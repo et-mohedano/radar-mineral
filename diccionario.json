@@ -1,0 +1,1726 @@
+{
+  "ENTIDAD": {
+    "indicador": "Clave de entidad federativa",
+    "descripcion": "Código que identifica a la entidad federativa. El código 00 identifica a los registros con los totales a nivel nacional.",
+    "rangos": "00…32",
+    "longitud": "2"
+  },
+  "NOM_ENT": {
+    "indicador": "Entidad federativa",
+    "descripcion": "Nombre oficial de la entidad federativa.",
+    "rangos": "Alfanumérico",
+    "longitud": "50"
+  },
+  "MUN": {
+    "indicador": "Clave de municipio o demarcación territorial",
+    "descripcion": "Código que identifica al municipio o demarcación territorial al interior de una entidad federativa, conforme al Marco Geoestadístico. El código 000 identifica a los registros con los totales a nivel de entidad federativa.",
+    "rangos": "000…570",
+    "longitud": "3"
+  },
+  "NOM_MUN": {
+    "indicador": "Municipio o demarcación territorial",
+    "descripcion": "Nombre oficial del municipio o demarcación territorial en el caso de la Ciudad de México.",
+    "rangos": "Alfanumérico",
+    "longitud": "50"
+  },
+  "LOC": {
+    "indicador": "Clave de localidad",
+    "descripcion": "Código que identifica a la localidad al interior de cada municipio o demarcación territorial conforme al Marco Geoestadístico. El código 0000 identifica a los registros con los totales a nivel de municipio o demarcación territorial.",
+    "rangos": "0000…9999",
+    "longitud": "4"
+  },
+  "NOM_LOC": {
+    "indicador": "Localidad",
+    "descripcion": "Nombre con el que se reconoce a la localidad dado por la ley o la costumbre.",
+    "rangos": "Alfanumérico",
+    "longitud": "70"
+  },
+  "LONGITUD": {
+    "indicador": "Longitud",
+    "descripcion": "Ubicación de la localidad expresada en grados, minutos, segundos y milésimas de segundo. Las primeras tres o cuatro posiciones corresponden a los grados y su símbolo; las siguientes tres posiciones indican los minutos y su símbolo y las siguientes 8 posiciones corresponden a los segundos, sus milésimas separados por un punto y su símbolo, la última posición indica que es la longitud situada al Oeste del meridiano de Greenwich (W).",
+    "rangos": "Caracter",
+    "longitud": "16"
+  },
+  "LATITUD": {
+    "indicador": "Latitud",
+    "descripcion": "Ubicación de la localidad expresada en grados, minutos, segundos y milésimas de segundo. Las primeras tres posiciones corresponden a los grados y su símbolo; las siguientes tres posiciones indican los minutos y su símbolo y las siguientes 8 posiciones corresponden a los segundos, sus milésimas separados por un punto y su símbolo, la última posición indica que es la latitud situada al norte del ecuador (N).",
+    "rangos": "Caracter",
+    "longitud": "15"
+  },
+  "ALTITUD": {
+    "indicador": "Altitud",
+    "descripcion": "Altura a la que se encuentra una localidad, respecto al nivel medio del mar, expresada en metros.",
+    "rangos": "Caracter",
+    "longitud": "4"
+  },
+  "POBTOT": {
+    "indicador": "Población total",
+    "descripcion": "Total de personas que residen habitualmente en el país, la entidad federativa, el municipio o la demarcación territorial y la localidad. Incluye la estimación del número de personas en viviendas particulares sin información de ocupantes. Incluye a la población que no especificó su edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POBFEM": {
+    "indicador": "Población femenina",
+    "descripcion": "Total de mujeres que residen habitualmente en el país, la entidad federativa, el municipio o la demarcación territorial y la localidad. Incluye la estimación del número de mujeres en viviendas particulares sin información de ocupantes. Incluye a la población que no especificó su edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POBMAS": {
+    "indicador": "Población masculina",
+    "descripcion": "Total de hombres que residen habitualmente en el país, la entidad federativa, el municipio o la demarcación territorial y la localidad. Incluye la estimación del número de hombres en viviendas particulares sin información de ocupantes. Incluye a la población que no especificó su edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_0A2": {
+    "indicador": "Población de 0 a 2 años",
+    "descripcion": "Personas de 0 a 2 años de edad.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "P_0A2_F": {
+    "indicador": "Población femenina de 0 a 2 años",
+    "descripcion": "Mujeres de 0 a 2 años de edad.",
+    "rangos": "0.,.999999999",
+    "longitud": "9"
+  },
+  "P_0A2_M": {
+    "indicador": "Población masculina de 0 a 2 años",
+    "descripcion": "Hombres de 0 a 2 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_3YMAS": {
+    "indicador": "Población de 3 años y más",
+    "descripcion": "Personas de 3 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_3YMAS_F": {
+    "indicador": "Población femenina de 3 años y más",
+    "descripcion": "Mujeres de 3 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_3YMAS_M": {
+    "indicador": "Población masculina de 3 años y más",
+    "descripcion": "Hombres de 3 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_5YMAS": {
+    "indicador": "Población de 5 años y más",
+    "descripcion": "Personas de 5 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_5YMAS_F": {
+    "indicador": "Población femenina de 5 años y más",
+    "descripcion": "Mujeres de 5 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_5YMAS_M": {
+    "indicador": "Población masculina de 5 años y más",
+    "descripcion": "Hombres de 5 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_12YMAS": {
+    "indicador": "Población de 12 años y más",
+    "descripcion": "Personas de 12 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_12YMAS_F": {
+    "indicador": "Población femenina de 12 años y más",
+    "descripcion": "Mujeres de 12 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_12YMAS_M": {
+    "indicador": "Población masculina de 12 años y más",
+    "descripcion": "Hombres de 12 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15YMAS": {
+    "indicador": "Población de 15 años y más",
+    "descripcion": "Personas de 15 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15YMAS_F": {
+    "indicador": "Población femenina de 15 años y más",
+    "descripcion": "Mujeres de 15 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15YMAS_M": {
+    "indicador": "Población masculina de 15 años y más",
+    "descripcion": "Hombres de 15 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_18YMAS": {
+    "indicador": "Población de 18 años y más",
+    "descripcion": "Personas de 18 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_18YMAS_F": {
+    "indicador": "Población femenina de 18 años y más",
+    "descripcion": "Mujeres de 18 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_18YMAS_M": {
+    "indicador": "Población masculina de 18 años y más",
+    "descripcion": "Hombres de 18 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_3A5": {
+    "indicador": "Población de 3 a 5 años",
+    "descripcion": "Personas de 3 a 5 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_3A5_F": {
+    "indicador": "Población femenina de 3 a 5 años",
+    "descripcion": "Mujeres de 3 a 5 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_3A5_M": {
+    "indicador": "Población masculina de 3 a 5 años",
+    "descripcion": "Hombres de 3 a 5 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_6A11": {
+    "indicador": "Población de 6 a 11 años",
+    "descripcion": "Personas de 6 a 11 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_6A11_F": {
+    "indicador": "Población femenina de 6 a 11 años",
+    "descripcion": "Mujeres de 6 a 11 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_6A11_M": {
+    "indicador": "Población masculina de 6 a 11 años",
+    "descripcion": "Hombres de 6 a 11 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_8A14": {
+    "indicador": "Población de 8 a 14 años",
+    "descripcion": "Personas de 8 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_8A14_F": {
+    "indicador": "Población femenina de 8 a 14 años",
+    "descripcion": "Mujeres de 8 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_8A14_M": {
+    "indicador": "Población masculina de 8 a 14 años",
+    "descripcion": "Hombres de 8 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_12A14": {
+    "indicador": "Población de 12 a 14 años",
+    "descripcion": "Personas de 12 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_12A14_F": {
+    "indicador": "Población femenina de 12 a 14 años",
+    "descripcion": "Mujeres de 12 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_12A14_M": {
+    "indicador": "Población masculina de 12 a 14 años",
+    "descripcion": "Hombres de 12 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15A17": {
+    "indicador": "Población de 15 a 17 años",
+    "descripcion": "Personas de 15 a 17 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15A17_F": {
+    "indicador": "Población femenina de 15 a 17 años",
+    "descripcion": "Mujeres de 15 a 17 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15A17_M": {
+    "indicador": "Población masculina de 15 a 17 años",
+    "descripcion": "Hombres de 15 a 17 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_18A24": {
+    "indicador": "Población de 18 a 24 años",
+    "descripcion": "Personas de 18 a 24 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_18A24_F": {
+    "indicador": "Población femenina de 18 a 24 años",
+    "descripcion": "Mujeres de 18 a 24 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_18A24_M": {
+    "indicador": "Población masculina de 18 a 24 años",
+    "descripcion": "Hombres de 18 a 24 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15A49_F": {
+    "indicador": "Población femenina de 15 a 49 años",
+    "descripcion": "Mujeres de 15 a 49 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_60YMAS": {
+    "indicador": "Población de 60 años y más",
+    "descripcion": "Personas de 60 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_60YMAS_F": {
+    "indicador": "Población femenina de 60 años y más",
+    "descripcion": "Mujeres de 60 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_60YMAS_M": {
+    "indicador": "Población masculina de 60 años y más",
+    "descripcion": "Hombres de 60 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "REL_H_M": {
+    "indicador": "Relación hombres-mujeres",
+    "descripcion": "Resultado de dividir el total de hombres entre el total de mujeres y multiplicarlo por cien. Indica el número de hombres por cada 100 mujeres.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POB0_14": {
+    "indicador": "Población de 0 a 14 años",
+    "descripcion": "Personas de 0 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POB15_64": {
+    "indicador": "Población de 15 a 64 años",
+    "descripcion": "Personas de 15 a 64 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POB65_MAS": {
+    "indicador": "Población de 65 años y más",
+    "descripcion": "Personas de 65 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_0A4": {
+    "indicador": "Población de 0 a 4 años",
+    "descripcion": "Personas de 0 a 4 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_0A4_F": {
+    "indicador": "Población femenina de 0 a 4 años",
+    "descripcion": "Mujeres de 0 a 4 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_0A4_M": {
+    "indicador": "Población masculina de 0 a 4 años",
+    "descripcion": "Hombres de 0 a 4 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_5A9": {
+    "indicador": "Población de 5 a 9 años",
+    "descripcion": "Personas de 5 a 9 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_5A9_F": {
+    "indicador": "Población femenina de 5 a 9 años",
+    "descripcion": "Mujeres de 5 a 9 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_5A9_M": {
+    "indicador": "Población masculina de 5 a 9 años",
+    "descripcion": "Hombres de 5 a 9 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_10A14": {
+    "indicador": "Población de 10 a 14 años",
+    "descripcion": "Personas de 10 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_10A14_F": {
+    "indicador": "Población femenina de 10 a 14 años",
+    "descripcion": "Mujeres de 10 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_10A14_M": {
+    "indicador": "Población masculina de 10 a 14 años",
+    "descripcion": "Hombres de 10 a 14 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15A19": {
+    "indicador": "Población de 15 a 19 años",
+    "descripcion": "Personas de 15 a 19 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15A19_F": {
+    "indicador": "Población femenina de 15 a 19 años",
+    "descripcion": "Mujeres de 15 a 19 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_15A19_M": {
+    "indicador": "Población masculina de 15 a 19 años",
+    "descripcion": "Hombres de 15 a 19 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_20A24": {
+    "indicador": "Población de 20 a 24 años",
+    "descripcion": "Personas de 20 a 24 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_20A24_F": {
+    "indicador": "Población femenina de 20 a 24 años",
+    "descripcion": "Mujeres de 20 a 24 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_20A24_M": {
+    "indicador": "Población masculina de 20 a 24 años",
+    "descripcion": "Hombres de 20 a 24 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_25A29": {
+    "indicador": "Población de 25 a 29 años",
+    "descripcion": "Personas de 25 a 29 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_25A29_F": {
+    "indicador": "Población femenina de 25 a 29 años",
+    "descripcion": "Mujeres de 25 a 29 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_25A29_M": {
+    "indicador": "Población masculina de 25 a 29 años",
+    "descripcion": "Hombres de 25 a 29 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_30A34": {
+    "indicador": "Población de 30 a 34 años",
+    "descripcion": "Personas de 30 a 34 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_30A34_F": {
+    "indicador": "Población femenina de 30 a 34 años",
+    "descripcion": "Mujeres de 30 a 34 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_30A34_M": {
+    "indicador": "Población masculina de 30 a 34 años",
+    "descripcion": "Hombres de 30 a 34 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_35A39": {
+    "indicador": "Población de 35 a 39 años",
+    "descripcion": "Personas de 35 a 39 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_35A39_F": {
+    "indicador": "Población femenina de 35 a 39 años",
+    "descripcion": "Mujeres de 35 a 39 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_35A39_M": {
+    "indicador": "Población masculina de 35 a 39 años",
+    "descripcion": "Hombres de 35 a 39 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_40A44": {
+    "indicador": "Población de 40 a 44 años",
+    "descripcion": "Personas de 40 a 44 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_40A44_F": {
+    "indicador": "Población femenina de 40 a 44 años",
+    "descripcion": "Mujeres de 40 a 44 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_40A44_M": {
+    "indicador": "Población masculina de 40 a 44 años",
+    "descripcion": "Hombres de 40 a 44 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_45A49": {
+    "indicador": "Población de 45 a 49 años",
+    "descripcion": "Personas de 45 a 49 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_45A49_F": {
+    "indicador": "Población femenina de 45 a 49 años",
+    "descripcion": "Mujeres de 45 a 49 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_45A49_M": {
+    "indicador": "Población masculina de 45 a 49 años",
+    "descripcion": "Hombres de 45 a 49 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_50A54": {
+    "indicador": "Población de 50 a 54 años",
+    "descripcion": "Personas de 50 a 54 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_50A54_F": {
+    "indicador": "Población femenina de 50 a 54 años",
+    "descripcion": "Mujeres de 50 a 54 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_50A54_M": {
+    "indicador": "Población masculina de 50 a 54 años",
+    "descripcion": "Hombres de 50 a 54 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_55A59": {
+    "indicador": "Población de 55 a 59 años",
+    "descripcion": "Personas de 55 a 59 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_55A59_F": {
+    "indicador": "Población femenina de 55 a 59 años",
+    "descripcion": "Mujeres de 55 a 59 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_55A59_M": {
+    "indicador": "Población masculina de 55 a 59 años",
+    "descripcion": "Hombres de 55 a 59 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_60A64": {
+    "indicador": "Población de 60 a 64 años",
+    "descripcion": "Personas de 60 a 64 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_60A64_F": {
+    "indicador": "Población femenina de 60 a 64 años",
+    "descripcion": "Mujeres de 60 a 64 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_60A64_M": {
+    "indicador": "Población masculina de 60 a 64 años",
+    "descripcion": "Hombres de 60 a 64 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_65A69": {
+    "indicador": "Población de 65 a 69 años",
+    "descripcion": "Personas de 65 a 69 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_65A69_F": {
+    "indicador": "Población femenina de 65 a 69 años",
+    "descripcion": "Mujeres de 65 a 69 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_65A69_M": {
+    "indicador": "Población masculina de 65 a 69 años",
+    "descripcion": "Hombres de 65 a 69 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_70A74": {
+    "indicador": "Población de 70 a 74 años",
+    "descripcion": "Personas de 70 a 74 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_70A74_F": {
+    "indicador": "Población femenina de 70 a 74 años",
+    "descripcion": "Mujeres de 70 a 74 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_70A74_M": {
+    "indicador": "Población masculina de 70 a 74 años",
+    "descripcion": "Hombres de 70 a 74 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_75A79": {
+    "indicador": "Población de 75 a 79 años",
+    "descripcion": "Personas de 75 a 79 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_75A79_F": {
+    "indicador": "Población femenina de 75 a 79 años",
+    "descripcion": "Mujeres de 75 a 79 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_75A79_M": {
+    "indicador": "Población masculina de 75 a 79 años",
+    "descripcion": "Hombres de 75 a 79 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_80A84": {
+    "indicador": "Población de 80 a 84 años",
+    "descripcion": "Personas de 80 a 84 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_80A84_F": {
+    "indicador": "Población femenina de 80 a 84 años",
+    "descripcion": "Mujeres de 80 a 84 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_80A84_M": {
+    "indicador": "Población masculina de 80 a 84 años",
+    "descripcion": "Hombres de 80 a 84 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_85YMAS": {
+    "indicador": "Población de 85 años y más",
+    "descripcion": "Personas de 85 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_85YMAS_F": {
+    "indicador": "Población femenina de 85 años y más",
+    "descripcion": "Mujeres de 85 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P_85YMAS_M": {
+    "indicador": "Población masculina de 85 años y más",
+    "descripcion": "Hombres de 85 a 130 años de edad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PROM_HNV": {
+    "indicador": "Promedio de hijas e hijos nacidos vivos",
+    "descripcion": "Resultado de dividir el total de hijas e hijos nacidos vivos de las mujeres de 12 a 130 años de edad, entre el total de mujeres del mismo grupo de edad. Excluye a las mujeres que no especificaron el número de hijas e hijos nacidos vivos y a las que sí han tenido, pero no especificaron el total de ellos.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PNACENT": {
+    "indicador": "Población nacida en la entidad",
+    "descripcion": "Personas nacidas en la misma entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PNACENT_F": {
+    "indicador": "Población femenina nacida en la entidad",
+    "descripcion": "Mujeres nacidas en la misma entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PNACENT_M": {
+    "indicador": "Población masculina nacida en la entidad",
+    "descripcion": "Hombres nacidos en la misma entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PNACOE": {
+    "indicador": "Población nacida en otra entidad",
+    "descripcion": "Personas nacidas en otra entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PNACOE_F": {
+    "indicador": "Población femenina nacida en otra entidad",
+    "descripcion": "Mujeres nacidas en otra entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PNACOE_M": {
+    "indicador": "Población masculina nacida en otra entidad",
+    "descripcion": "Hombres nacidos en otra entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PRES2015": {
+    "indicador": "Población de 5 años y más residente en la entidad en marzo de 2015",
+    "descripcion": "Personas de 5 a 130 años de edad que entre 2015 y 2020 residían en la misma entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PRES2015_F": {
+    "indicador": "Población femenina de 5 años y más residente en la entidad en marzo de 2015",
+    "descripcion": "Mujeres de 5 a 130 años de edad que entre 2015 y 2020 residían en la misma entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PRES2015_M": {
+    "indicador": "Población masculina de 5 años y más residente en la entidad en marzo de 2015",
+    "descripcion": "Hombres de 5 a 130 años de edad que entre 2015 y 2020 residían en la misma entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PRESOE15": {
+    "indicador": "Población de 5 años y más residente en otra entidad en marzo de 2015",
+    "descripcion": "Personas de 5 a 130 años de edad que en el 2015 residían en otra entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PRESOE15_F": {
+    "indicador": "Población femenina de 5 años y más residente en otra entidad en marzo de 2015",
+    "descripcion": "Mujeres de 5 a 130 años de edad que en 2015 residían en otra entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "PRESOE15_M": {
+    "indicador": "Población masculina de 5 años y más residente en otra entidad en marzo de 2015",
+    "descripcion": "Hombres de 5 a 130 años de edad que en 2015 residían en otra entidad federativa.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "P3YM_HLI": {
+    "indicador": "Población de 3 años y más que habla alguna lengua indígena",
+    "descripcion": "Personas de 3 a 130 años de edad que hablan alguna lengua indígena.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3YM_HLI_F": {
+    "indicador": "Población femenina de 3 años y más que habla alguna lengua indígena",
+    "descripcion": "Mujeres de 3 a 130 años de edad que hablan alguna lengua indígena.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3YM_HLI_M": {
+    "indicador": "Población masculina de 3 años y más que habla alguna lengua indígena",
+    "descripcion": "Hombres de 3 a 130 años de edad que hablan alguna lengua indígena.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3HLINHE": {
+    "indicador": "Población de 3 años y más que habla alguna lengua indígena y no habla español",
+    "descripcion": "Personas de 3 a 130 años de edad que hablan alguna lengua indígena y además no hablan español.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3HLINHE_F": {
+    "indicador": "Población femenina de 3 años y más que habla alguna lengua indígena y no habla español",
+    "descripcion": "Mujeres de 3 a 130 años de edad que hablan alguna lengua indígena y además no hablan español.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3HLINHE_M": {
+    "indicador": "Población masculina de 3 años y más que habla alguna lengua indígena y no habla español",
+    "descripcion": "Hombres de 3 a 130 años de edad que hablan alguna lengua indígena y además no hablan español.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3HLI_HE": {
+    "indicador": "Población de 3 años y más que habla alguna lengua indígena y habla español",
+    "descripcion": "Personas de 3 a 130 años de edad que hablan alguna lengua indígena y además hablan español.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3HLI_HE_F": {
+    "indicador": "Población femenina de 3 años y más que habla alguna lengua indígena y habla español",
+    "descripcion": "Mujeres de 3 a 130 años de edad que hablan alguna lengua indígena y además hablan español.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3HLI_HE_M": {
+    "indicador": "Población masculina de 3 años y más que habla alguna lengua indígena y habla español",
+    "descripcion": "Hombres de 3 a 130 años de edad que hablan alguna lengua indígena y además hablan español.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P5_HLI": {
+    "indicador": "Población de 5 años y más que habla alguna lengua indígena",
+    "descripcion": "Personas de 5 a 130 años de edad que hablan alguna lengua indígena.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P5_HLI_NHE": {
+    "indicador": "Población de 5 años y más que habla alguna lengua indígena y no habla español",
+    "descripcion": "Personas de 5 a 130 años de edad que hablan alguna lengua indígena y además no hablan español.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P5_HLI_HE": {
+    "indicador": "Población de 5 años y más que habla alguna lengua indígena y habla español",
+    "descripcion": "Personas de 5 a 130 años de edad que hablan alguna lengua indígena y además hablan español.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PHOG_IND": {
+    "indicador": "Población en hogares censales indígenas",
+    "descripcion": "Total de personas que forman hogares censales donde la persona de referencia del hogar o su cónyuge o alguno de los ascendientes de estos, declararon hablar lengua indígena.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POB_AFRO": {
+    "indicador": "Población que se considera afromexicana o afrodescendiente",
+    "descripcion": "Personas que se consideran afromexicanos o afrodescendientes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POB_AFRO_F": {
+    "indicador": "Población femenina que se considera afromexicana o afrodescendiente",
+    "descripcion": "Mujeres que se consideran afromexicanas o afrodescendientes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POB_AFRO_M": {
+    "indicador": "Población masculina que se considera afromexicana o afrodescendiente",
+    "descripcion": "Hombres que se consideran afromexicanos o afrodescendientes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCON_DISC": {
+    "indicador": "Población con discapacidad",
+    "descripcion": "Personas que realizan con mucha dificultad o no pueden hacer al menos una de las siguientes actividades: ver, aun usando lentes; oír, aun usando aparato auditivo; caminar, subir o bajar; recordar o concentrarse; bañarse, vestirse o comer; hablar o comunicarse.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCDISC_MOT": {
+    "indicador": "Población con discapacidad para caminar, subir o bajar",
+    "descripcion": "Personas que tiene mucha dificultad o no pueden caminar, subir o bajar.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCDISC_VIS": {
+    "indicador": "Población con discapacidad para ver, aun usando lentes",
+    "descripcion": "Personas que tienen mucha dificultad o no pueden ver, aun cuando usen lentes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCDISC_LENG": {
+    "indicador": "Población con discapacidad para hablar o comunicarse",
+    "descripcion": "Personas que tienen mucha dificultad o no pueden hablar o comunicarse.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCDISC_AUD": {
+    "indicador": "Población con discapacidad para oír, aun usando aparato auditivo",
+    "descripcion": "Personas que tienen mucha dificultad o no pueden oír, aun usando aparato auditivo.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCDISC_MOT2": {
+    "indicador": "Población con discapacidad para vestirse, bañarse o comer",
+    "descripcion": "Personas que tienen mucha dificultad o no pueden bañarse, vestirse o comer.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCDISC_MEN": {
+    "indicador": "Población con discapacidad para recordar o concentrarse",
+    "descripcion": "Personas que tienen mucha dificultad o no pueden recordar o concentrarse.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCON_LIMI": {
+    "indicador": "Población con limitación",
+    "descripcion": "Personas que realizan con poca dificultad al menos una de las siguientes actividades: ver, aun usando lentes; oír, aun usando aparato auditivo; caminar, subir o bajar; recordar o concentrarse; bañarse, vestirse o comer; hablar o comunicarse.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCLIM_CSB": {
+    "indicador": "Población con limitación para caminar, subir o bajar",
+    "descripcion": "Personas que tienen poca dificultad para caminar, subir o bajar.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCLIM_VIS": {
+    "indicador": "Población con limitación para ver, aun usando lentes",
+    "descripcion": "Personas que tienen poca dificultad para ver, aun usando lentes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCLIM_HACO": {
+    "indicador": "Población con limitación para hablar o comunicarse",
+    "descripcion": "Personas que tienen poca dificultad para hablar o comunicarse.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCLIM_OAUD": {
+    "indicador": "Población con limitación para oír, aun usando aparato auditivo",
+    "descripcion": "Personas que tienen poca dificultad para oír, aun usando aparato auditivo.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCLIM_MOT2": {
+    "indicador": "Población con limitación para vestirse, bañarse o comer",
+    "descripcion": "Personas que tienen poca dificultad para bañarse, vestirse o comer.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCLIM_RE_CO": {
+    "indicador": "Población con limitación para recordar o concentrarse",
+    "descripcion": "Personas que tienen poca dificultad para recordar o concentrarse.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCLIM_PMEN": {
+    "indicador": "Población con algún problema o condición mental",
+    "descripcion": "Personas con algún problema o condición mental, como las relacionadas con el trastorno de la conciencia, retraso mental y las alteraciones de la conducta del individuo con otras personas en su entorno social. Incluye a la población que declaró realizar actividades cotidianas con mucha dificultad o no poder hacerlas o las hace con poca dificultad.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PSIND_LIM": {
+    "indicador": "Población sin discapacidad, limitación, problema o condición mental",
+    "descripcion": "Personas que no tienen dificultad para realizar alguna actividad cotidiana como: ver, aun usando lentes; oír aun usando aparato auditivo; caminar, subir o bajar; recordar o concentrarse; bañarse, vestirse o comer; hablar o comunicarse, ni tampoco tiene algún problema o condición mental.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3A5_NOA": {
+    "indicador": "Población de 3 a 5 años que no asiste a la escuela",
+    "descripcion": "Personas de 3 a 5 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3A5_NOA_F": {
+    "indicador": "Población femenina de 3 a 5 años que no asiste a la escuela",
+    "descripcion": "Mujeres de 3 a 5 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P3A5_NOA_M": {
+    "indicador": "Población masculina de 3 a 5 años que no asiste a la escuela",
+    "descripcion": "Hombres de 3 a 5 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P6A11_NOA": {
+    "indicador": "Población de 6 a 11 años que no asiste a la escuela",
+    "descripcion": "Personas de 6 a 11 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P6A11_NOAF": {
+    "indicador": "Población femenina de 6 a 11 años que no asiste a la escuela",
+    "descripcion": "Mujeres de 6 a 11 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P6A11_NOAM": {
+    "indicador": "Población masculina de 6 a 11 años que no asiste a la escuela",
+    "descripcion": "Hombres de 6 a 11 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P12A14NOA": {
+    "indicador": "Población de 12 a 14 años que no asiste a la escuela",
+    "descripcion": "Personas de 12 a 14 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P12A14NOAF": {
+    "indicador": "Población femenina de 12 a 14 años que no asiste a la escuela",
+    "descripcion": "Mujeres de 12 a 14 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P12A14NOAM": {
+    "indicador": "Población masculina de 12 a 14 años que no asiste a la escuela",
+    "descripcion": "Hombres de 12 a 14 años de edad que no van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15A17A": {
+    "indicador": "Población de 15 a 17 años que asiste a la escuela",
+    "descripcion": "Personas de 15 a 17 años de edad que van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15A17A_F": {
+    "indicador": "Población femenina de 15 a 17 años que asiste a la escuela",
+    "descripcion": "Mujeres de 15 a 17 años de edad que van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15A17A_M": {
+    "indicador": "Población masculina de 15 a 17 años que asiste a la escuela",
+    "descripcion": "Hombres de 15 a 17 años de edad que van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P18A24A": {
+    "indicador": "Población de 18 a 24 años que asiste a la escuela",
+    "descripcion": "Personas de 18 a 24 años de edad que van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P18A24A_F": {
+    "indicador": "Población femenina de 18 a 24 años que asiste a la escuela",
+    "descripcion": "Mujeres de 18 a 24 años de edad que van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P18A24A_M": {
+    "indicador": "Población masculina de 18 a 24 años que asiste a la escuela",
+    "descripcion": "Hombres de 18 a 24 años de edad que van a la escuela.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P8A14AN": {
+    "indicador": "Población de 8 a 14 años que no sabe leer y escribir",
+    "descripcion": "Personas de 8 a 14 años de edad que no saben leer y escribir un recado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P8A14AN_F": {
+    "indicador": "Población femenina de 8 a 14 años que no sabe leer y escribir",
+    "descripcion": "Mujeres de 8 a 14 años de edad que no saben leer y escribir un recado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P8A14AN_M": {
+    "indicador": "Población masculina de 8 a 14 años que no sabe leer y escribir",
+    "descripcion": "Hombres de 8 a 14 años de edad que no saben leer y escribir un recado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15YM_AN": {
+    "indicador": "Población de 15 años y más analfabeta",
+    "descripcion": "Personas de 15 a 130 años de edad que no saben leer y escribir un recado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15YM_AN_F": {
+    "indicador": "Población femenina de 15 años y más analfabeta",
+    "descripcion": "Mujeres de 15 a 130 años de edad que no saben leer y escribir un recado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15YM_AN_M": {
+    "indicador": "Población masculina de 15 años y más analfabeta",
+    "descripcion": "Hombres de 15 a 130 años de edad que no saben leer y escribir un recado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15YM_SE": {
+    "indicador": "Población de 15 años y más sin escolaridad",
+    "descripcion": "Personas de 15 a 130 años de edad que no aprobaron ningún grado escolar o que sólo tienen nivel preescolar.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15YM_SE_F": {
+    "indicador": "Población femenina de 15 años y más sin escolaridad",
+    "descripcion": "Mujeres de 15 a 130 años de edad que no aprobaron ningún grado escolar o que sólo tienen nivel preescolar.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15YM_SE_M": {
+    "indicador": "Población masculina de 15 años y más sin escolaridad",
+    "descripcion": "Hombres de 15 a 130 años de edad que no aprobaron ningún grado escolar o que sólo tienen nivel preescolar.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15PRI_IN": {
+    "indicador": "Población de 15 años y más con primaria incompleta",
+    "descripcion": "Personas de 15 a 130 años de edad que tienen como máxima escolaridad hasta el quinto grado aprobado en primaria. Incluye a las personas que no especificaron los grados aprobados en el nivel señalado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15PRI_INF": {
+    "indicador": "Población femenina de 15 años y más con primaria incompleta",
+    "descripcion": "Mujeres de 15 a 130 años de edad que tienen como máxima escolaridad hasta el quinto grado aprobado en primaria. Incluye a las mujeres que no especificaron los grados aprobados en el nivel señalado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15PRI_INM": {
+    "indicador": "Población masculina de 15 años y más con primaria incompleta",
+    "descripcion": "Hombres de 15 a 130 años de edad que tienen como máxima escolaridad hasta el quinto grado aprobado en primaria. Incluye a los hombres que no especificaron los grados aprobados en el nivel señalado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15PRI_CO": {
+    "indicador": "Población de 15 años y más con primaria completa",
+    "descripcion": "Personas de 15 a 130 años de edad que tienen como máxima escolaridad 6 grados aprobados en primaria.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15PRI_COF": {
+    "indicador": "Población femenina de 15 años y más con primaria completa",
+    "descripcion": "Mujeres de 15 a 130 años de edad que tienen como máxima escolaridad 6 grados aprobados en primaria.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15PRI_COM": {
+    "indicador": "Población masculina de 15 años y más con primaria completa",
+    "descripcion": "Hombres de 15 a 130 años de edad que tienen como máxima escolaridad 6 grados aprobados en primaria.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15SEC_IN": {
+    "indicador": "Población de 15 años y más con secundaria incompleta",
+    "descripcion": "Personas de 15 a 130 años de edad que tienen como máxima escolaridad hasta segundo grado aprobado de secundaria. Incluye a las personas que no especificaron los grados aprobados en el nivel señalado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15SEC_INF": {
+    "indicador": "Población femenina de 15 años y más con secundaria incompleta",
+    "descripcion": "Mujeres de 15 a 130 años de edad que tienen como máxima escolaridad hasta segundo grado aprobado de secundaria. Incluye a las mujeres que no especificaron los grados aprobados en el nivel señalado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15SEC_INM": {
+    "indicador": "Población masculina de 15 años y más con secundaria incompleta",
+    "descripcion": "Hombres de 15 a 130 años de edad que tienen como máxima escolaridad hasta segundo grado aprobado de secundaria. Incluye a los hombres que no especificaron los grados aprobados en el nivel señalado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15SEC_CO": {
+    "indicador": "Población de 15 años y más con secundaria completa",
+    "descripcion": "Personas de 15 a 130 años de edad que tienen como máxima escolaridad 3 grados aprobados en secundaria.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15SEC_COF": {
+    "indicador": "Población femenina de 15 años y más con secundaria completa",
+    "descripcion": "Mujeres de 15 a 130 años de edad que tienen como máxima escolaridad 3 grados aprobados en secundaria.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P15SEC_COM": {
+    "indicador": "Población masculina de 15 años y más con secundaria completa",
+    "descripcion": "Hombres de 15 a 130 años de edad que tienen como máxima escolaridad 3 grados aprobados en secundaria.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P18YM_PB": {
+    "indicador": "Población de 18 años y más con educación posbásica",
+    "descripcion": "Personas de 18 a 130 años de edad que tienen como máxima escolaridad algún grado aprobado en preparatoria o bachillerato; normal básica; estudios técnicos o comerciales con secundaria terminada; estudios técnicos o comerciales con preparatoria terminada; normal de licenciatura; licenciatura o profesional; especialidad; maestría o doctorado. Incluye a las personas que no especificaron los grados aprobados en los niveles señalados.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P18YM_PB_F": {
+    "indicador": "Población femenina de 18 años y más con educación posbásica",
+    "descripcion": "Mujeres de 18 a 130 años de edad que tienen como máxima escolaridad algún grado aprobado: preparatoria o bachillerato; normal básica; estudios técnicos o comerciales con secundaria terminada; estudios técnicos o comerciales con preparatoria terminada; normal de licenciatura; licenciatura o profesional; especialidad; maestría o doctorado. Incluye a las personas que no especificaron los grados aprobados en los niveles señalados.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P18YM_PB_M": {
+    "indicador": "Población masculina de 18 años y más con educación posbásica",
+    "descripcion": "Hombres de 18 a 130 años de edad que tienen como máxima escolaridad algún grado aprobado en preparatoria o bachillerato; normal básica; estudios técnicos o comerciales con secundaria terminada; estudios técnicos o comerciales con preparatoria terminada; normal de licenciatura; licenciatura o profesional; especialidad; maestría o doctorado. Incluye a las personas que no especificaron los grados aprobados en los niveles señalados.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "GRAPROES": {
+    "indicador": "Grado promedio de escolaridad",
+    "descripcion": "Resultado de dividir el monto de grados escolares aprobados por las personas de 15 a 130 años de edad entre las personas del mismo grupo de edad. Excluye a las personas que no especificaron los grados aprobados.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "GRAPROES_F": {
+    "indicador": "Grado promedio de escolaridad de la población femenina",
+    "descripcion": "Resultado de dividir el monto de grados escolares aprobados por las mujeres de 15 a 130 años de edad entre las mujeres del mismo grupo de edad. Excluye a las mujeres que no especificaron los grados aprobados.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "GRAPROES_M": {
+    "indicador": "Grado promedio de escolaridad de la población masculina",
+    "descripcion": "Resultado de dividir el monto de grados escolares aprobados por los hombres de 15 a 130 años de edad entre los hombres del mismo grupo de edad. Excluye a los hombres que no especificaron los grados aprobados.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PEA": {
+    "indicador": "Población de 12 años y más económicamente activa",
+    "descripcion": "Personas de 12 a 130 años de edad que trabajaron, tenían trabajo pero no trabajaron o buscaron trabajo en la semana de referencia.",
+    "rangos": "0..999999999",
+    "longitud": "9"
+  },
+  "PEA_F": {
+    "indicador": "Población femenina de 12 años y más económicamente activa",
+    "descripcion": "Mujeres de 12 a 130 años de edad que trabajaron, tenían trabajo pero no trabajaron o buscaron trabajo en la semana de referencia.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PEA_M": {
+    "indicador": "Población masculina de 12 años y más económicamente activa",
+    "descripcion": "Hombres de 12 a 130 años de edad que trabajaron, tenían trabajo pero no trabajaron o buscaron trabajo en la semana de referencia.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PE_INAC": {
+    "indicador": "Población de 12 años y más no económicamente activa",
+    "descripcion": "Personas de 12 a 130 años de edad pensionadas o jubiladas; estudiantes; dedicadas a los quehaceres del hogar; están incapacitadas permanentemente para trabajar; o no trabajan.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PE_INAC_F": {
+    "indicador": "Población femenina de 12 años y más no económicamente activa",
+    "descripcion": "Mujeres de 12 a 130 años de edad pensionadas o jubiladas; estudiantes; dedicadas a los quehaceres del hogar; están incapacitadas permanentemente para trabajar; o no trabajan.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PE_INAC_M": {
+    "indicador": "Población masculina de 12 años y más no económicamente activa",
+    "descripcion": "Hombres de 12 a 130 años de edad pensionados o jubilados; estudiantes; dedicados a los quehaceres del hogar; están incapacitados permanentemente para trabajar; o no trabajan.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POCUPADA": {
+    "indicador": "Población de 12 años y más ocupada",
+    "descripcion": "Personas de 12 a 130 años de edad que trabajaron o que no trabajaron, pero sí tenían trabajo en la semana de referencia.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POCUPADA_F": {
+    "indicador": "Población femenina de 12 años y más ocupada",
+    "descripcion": "Mujeres de 12 a 130 años de edad que trabajaron o que no trabajaron, pero sí tenían trabajo en la semana de referencia.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POCUPADA_M": {
+    "indicador": "Población masculina de 12 años y más ocupada",
+    "descripcion": "Hombres de 12 a 130 años de edad que trabajaron o que no trabajaron, pero sí tenían trabajo en la semana de referencia.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDESOCUP": {
+    "indicador": "Población de 12 años y más desocupada",
+    "descripcion": "Personas de 12 a 130 años de edad que no tenían trabajo, pero buscaron trabajo en la semana de referencia.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDESOCUP_F": {
+    "indicador": "Población femenina de 12 años y más desocupada",
+    "descripcion": "Mujeres de 12 a 130 años de edad que no tenían trabajo, pero buscaron trabajo en la semana de referencia.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDESOCUP_M": {
+    "indicador": "Población masculina de 12 años y más desocupada",
+    "descripcion": "Hombres de 12 a 130 años de edad que no tenían trabajo, pero buscaron trabajo en la semana de referencia.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PSINDER": {
+    "indicador": "Población sin afiliación a servicios de salud",
+    "descripcion": "Total de personas que no están afiliadas a servicios médicos en ninguna institución pública o privada",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDER_SS": {
+    "indicador": "Población afiliada a servicios de salud",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en alguna institución de salud pública o privada como: el Instituto Mexicano del Seguro Social (IMSS), el Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado (ISSSTE e ISSSTE estatal), Petróleos Mexicanos (PEMEX), la Secretaría de la Defensa Nacional (SEDENA), la Secretaría de Marina Armada de México (SEMAR), el Instituto de Salud para el Bienestar (INSABI) o en otra.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDER_IMSS": {
+    "indicador": "Población afiliada a servicios de salud en el IMSS",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en el Instituto Mexicano del Seguro Social (IMSS).",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDER_ISTE": {
+    "indicador": "Población afiliada a servicios de salud en el ISSSTE",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en el Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDER_ISTEE": {
+    "indicador": "Población afiliada a servicios de salud en el ISSSTE estatal",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en los institutos de seguridad social de los estados (ISSSTE, ISSSEMyM, ISSSTEZAC, ISSSPEA o ISSSTESON).",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PAFIL_PDOM": {
+    "indicador": "Población afiliada a servicios de salud en PEMEX, Defensa o Marina",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en Petróleos Mexicanos (PEMEX), la Secretaría de la Defensa Nacional (SEDENA) o la Secretaría de Marina Armada de México (SEMAR).",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDER_SEGP": {
+    "indicador": "Población afiliada a servicios de salud en el Instituto de Salud para el Bienestar",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en la Secretaría de Salud, mediante en el Instituto de Salud para el Bienestar.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PDER_IMSSB": {
+    "indicador": "Población afiliada a servicios de salud en el IMSS BIENESTAR",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en el Instituto Mexicano del Seguro Social (IMSS) BIENESTAR",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PAFIL_IPRIV": {
+    "indicador": "Población afiliada a servicios de salud en una institución privada",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en instituciones de salud privadas.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PAFIL_OTRAI": {
+    "indicador": "Población afiliada a servicios de salud en otra institución",
+    "descripcion": "Total de personas que están afiliadas a servicios médicos en cualquier otra institución de salud pública o privada.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P12YM_SOLT": {
+    "indicador": "Población de 12 años y más soltera o nunca unida",
+    "descripcion": "Personas de 12 a 130 años de edad solteras.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P12YM_CASA": {
+    "indicador": "Población de 12 años y más casada o unida",
+    "descripcion": "Personas de 12 a 130 años de edad casadas sólo por el civil; casadas sólo religiosamente o; casadas por el civil y religiosamente o en unión libre.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "P12YM_SEPA": {
+    "indicador": "Población de 12 años y más que estuvo casada o unida",
+    "descripcion": "Personas de 12 a 130 años de edad que están separadas, divorciadas o viudas.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PCATOLICA": {
+    "indicador": "Población con religión católica",
+    "descripcion": "Personas que tienen como creencia o preferencia espiritual la religión católica",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PRO_CRIEVA": {
+    "indicador": "Población con grupo religioso protestante/cristiano evangélico",
+    "descripcion": "Incluye a las denominaciones religiosas del grupo protestante/cristiano evangélico: protestante, pentecostal, iglesia del Dios vivo, columna y apoyo de la verdad, la luz del mundo, cristiana, evangélica, iglesia de Jesucristo de los santos de los últimos días (mormón) entre otras.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POTRAS_REL": {
+    "indicador": "Población con otras religiones diferentes a las anteriores",
+    "descripcion": "Personas con otras creencias o preferencias espirituales diferentes a las anteriores.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PSIN_RELIG": {
+    "indicador": "Población sin religión o sin adscripción religiosa",
+    "descripcion": "Personas que declararon no tener religión o no estar adscritas en alguna.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "TOTHOG": {
+    "indicador": "Total de hogares censales",
+    "descripcion": "Hogares en viviendas particulares habitadas. Se considera un hogar en cada vivienda particular. Incluye casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio; local no construido para habitación; vivienda móvil; refugio y no especificado de vivienda particular.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "HOGJEF_F": {
+    "indicador": "Hogares censales con persona de referencia mujer",
+    "descripcion": "Hogares en viviendas particulares habitadas donde la persona de referencia es mujer. Se considera un hogar en cada vivienda particular. Incluye casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea; local no construido para habitación; vivienda móvil; refugio y no especificado de vivienda particular.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "HOGJEF_M": {
+    "indicador": "Hogares censales con persona de referencia hombre",
+    "descripcion": "Hogares en viviendas particulares habitadas donde la persona de referencia es hombre. Se considera un hogar en cada vivienda particular. Incluye casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea; local no construido para habitación; vivienda móvil; refugio y no especificado de vivienda particular.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "POBHOG": {
+    "indicador": "Población en hogares censales",
+    "descripcion": "Personas en hogares censales. Se considera un hogar en cada vivienda particular. Incluye casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea; local no construido para habitación; vivienda móvil; refugio y no especificado de vivienda particular.",
+    "rangos": "0...99999999",
+    "longitud": "9"
+  },
+  "PHOGJEF_F": {
+    "indicador": "Población en hogares censales con persona de referencia mujer",
+    "descripcion": "Personas en hogares censales donde la persona de referencia es mujer. Se considera un hogar en cada vivienda particular. Incluye casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea; local no construido para habitación; vivienda móvil; refugio y no especificado de vivienda particular.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PHOGJEF_M": {
+    "indicador": "Población en hogares censales con persona de referencia hombre",
+    "descripcion": "Personas en hogares censales donde la persona de referencia es hombre. Se considera un hogar en cada vivienda particular. Incluye casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea; local no construido para habitación; vivienda móvil; refugio y no especificado de vivienda particular.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "VIVTOT": {
+    "indicador": "Total de viviendas",
+    "descripcion": "Viviendas particulares habitadas, deshabitadas, de uso temporal y colectivas. Incluye a las viviendas sin información de ocupantes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "TVIVHAB": {
+    "indicador": "Total de viviendas habitadas",
+    "descripcion": "Viviendas particulares y colectivas habitadas. Incluye a las viviendas sin información de ocupantes",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "TVIVPAR": {
+    "indicador": "Total de viviendas particulares",
+    "descripcion": "Viviendas particulares habitadas, deshabitadas y de uso temporal. Excluye a las viviendas sin información de ocupantes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "VIVPAR_HAB": {
+    "indicador": "Viviendas particulares habitadas",
+    "descripcion": "Viviendas particulares habitadas de cualquier clase: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio; local no construido para habitación, vivienda móvil; refugio y no especificado de vivienda particular. Excluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "VIVPARH_CV": {
+    "indicador": "Total de viviendas particulares habitadas con características",
+    "descripcion": "Viviendas particulares habitadas a las que se les captan sus características, incluye casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "TVIVPARHAB": {
+    "indicador": "Total de viviendas particulares habitadas",
+    "descripcion": "Viviendas particulares habitadas de cualquier clase: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio; local no construido para habitación, vivienda móvil; refugio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "VIVPAR_DES": {
+    "indicador": "Viviendas particulares deshabitadas",
+    "descripcion": "Viviendas particulares deshabitadas.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "VIVPAR_UT": {
+    "indicador": "Viviendas particulares de uso temporal",
+    "descripcion": "Viviendas particulares de uso temporal.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "OCUPVIVPAR": {
+    "indicador": "Ocupantes en viviendas particulares habitadas",
+    "descripcion": "Personas que residen en viviendas particulares habitadas de cualquier clase: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio; local no construido para habitación, vivienda móvil; refugio y no especificado de vivienda particular. Incluye una estimación de personas en viviendas particulares sin información de ocupantes y menores omitidos.",
+    "rangos": "0...99999999",
+    "longitud": "9"
+  },
+  "PROM_OCUP": {
+    "indicador": "Promedio de ocupantes en viviendas particulares habitadas",
+    "descripcion": "Resultado de dividir el número de personas que residen en viviendas particulares habitadas, entre el número de esas viviendas.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "PRO_OCUP_C": {
+    "indicador": "Promedio de ocupantes por cuarto en viviendas particulares habitadas",
+    "descripcion": "Resultado de dividir el número de personas que residen en viviendas particulares habitadas entre el número de cuartos de esas viviendas. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "VPH_PISODT": {
+    "indicador": "Viviendas particulares habitadas con piso de material diferente de tierra",
+    "descripcion": "Viviendas particulares habitadas con piso de cemento o firme, madera, mosaico u otro material. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "VPH_PISOTI": {
+    "indicador": "Viviendas particulares habitadas con piso de tierra",
+    "descripcion": "Viviendas particulares habitadas con piso de tierra. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0...999999999",
+    "longitud": "9"
+  },
+  "VPH_1DOR": {
+    "indicador": "Viviendas particulares habitadas con un dormitorio",
+    "descripcion": "Viviendas particulares habitadas con un dormitorio. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0… 999999999",
+    "longitud": "9"
+  },
+  "VPH_2YMASD": {
+    "indicador": "Viviendas particulares habitadas con dos dormitorios y más",
+    "descripcion": "Viviendas particulares habitadas que usan para dormir entre 2 y 25 cuartos. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_1CUART": {
+    "indicador": "Viviendas particulares habitadas con sólo un cuarto",
+    "descripcion": "Viviendas particulares habitadas que tienen sólo un cuarto. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_2CUART": {
+    "indicador": "Viviendas particulares habitadas con dos cuartos",
+    "descripcion": "Viviendas particulares habitadas que tienen dos cuartos. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_3YMASC": {
+    "indicador": "Viviendas particulares habitadas con 3 cuartos y más",
+    "descripcion": "Viviendas particulares habitadas que tienen entre 3 y 25 cuartos. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_C_ELEC": {
+    "indicador": "Viviendas particulares habitadas que disponen de energía eléctrica",
+    "descripcion": "Viviendas particulares habitadas que tienen energía eléctrica. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_S_ELEC": {
+    "indicador": "Viviendas particulares habitadas que no disponen de energía eléctrica",
+    "descripcion": "Viviendas particulares habitadas que no tienen energía eléctrica. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_AGUADV": {
+    "indicador": "Viviendas particulares habitadas que disponen de agua entubada en el ámbito de la vivienda",
+    "descripcion": "Viviendas particulares habitadas que tienen disponibilidad de agua entubada dentro de la vivienda o sólo en el patio o terreno. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_AEASP": {
+    "indicador": "Viviendas particulares habitadas que disponen de agua entubada y se abastecen del servicio público de agua",
+    "descripcion": "Viviendas particulares habitadas que tienen agua entubada y se abastecen del servicio público de agua. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_AGUAFV": {
+    "indicador": "Viviendas particulares habitadas que no disponen de agua entubada en el ámbito de la vivienda",
+    "descripcion": "Viviendas particulares habitadas que no tienen disponibilidad de agua entubada. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_TINACO": {
+    "indicador": "Viviendas particulares habitadas que disponen de tinaco",
+    "descripcion": "Viviendas particulares habitadas que tienen tinaco. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_CISTER": {
+    "indicador": "Viviendas particulares habitadas que disponen de cisterna o aljibe",
+    "descripcion": "Viviendas particulares habitadas que tienen cisterna o aljibe. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_EXCSA": {
+    "indicador": "Viviendas particulares habitadas que disponen de excusado o sanitario",
+    "descripcion": "Viviendas particulares habitadas que tienen taza de baño (excusado o sanitario). Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_LETR": {
+    "indicador": "Viviendas particulares habitadas que disponen de letrina (pozo u hoyo)",
+    "descripcion": "Viviendas particulares habitadas que tienen letrina (pozo u hoyo). Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_DRENAJ": {
+    "indicador": "Viviendas particulares habitadas que disponen de drenaje",
+    "descripcion": "Viviendas particulares habitadas que tienen drenaje conectado a la red pública; una fosa séptica o tanque séptico (biodigestor); una tubería que va a dar a una barranca o grieta, río, lago o mar. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_NODREN": {
+    "indicador": "Viviendas particulares habitadas que no disponen de drenaje",
+    "descripcion": "Viviendas particulares habitadas que no tienen drenaje. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_C_SERV": {
+    "indicador": "Viviendas particulares habitadas que disponen de energía eléctrica, agua entubada de la red pública y drenaje",
+    "descripcion": "Viviendas particulares habitadas que tienen energía eléctrica, agua entubada dentro de la vivienda o sólo en el patio o terreno y drenaje conectado a la red pública; una fosa séptica o tanque séptico (biodigestor); una tubería que va a dar a una barranca o grieta, río, lago o mar. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_NDEAED": {
+    "indicador": "Viviendas particulares habitadas que no disponen de energía eléctrica, agua entubada, ni drenaje",
+    "descripcion": "Viviendas particulares habitadas que no tienen energía eléctrica, agua entubada ni drenaje. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_DSADMA": {
+    "indicador": "Viviendas particulares que disponen de drenaje y sanitario con admisión de agua",
+    "descripcion": "Viviendas particulares habitadas que tienen drenaje conectado a la red pública; una fosa séptica o tanque séptico (biodigestor); una tubería que va a dar a una barranca o grieta, río, lago o mar; taza de baño (excusado o sanitario); letrina (pozo u hoyo) con admisión de agua. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_NDACMM": {
+    "indicador": "Viviendas particulares habitadas que no disponen de automóvil o camioneta, ni de motocicleta o motoneta",
+    "descripcion": "Viviendas particulares habitadas que no tienen automóvil o camioneta ni motocicleta o motoneta. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_SNBIEN": {
+    "indicador": "Viviendas particulares habitadas sin ningún bien",
+    "descripcion": "Viviendas particulares habitadas donde no cuentan con refrigerador; lavadora; horno de microondas automóvil o camioneta; motocicleta o motoneta; bicicleta que se utilice como medio de transporte; algún aparato o dispositivo para oír radio; televisor; computadora, laptop o tablet; Internet; línea telefónica fija; teléfono celular; servicio de televisión de paga (cable o satelital); servicio de películas, música o videos de paga por Internet ni consola de videojuegos. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_REFRI": {
+    "indicador": "Viviendas particulares habitadas que disponen de refrigerador",
+    "descripcion": "Viviendas particulares habitadas que tienen refrigerador. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_LAVAD": {
+    "indicador": "Viviendas particulares habitadas que disponen de lavadora",
+    "descripcion": "Viviendas particulares habitadas que tienen lavadora. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_HMICRO": {
+    "indicador": "Viviendas particulares habitadas que disponen de horno de microondas",
+    "descripcion": "Viviendas particulares habitadas que tienen horno de microondas. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_AUTOM": {
+    "indicador": "Viviendas particulares habitadas que disponen de automóvil o camioneta",
+    "descripcion": "Viviendas particulares habitadas que tienen automóvil o camioneta. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_MOTO": {
+    "indicador": "Viviendas particulares habitadas que disponen de motocicleta o motoneta",
+    "descripcion": "Viviendas particulares habitadas que tienen motocicleta o motoneta. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_BICI": {
+    "indicador": "Viviendas particulares habitadas que disponen de bicicleta como medio de transporte",
+    "descripcion": "Viviendas particulares habitadas que tienen bicicleta que se utilice como medio de transporte. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_RADIO": {
+    "indicador": "Viviendas particulares habitadas que disponen de radio",
+    "descripcion": "Viviendas particulares habitadas que tienen algún aparato o dispositivo para oír radio. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_TV": {
+    "indicador": "Viviendas particulares habitadas que disponen de televisor",
+    "descripcion": "Viviendas particulares habitadas que tienen televisor.  Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_PC": {
+    "indicador": "Viviendas particulares habitadas que disponen de computadora, laptop o tablet",
+    "descripcion": "Viviendas particulares habitadas que tienen computadora, laptop o tablet. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_TELEF": {
+    "indicador": "Viviendas particulares habitadas que disponen de línea telefónica fija",
+    "descripcion": "Viviendas particulares habitadas que tienen línea telefónica fija. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_CEL": {
+    "indicador": "Viviendas particulares habitadas que disponen de teléfono celular",
+    "descripcion": "Viviendas particulares habitadas que tienen teléfono celular. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_INTER": {
+    "indicador": "Viviendas particulares habitadas que disponen de Internet",
+    "descripcion": "Viviendas particulares habitadas que tienen Internet. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_STVP": {
+    "indicador": "Viviendas particulares habitadas que disponen de servicio de televisión de paga",
+    "descripcion": "Viviendas particulares habitadas que tienen servicio de televisión de paga (cable o satelital). Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_SPMVPI": {
+    "indicador": "Viviendas particulares habitadas que disponen de servicio de películas, música o videos de paga por Internet",
+    "descripcion": "Viviendas particulares habitadas que tienen servicio de películas, música o videos de paga por Internet. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_CVJ": {
+    "indicador": "Viviendas particulares habitadas que disponen de consola de videojuegos",
+    "descripcion": "Viviendas particulares habitadas que tienen consola de videojuegos. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_SINRTV": {
+    "indicador": "Viviendas particulares habitadas sin radio ni televisor",
+    "descripcion": "Viviendas particulares habitadas que no cuentan con algún aparato o dispositivo para oír radio ni televisor. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_SINLTC": {
+    "indicador": "Viviendas particulares habitadas sin línea telefónica fija ni teléfono celular",
+    "descripcion": "Viviendas particulares habitadas que no cuentan con línea telefónica fija, ni teléfono celular. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_SINCINT": {
+    "indicador": "Viviendas particulares habitadas sin computadora ni Internet",
+    "descripcion": "Viviendas particulares habitadas que no cuentan con computadora, laptop o tablet ni Internet. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "VPH_SINTIC": {
+    "indicador": "Viviendas particulares habitadas sin tecnologías de la información y de la comunicación (TIC)",
+    "descripcion": "Viviendas particulares habitadas que no cuentan con algún aparato o dispositivo para oír radio; televisor; computadora, laptop o tablet; línea telefónica fija; teléfono celular; Internet; servicio de televisión de paga (cable o satelital); servicio de películas, música o videos de paga por Internet ni consola de videojuegos. Comprende las viviendas particulares para las que se captaron las características de la vivienda, clasificadas como: casa única en el terreno; casa que comparte terreno con otra(s); casa dúplex; departamento en edificio; vivienda en vecindad o cuartería; vivienda en cuarto de azotea de un edificio y no especificado de vivienda particular. Incluye a las viviendas particulares sin información de ocupantes.",
+    "rangos": "0…999999999",
+    "longitud": "9"
+  },
+  "TAMLOC": {
+    "indicador": "Tamaño de localidad",
+    "descripcion": "Total de personas que residen habitualmente en la localidad, y se clasifica el tamaño con base en el número de la población de la localidad.",
+    "rangos": "01..14",
+    "longitud": "2"
+  },
+  "lon_dd": {
+    "indicador": "Longitud (decimal)",
+    "descripcion": "Longitud convertida a grados decimales (WGS84)."
+  },
+  "lat_dd": {
+    "indicador": "Latitud (decimal)",
+    "descripcion": "Latitud convertida a grados decimales (WGS84)."
+  }
+}

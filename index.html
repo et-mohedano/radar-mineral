@@ -1,0 +1,1323 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Visor · Colonias, Localidades, DENUE y Marginación (IMU 2020) · Mineral de la Reforma</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a33;
+      --panel2:#0f1730;
+      --text:#e8ecff;
+      --muted:#aab3d6;
+      --border:rgba(255,255,255,.12);
+      --border2:rgba(255,255,255,.18);
+      --accent:#7A1436;
+      --accent2:#B38E5D;
+      --shadow: 0 14px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+
+    html,body{height:100%;margin:0}
+    body{
+      font-family:system-ui, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    .app{display:grid;grid-template-columns:440px 1fr;height:100%}
+    aside{
+      background: radial-gradient(1200px 600px at -20% 0%, rgba(122,20,54,.25) 0%, rgba(0,0,0,0) 60%),
+                  linear-gradient(180deg,var(--panel),var(--panel2));
+      border-right:1px solid var(--border);
+      padding:14px;
+      overflow:auto;
+    }
+    #map{height:100%;width:100%}
+
+    h1{font-size:15px;margin:0;line-height:1.2}
+    .muted{color:var(--muted);font-size:12px;line-height:1.45}
+    .mono{font-family:ui-monospace, Menlo, Consolas, monospace;font-size:11px}
+
+    .header{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 10px;
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+    .brand-pill{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(135deg,var(--accent),#4f0f25);
+      font-weight:900;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+    .header-actions{
+      margin-left:auto;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .icon-btn{
+      width:34px;height:34px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:900;
+    }
+    .icon-btn:hover{background: rgba(255,255,255,.10);}
+
+    .sticky{
+      position:sticky;
+      top:0;
+      background: linear-gradient(180deg,rgba(18,26,51,.98),rgba(15,23,48,.92));
+      padding:12px 0 12px 0;
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(8px);
+      z-index:10;
+      margin-top:12px;
+    }
+
+    input[type="text"]{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border2);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      outline:none;
+    }
+    input::placeholder{color:rgba(232,236,255,.55)}
+    .results{
+      margin-top:8px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      display:none;
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+    }
+    .item{
+      padding:10px 12px;
+      border-bottom:1px solid var(--border);
+      cursor:pointer;
+      background: rgba(255,255,255,.03);
+    }
+    .item:hover{background: rgba(255,255,255,.08)}
+    .item:last-child{border-bottom:none}
+    .k{font-size:11px;color:var(--muted)}
+    .v{font-size:13px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      overflow:hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      margin-top:12px;
+    }
+    .card-h{
+      padding:10px 12px;
+      background: rgba(255,255,255,.04);
+      border-bottom:1px solid var(--border);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .card-h .title{
+      font-size:12px;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+      color:rgba(232,236,255,.90);
+    }
+    .pill{
+      font-size:11px;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      color:rgba(232,236,255,.90);
+      white-space:nowrap;
+      background: rgba(255,255,255,.03);
+    }
+    .card-b{padding:12px}
+
+    /* Layers UI */
+    .seg{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+    .seg button{
+      cursor:pointer;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      font-weight:900;
+      font-size:12px;
+    }
+    .seg button.active{
+      background: linear-gradient(135deg, rgba(179,142,93,.25), rgba(255,255,255,.06));
+      border-color: rgba(179,142,93,.55);
+    }
+    .seg button:hover{background: rgba(255,255,255,.10);}
+
+    .layer-row{
+      display:grid;
+      grid-template-columns: 22px 1fr auto;
+      gap:10px;
+      align-items:center;
+      padding:8px 8px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      background: rgba(0,0,0,.10);
+      margin-bottom:10px;
+    }
+    .layer-row:last-child{margin-bottom:0}
+    .chk{width:18px;height:18px; cursor:pointer;}
+    .layer-name{display:flex; flex-direction:column; gap:2px;}
+    .layer-name b{font-size:12px}
+    .layer-name span{font-size:11px;color:var(--muted)}
+    .swatch{width:12px;height:12px;border-radius:4px;border:1px solid rgba(255,255,255,.22);display:inline-block;margin-right:6px;}
+    .slider-wrap{margin-top:8px;display:grid;grid-template-columns: 1fr auto;gap:10px;align-items:center;}
+    input[type="range"]{width:100%; accent-color: var(--accent2);}
+    .pct{font-size:11px;color: rgba(232,236,255,.90);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px 8px;background: rgba(255,255,255,.03);min-width:52px;text-align:center;}
+
+    /* Info rows */
+    .row{
+      padding:9px 10px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      background: rgba(0,0,0,.10);
+      margin-bottom:8px;
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:10px;
+      align-items:start;
+    }
+    .row:last-child{margin-bottom:0}
+    .row .k{
+      font-size:11px;color: rgba(232,236,255,.75);
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    }
+    .row .v{font-size:13px;font-weight:900;text-align:right;}
+    .help{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:16px;height:16px;border-radius:999px;background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:11px;color: rgba(232,236,255,.9);cursor:help;
+    }
+
+    details{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      background: rgba(0,0,0,.08);
+      overflow:hidden;
+      margin-top:10px;
+    }
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding:10px 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      background: rgba(255,255,255,.03);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      user-select:none;
+    }
+    summary::-webkit-details-marker{display:none}
+    .sum-title{font-size:12px; font-weight:950; letter-spacing:.2px;}
+    .sum-meta{font-size:11px;color:var(--muted)}
+    .details-b{padding:12px}
+
+    .cols-list{max-height:220px; overflow:auto; padding-right:6px;}
+    .cols-list::-webkit-scrollbar{width:8px}
+    .cols-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px}
+
+    /* Legend */
+    .legend{
+      position:absolute;
+      right:16px;
+      bottom:16px;
+      z-index:500;
+      background: rgba(17,26,53,.86);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      padding:10px 12px;
+      box-shadow: 0 12px 24px rgba(0,0,0,.35);
+      max-width: 230px;
+      display:none;
+    }
+    .legend h3{margin:0 0 6px 0; font-size:12px; letter-spacing:.3px; text-transform:uppercase;}
+    .leg-row{display:flex; gap:10px; align-items:center; font-size:12px; color:rgba(232,236,255,.9); margin-top:6px;}
+    .leg-sq{width:12px; height:12px; border-radius:4px; border:1px solid rgba(255,255,255,.20);}
+
+    /* Leaflet tweaks */
+    .leaflet-control-zoom{
+      border:1px solid rgba(255,255,255,.18)!important;
+      box-shadow: 0 10px 20px rgba(0,0,0,.35)!important;
+      border-radius:14px!important;
+      overflow:hidden;
+    }
+    .leaflet-control-zoom a{
+      background: rgba(17,26,53,.85)!important;
+      color: var(--text)!important;
+      border-bottom:1px solid rgba(255,255,255,.12)!important;
+    }
+    .leaflet-control-zoom a:hover{background: rgba(255,255,255,.10)!important;}
+    .leaflet-control-attribution{
+      background: rgba(17,26,53,.78)!important;
+      color: rgba(232,236,255,.8)!important;
+      border:1px solid rgba(255,255,255,.12)!important;
+      border-radius:12px!important;
+      margin:0 10px 10px 0!important;
+      padding:6px 10px!important;
+    }
+  
+    /* Print helpers (only affects report window) */
+    @media print{
+      .no-print{display:none!important;}
+    }
+
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="header">
+      <div class="brand-pill">Mineral</div>
+      <div>
+        <h1>Visor · DENUE + Marginación (IMU 2020)</h1>
+        <div class="muted">Cruce por <b class="mono">LOC</b>. IMU agregado por localidad.</div>
+      </div>
+      <div class="header-actions">
+        <button id="btnHome" class="icon-btn" title="Centrar mapa">⌂</button>
+        <button id="btnClear" class="icon-btn" title="Limpiar selección">✕</button>
+        <button id="btnPrint" class="icon-btn" title="Imprimir ficha">🖨</button>
+      </div>
+    </div>
+
+    <div class="sticky">
+      <input id="q" type="text" placeholder="Buscar colonia, localidad o DENUE (3+ letras)…">
+      <div id="results" class="results"></div>
+      <div class="muted" style="margin-top:8px">
+        Servidor local: <span class="mono">python -m http.server 8000</span><br/>
+        Abrir: <span class="mono">http://localhost:8000/visor_mr_colonias_localidades_denue_imu2020_v5.html</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <div class="title">Capas y fondo</div>
+        <span class="pill" id="pillLayers">Listo</span>
+      </div>
+      <div class="card-b">
+        <div class="muted" style="margin-bottom:10px">Activa/desactiva capas, ajusta transparencia y cambia a satelital. El “Modo IMU” colorea localidades por grado de marginación.</div>
+
+        <div class="seg" style="margin-bottom:10px">
+          <button id="bmOsm" class="active" type="button">Mapa</button>
+          <button id="bmSat" type="button">Satelital</button>
+          <button id="btnIMU" type="button">Modo IMU</button>
+        </div>
+
+        <div class="layer-row">
+          <input class="chk" id="chkColonias" type="checkbox" checked>
+          <div class="layer-name">
+            <b><span class="swatch" style="background:rgba(255,255,255,.25)"></span>Colonias</b>
+            <span>Polígonos</span>
+            <div class="slider-wrap">
+              <input id="opColonias" type="range" min="0" max="100" value="35">
+              <span class="pct" id="pctColonias">35%</span>
+            </div>
+          </div>
+          <span class="pill mono">fill</span>
+        </div>
+
+        <div class="layer-row">
+          <input class="chk" id="chkLocPolys" type="checkbox" checked>
+          <div class="layer-name">
+            <b><span class="swatch" style="background:rgba(179,142,93,.26)"></span>Localidades</b>
+            <span>Polígonos (unión de colonias)</span>
+            <div class="slider-wrap">
+              <input id="opLocPolys" type="range" min="0" max="100" value="18">
+              <span class="pct" id="pctLocPolys">18%</span>
+            </div>
+          </div>
+          <span class="pill mono">fill</span>
+        </div>
+
+        <div class="layer-row">
+          <input class="chk" id="chkLocPoints" type="checkbox" checked>
+          <div class="layer-name">
+            <b><span class="swatch" style="background:rgba(122,20,54,.55)"></span>Localidades</b>
+            <span>Puntos (Censo)</span>
+            <div class="slider-wrap">
+              <input id="opLocPoints" type="range" min="0" max="100" value="80">
+              <span class="pct" id="pctLocPoints">80%</span>
+            </div>
+          </div>
+          <span class="pill mono">fill</span>
+        </div>
+
+        <div class="layer-row">
+          <input class="chk" id="chkDenue" type="checkbox" checked>
+          <div class="layer-name">
+            <b><span class="swatch" style="background:rgba(80,200,120,.55)"></span>DENUE</b>
+            <span>Unidades económicas (puntos)</span>
+            <div class="slider-wrap">
+              <input id="opDenue" type="range" min="0" max="100" value="65">
+              <span class="pct" id="pctDenue">65%</span>
+            </div>
+          </div>
+          <span class="pill mono">fill</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <div class="title">Panel de información</div>
+        <span id="pill" class="pill">Nada</span>
+      </div>
+      <div id="info" class="card-b">
+        <div class="muted">Da click sobre el mapa o usa el buscador.</div>
+      </div>
+    </div>
+  </aside>
+
+  <main id="map" style="position:relative">
+    <div id="legendIMU" class="legend">
+      <h3>Grado de marginación (IMU)</h3>
+      <div class="muted" style="margin-bottom:6px">Colorea localidades por <span class="mono">IMU_GM_2020</span> (agregado por LOC).</div>
+      <div class="leg-row"><span class="leg-sq" style="background:#2A9D8F"></span> Muy bajo</div>
+      <div class="leg-row"><span class="leg-sq" style="background:#A7C957"></span> Bajo</div>
+      <div class="leg-row"><span class="leg-sq" style="background:#F2CC8F"></span> Medio</div>
+      <div class="leg-row"><span class="leg-sq" style="background:#F4A261"></span> Alto</div>
+      <div class="leg-row"><span class="leg-sq" style="background:#E76F51"></span> Muy alto</div>
+    </div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Archivos esperados en la misma carpeta:
+  const FILE_COLONIAS    = "colonias_con_imu2020.geojson";
+  const FILE_LOC_POINTS  = "localidades_puntos_con_imu2020.geojson";
+  const FILE_LOC_POLYS   = "localidades_poligonos_con_imu2020.geojson";
+
+  const FILE_DICT_CENSO  = "diccionario.json";
+  const FILE_DENUE       = "denue.geojson";
+  const FILE_DICT_DENUE  = "diccionario_denue.json";
+  const FILE_DICT_IMU    = "diccionario_imu2020.json";
+
+  // Basemaps
+  const bmOSM = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{ maxZoom: 20, attribution:"© OpenStreetMap" });
+  const bmSAT = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{ maxZoom: 20, attribution:"Tiles © Esri" });
+
+  const map = L.map("map", { zoomControl: true }).setView([20.06,-98.74], 12);
+  bmOSM.addTo(map);
+
+  function norm(s){
+    return (s ?? "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+  function fmt(v){
+    if(v===null||v===undefined||v==="") return "—";
+    if(typeof v==="number") return Number.isInteger(v)? String(v) : v.toFixed(4);
+    return String(v);
+  }
+  function esc(s){return (s??"").toString().replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
+
+  async function load(url){
+    const r=await fetch(url);
+    if(!r.ok) throw new Error("No se pudo cargar "+url);
+    return await r.json();
+  }
+
+  // Diccionario unificado
+  let DICT = {};
+  function labelFor(code){
+    const m = DICT[code];
+    if(!m) return code;
+    return m.indicador || code;
+  }
+  function descFor(code){
+    const m = DICT[code];
+    return m?.descripcion || "";
+  }
+
+
+  // -----------------------------
+  // Estado de selección (para imprimir)
+  // -----------------------------
+  let currentSelection = null; 
+  // { type: "colonia"|"localidad"|"denue", feature, locPointFeature, denueListLoc, denueListCol, coloniasList }
+
+  function nowMX(){
+    const d = new Date();
+    return d.toLocaleString("es-MX", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+  }
+
+  function sortKeysForReport(obj){
+    return Object.keys(obj||{}).sort((a,b)=>a.localeCompare(b,"es"));
+  }
+
+  function labelWithCode(code){
+    const lbl = labelFor(code);
+    return (lbl && lbl !== code) ? `${lbl} (${code})` : code;
+  }
+
+  function buildRows(props, keys){
+    const arr = [];
+    const useKeys = keys && keys.length ? keys : sortKeysForReport(props);
+    for(const k of useKeys){
+      const v = props?.[k];
+      if(v === undefined) continue;
+      arr.push({ key:k, label: labelFor(k), desc: descFor(k), value: v });
+    }
+    return arr;
+  }
+
+  function esc2(s){ return esc(s); } // alias
+
+  function tableHTML(title, rows){
+    if(!rows.length) return "";
+    const trs = rows.map(r=>{
+      const desc = r.desc ? `<div class="desc">${esc2(r.desc)}</div>` : ``;
+      const code = (r.label && r.label !== r.key) ? `<span class="code">(${esc2(r.key)})</span>` : ``;
+      const label = esc2(r.label || r.key);
+      const val = esc2(fmt(r.value));
+      return `
+        <tr>
+          <td class="k">
+            <div class="lbl">${label} ${code}</div>
+            ${desc}
+          </td>
+          <td class="v">${val}</td>
+        </tr>`;
+    }).join("");
+    return `
+      <section class="sec">
+        <h2>${esc2(title)}</h2>
+        <table class="kv">
+          <tbody>${trs}</tbody>
+        </table>
+      </section>`;
+  }
+
+  function listHTML(title, items, subtitle=""){
+    if(!items || !items.length) return `
+      <section class="sec">
+        <h2>${esc2(title)}</h2>
+        ${subtitle ? `<div class="sub">${esc2(subtitle)}</div>` : ``}
+        <div class="empty">Sin registros.</div>
+      </section>`;
+    const lis = items.map(x=>`<li>${esc2(x)}</li>`).join("");
+    return `
+      <section class="sec">
+        <h2>${esc2(title)}</h2>
+        ${subtitle ? `<div class="sub">${esc2(subtitle)}</div>` : ``}
+        <ol class="list">${lis}</ol>
+      </section>`;
+  }
+
+  function denueTable(title, denueFeatures, limit=200){
+    const list = (denueFeatures || []).slice(0, limit);
+    if(!list.length){
+      return `
+        <section class="sec">
+          <h2>${esc2(title)}</h2>
+          <div class="empty">Sin unidades económicas.</div>
+        </section>`;
+    }
+    const rows = list.map(f=>{
+      const p = f.properties || {};
+      const nom = p.nom_estab || "(sin nombre)";
+      const act = p.nombre_act || "";
+      const dir = [p.tipo_vial, p.nom_vial, p.numero_ext, p.letra_ext, p.tipo_asent, p.nomb_asent, p.cod_postal]
+        .filter(Boolean).join(" ");
+      const tel = p.telefono || "";
+      return `
+        <tr>
+          <td class="k">
+            <div class="lbl">${esc2(nom)}</div>
+            <div class="desc">${esc2(act)}</div>
+            ${dir ? `<div class="desc">${esc2(dir)}</div>` : ``}
+          </td>
+          <td class="v">${esc2(tel || "—")}</td>
+        </tr>`;
+    }).join("");
+
+    return `
+      <section class="sec">
+        <h2>${esc2(title)}</h2>
+        <div class="sub">Total: <b>${(denueFeatures||[]).length}</b> · Mostrando: ${list.length}</div>
+        <table class="kv">
+          <thead><tr><th class="k">Establecimiento</th><th class="v">Teléfono</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </section>`;
+  }
+
+  function buildReportDocument(sel){
+    const type = sel?.type;
+    const f = sel?.feature;
+    const p = f?.properties || {};
+    const locPoint = sel?.locPointFeature;
+    const lp = locPoint?.properties || {};
+    const coloniasList = sel?.coloniasList || [];
+    const denLoc = sel?.denueListLoc || [];
+    const denCol = sel?.denueListCol || [];
+
+    const title = (type === "colonia")
+      ? `Ficha de Colonia · ${p.Nombre || "—"}`
+      : (type === "localidad")
+        ? `Ficha de Localidad · ${p.NOM_LOC || "—"}`
+        : `Ficha DENUE · ${p.nom_estab || "—"}`;
+
+    const subtitle = `Municipio: Mineral de la Reforma · Generado: ${nowMX()}`;
+
+    // Sections
+    let sections = "";
+
+    if(type === "colonia"){
+      const coloniaKeys = ["Nombre","Caracter","Pres_Hab","AREA_APROX","LOC","NOM_LOC","dist_m_a_localidad"];
+      sections += tableHTML("Datos de la colonia", buildRows(p, coloniaKeys));
+
+      // IMU keys (prefixed)
+      const imuKeys = sortKeysForReport(p).filter(k => k.startsWith("IMU_"));
+      sections += tableHTML("Marginación (IMU 2020) · agregado por LOC", buildRows(p, imuKeys));
+
+      // Censo: all from localidad punto
+      if(Object.keys(lp).length){
+        sections += tableHTML("Censo · Localidad asociada (todas las variables)", buildRows(lp, null));
+      } else {
+        sections += `<section class="sec"><h2>Censo</h2><div class="empty">No se encontró el punto de localidad para esta colonia.</div></section>`;
+      }
+
+      sections += listHTML("Colonias en la localidad (por LOC)", coloniasList, `LOC ${fmt(p.LOC)} · ${p.NOM_LOC||""}`);
+      sections += denueTable("DENUE en esta colonia", denCol, 200);
+      sections += denueTable("DENUE en la localidad (LOC)", denLoc, 200);
+
+    } else if(type === "localidad"){
+      const locKeys = ["LOC","NOM_LOC","AMBITO","POBTOT","ALTITUD","colonias_count","metodo_poligono"];
+      sections += tableHTML("Datos de la localidad", buildRows(p, locKeys));
+
+      const imuKeys = sortKeysForReport(p).filter(k => k.startsWith("IMU_"));
+      sections += tableHTML("Marginación (IMU 2020) · agregado por LOC", buildRows(p, imuKeys));
+
+      if(Object.keys(lp).length){
+        sections += tableHTML("Censo (todas las variables)", buildRows(lp, null));
+      } else {
+        // if click was point, feature contains censo
+        sections += tableHTML("Censo (todas las variables)", buildRows(p, null));
+      }
+
+      sections += listHTML("Colonias en la localidad (por LOC)", coloniasList, `LOC ${fmt(p.LOC)} · ${p.NOM_LOC||""}`);
+      sections += denueTable("DENUE en la localidad (LOC)", denLoc, 250);
+
+    } else if(type === "denue"){
+      const denKeys = sortKeysForReport(p);
+      sections += tableHTML("Datos de la unidad económica (DENUE)", buildRows(p, denKeys));
+    }
+
+    // Report HTML
+    return `<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>${esc2(title)}</title>
+  <style>
+    :root{
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --accent:#7A1436;
+      --accent2:#B38E5D;
+    }
+    @page { size: A4; margin: 14mm; }
+    body{ font-family: Arial, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--text); }
+    .top{
+      display:flex; justify-content:space-between; align-items:flex-start;
+      gap:16px; border-bottom:3px solid var(--accent); padding-bottom:10px; margin-bottom:14px;
+    }
+    .brand{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .brand .t{ font-weight:900; font-size:16px; color:var(--accent); }
+    .brand .s{ font-size:12px; color:var(--muted); }
+    .meta{ text-align:right; font-size:12px; color:var(--muted); }
+    h1{ margin:0; font-size:18px; }
+    .sec{ margin-top:14px; }
+    .sec h2{
+      margin:0 0 8px 0; font-size:13px; letter-spacing:.2px; text-transform:uppercase;
+      color:#111827; border-left:5px solid var(--accent2); padding-left:10px;
+    }
+    .sub{ font-size:12px; color:var(--muted); margin:-2px 0 8px 0; }
+    .empty{ font-size:12px; color:var(--muted); border:1px dashed var(--border); padding:10px; border-radius:8px; }
+    table.kv{ width:100%; border-collapse:collapse; }
+    table.kv thead th{
+      text-align:left; font-size:12px; padding:8px 10px; border:1px solid var(--border); background:#f9fafb;
+    }
+    table.kv td{
+      vertical-align:top; padding:8px 10px; border:1px solid var(--border);
+      font-size:12px;
+    }
+    td.k{ width:72%; }
+    td.v, th.v{ width:28%; text-align:right; font-weight:700; }
+    .lbl{ font-weight:700; }
+    .code{ color:var(--muted); font-weight:600; margin-left:6px; }
+    .desc{ color:var(--muted); margin-top:3px; line-height:1.25; }
+    ol.list{ margin:0; padding-left:18px; font-size:12px; }
+    ol.list li{ margin:4px 0; }
+    .footer{ margin-top:16px; border-top:1px solid var(--border); padding-top:10px; font-size:11px; color:var(--muted); }
+    .actions{ margin-top:10px; display:flex; gap:8px; }
+    .btn{
+      border:1px solid var(--border); background:#fff; padding:8px 10px; border-radius:8px;
+      font-weight:700; cursor:pointer; font-size:12px;
+    }
+    .btn.primary{ border-color: var(--accent); }
+    @media print{
+      .no-print{ display:none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="brand">
+      <div class="t">${esc2(title)}</div>
+      <div class="s">${esc2(subtitle)}</div>
+    </div>
+    <div class="meta">
+      <div><b>Mineral de la Reforma</b></div>
+      <div>Ficha generada desde el visor</div>
+    </div>
+  </div>
+
+  <div class="no-print actions">
+    <button class="btn primary" onclick="window.print()">Imprimir</button>
+    <button class="btn" onclick="window.close()">Cerrar</button>
+  </div>
+
+  ${sections}
+
+  <div class="footer">
+    Fuente: Censo/INEGI (Localidades), IMU 2020 (CONAPO), DENUE (INEGI). Integración por LOC/colonia (aprox).
+  </div>
+</body>
+</html>`;
+  }
+
+  function printCurrentSelection(){
+    if(!currentSelection || !currentSelection.feature){
+      alert("Primero selecciona una colonia, localidad o punto DENUE en el mapa.");
+      return;
+    }
+    const html = buildReportDocument(currentSelection);
+    const w = window.open("", "_blank");
+    if(!w){
+      alert("Tu navegador bloqueó la ventana emergente. Permite pop-ups para imprimir.");
+      return;
+    }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    // Wait a tick before printing for better reliability
+    setTimeout(()=>{ w.focus(); w.print(); }, 250);
+  }
+  // Opacity state
+  const opacityState = { colonias:0.35, locPolys:0.18, locPoints:0.80, denue:0.65 };
+
+  // IMU mode
+  let imuMode = false;
+  const legendIMU = document.getElementById("legendIMU");
+
+  function gmColor(gm){
+    const g = (gm||"").toString().toLowerCase();
+    if(g.includes("muy bajo")) return "#2A9D8F";
+    if(g.includes("bajo")) return "#A7C957";
+    if(g.includes("medio")) return "#F2CC8F";
+    if(g.includes("alto") && !g.includes("muy")) return "#F4A261";
+    if(g.includes("muy alto")) return "#E76F51";
+    return "#8D99AE"; // sin dato
+  }
+
+  function styleColonias(){
+    return { weight: 1, opacity: Math.min(0.95, opacityState.colonias + 0.25), fillOpacity: opacityState.colonias, fillColor:"#ffffff" };
+  }
+  function styleLocPolys(feature){
+    const base = { weight: 2, opacity: Math.min(0.90, opacityState.locPolys + 0.25), fillOpacity: opacityState.locPolys };
+    if(imuMode){
+      base.fillColor = gmColor(feature?.properties?.IMU_GM_2020);
+    } else {
+      base.fillColor = "#B38E5D";
+    }
+    return base;
+  }
+  function styleLocPoints(){
+    return { radius: 6, weight: 2, opacity: Math.min(0.95, opacityState.locPoints + 0.15), fillOpacity: opacityState.locPoints };
+  }
+  function styleDenue(){
+    return { radius: 4, weight: 1.5, opacity: Math.min(0.95, opacityState.denue + 0.15), fillOpacity: opacityState.denue };
+  }
+
+  // Stores
+  let coloniasFeatures=[];
+  const locPointByLOC = new Map();
+  const denueById = new Map();
+  let denueFeatures=[];
+  const denueByLOC = new Map();
+  const denueByColonia = new Map();
+
+  // Layers
+  const layerColonias = L.geoJSON(null,{
+    style:()=>styleColonias(),
+    onEachFeature:(f,l)=>l.on("click",()=>select("colonia",f,l))
+  });
+
+  const layerLocPolys = L.geoJSON(null,{
+    style:(f)=>styleLocPolys(f),
+    onEachFeature:(f,l)=>l.on("click",()=>select("localidad",f,l))
+  });
+
+  const layerLocPoints = L.geoJSON(null,{
+    pointToLayer:(f,latlng)=>L.circleMarker(latlng, styleLocPoints()),
+    onEachFeature:(f,l)=>l.on("click",()=>select("localidad",f,l))
+  });
+
+  const canvas = L.canvas({ padding: 0.5 });
+  const layerDenue = L.geoJSON(null,{
+    pointToLayer:(f,latlng)=>L.circleMarker(latlng, { ...styleDenue(), renderer: canvas }),
+    onEachFeature:(f,l)=>{
+      const id = f.properties?.id;
+      if(id !== undefined && id !== null) denueById.set(String(id), l);
+      l.on("click", ()=>select("denue", f, l));
+    }
+  });
+
+  layerColonias.addTo(map);
+  layerLocPolys.addTo(map);
+  layerLocPoints.addTo(map);
+  layerDenue.addTo(map);
+
+  // Highlight logic
+  let activeLayer=null;
+  let activeKind=null;
+
+  function clearHighlight(){
+    if(activeLayer && activeLayer.setStyle){
+      if(activeKind==="colonia") activeLayer.setStyle(styleColonias());
+      else if(activeKind==="localidad") activeLayer.setStyle(styleLocPolys(activeLayer.feature));
+      else if(activeKind==="punto") activeLayer.setStyle(styleLocPoints());
+      else if(activeKind==="denue") activeLayer.setStyle(styleDenue());
+    }
+    activeLayer=null;
+    activeKind=null;
+  }
+
+  function highlight(layer, kind){
+    if(!layer || !layer.setStyle) return;
+    if(kind==="colonia") layer.setStyle(styleColonias());
+    else if(kind==="localidad") layer.setStyle(styleLocPolys(layer.feature));
+    else if(kind==="punto") layer.setStyle(styleLocPoints());
+    else layer.setStyle(styleDenue());
+
+    layer.setStyle({ weight: 4, opacity: 0.98, fillOpacity: 0.95 });
+    activeLayer=layer;
+    activeKind=kind;
+  }
+
+  // Layer helpers
+  function setLayerVisible(layer, visible){
+    const has = map.hasLayer(layer);
+    if(visible && !has) layer.addTo(map);
+    if(!visible && has) map.removeLayer(layer);
+  }
+
+  function applyOpacity(){
+    layerColonias.setStyle(styleColonias());
+    layerLocPolys.setStyle((f)=>styleLocPolys(f));
+    layerLocPoints.eachLayer(l=>l.setStyle && l.setStyle(styleLocPoints()));
+    layerDenue.eachLayer(l=>l.setStyle && l.setStyle(styleDenue()));
+    if(activeLayer) highlight(activeLayer, activeKind);
+  }
+
+  // List helpers
+  function coloniasDeLocalidad(loc){
+    const L=Number(loc);
+    return coloniasFeatures
+      .filter(f=>Number(f.properties?.LOC)===L)
+      .map(f=>f.properties?.Nombre ?? "(sin nombre)")
+      .sort((a,b)=>a.localeCompare(b,"es"));
+  }
+
+  function indexDenue(){
+    denueByLOC.clear();
+    denueByColonia.clear();
+    for(const f of denueFeatures){
+      const p=f.properties||{};
+      const loc=Number(p.LOC);
+      const col=(p.colonia_nombre||"").toString();
+      if(!Number.isNaN(loc)){
+        if(!denueByLOC.has(loc)) denueByLOC.set(loc, []);
+        denueByLOC.get(loc).push(f);
+      }
+      if(col){
+        if(!denueByColonia.has(col)) denueByColonia.set(col, []);
+        denueByColonia.get(col).push(f);
+      }
+    }
+  }
+
+  // UI elements
+  const pill=document.getElementById("pill");
+  const info=document.getElementById("info");
+
+  function row(code, value){
+    const lbl = labelFor(code);
+    const desc = descFor(code);
+    const help = desc ? `<span class="help" title="${esc(desc)}">?</span>` : "";
+    const codeTag = (lbl !== code) ? `<span class="mono" style="opacity:.75">(${esc(code)})</span>` : "";
+    return `<div class="row">
+      <div class="k">${esc(lbl)} ${codeTag} ${help}</div>
+      <div class="v">${esc(fmt(value))}</div>
+    </div>`;
+  }
+
+  function details(title, meta, inner, open=false){
+    return `<details ${open?"open":""}>
+      <summary>
+        <div>
+          <div class="sum-title">${esc(title)}</div>
+          <div class="sum-meta">${esc(meta||"")}</div>
+        </div>
+        <span class="pill">${open?"—":"+"}</span>
+      </summary>
+      <div class="details-b">${inner}</div>
+    </details>`;
+  }
+
+  // Censo blocks
+  function viviendaKeys(props){
+    const keys = Object.keys(props||{});
+    return keys.filter(k => /^(VIV|VPH|HOG)/i.test(k) || /^TOTHOG$/i.test(k) || /^TVIV/i.test(k) || /^VIVPAR/i.test(k) || /^OCUPVIV/i.test(k) || /^PROM_/i.test(k)).sort();
+  }
+  function idKeys(props){
+    const prefer = ["ENTIDAD","NOM_ENT","MUN","NOM_MUN","LOC","NOM_LOC","AMBITO","ALTITUD","LONGITUD","LATITUD","lon_dd","lat_dd"];
+    return prefer.filter(k => props?.[k] !== undefined);
+  }
+  function popKeys(props){
+    const prefer = ["POBTOT","POBFEM","POBMAS","POBHOG","TAMLOC","REL_H_M","POB0_14","POB15_64","POB65_MAS"];
+    return prefer.filter(k => props?.[k] !== undefined);
+  }
+
+  function renderLocalidadCenso(locPointFeature){
+    const p = locPointFeature?.properties || {};
+    const idk = idKeys(p);
+    const popk = popKeys(p);
+    const vivk = viviendaKeys(p).slice(0, 50);
+
+    const idHtml = idk.map(k => row(k, p[k])).join("");
+    const popHtml = popk.length ? popk.map(k => row(k, p[k])).join("") : `<div class="muted">Sin variables de población esperadas.</div>`;
+    const vivHtml = vivk.length ? vivk.map(k => row(k, p[k])).join("") : `<div class="muted">Sin variables VIV/VPH/HOG detectadas.</div>`;
+
+    const allBtn = `
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button id="btnAll">Ver todas las variables</button>
+        <button id="btnHideAll" style="display:none">Ocultar</button>
+      </div>
+      <div id="allWrap" style="display:none;margin-top:10px"></div>
+    `;
+
+    return details("Identificación", "Claves y ubicación", idHtml, true) +
+           details("Población", "Selección rápida", popHtml, false) +
+           details("Vivienda / Hogares", "Selección rápida", vivHtml, false) +
+           details("Todas las variables", "Listado completo", allBtn, false);
+  }
+
+  function hookAllVars(locPointFeature){
+    const btn=document.getElementById("btnAll");
+    const btnHide=document.getElementById("btnHideAll");
+    const wrap=document.getElementById("allWrap");
+    if(!btn || !wrap) return;
+
+    btn.onclick = () => {
+      const p = locPointFeature?.properties || {};
+      const keys = Object.keys(p).sort((a,b)=>a.localeCompare(b,"es"));
+      wrap.innerHTML = keys.map(k => row(k, p[k])).join("") || `<div class="muted">Sin datos.</div>`;
+      wrap.style.display="block";
+      btn.style.display="none";
+      if(btnHide) btnHide.style.display="inline-block";
+    };
+    if(btnHide){
+      btnHide.onclick = () => {
+        wrap.style.display="none";
+        btn.style.display="inline-block";
+        btnHide.style.display="none";
+      };
+    }
+  }
+
+  // IMU block
+  function renderIMU(props){
+    const keys = ["IMU_GM_2020","IMU_IM_2020","IMU_IMN_2020","IMU_PSDSS","IMU_SBASC","IMU_P6A14NAE","IMU_OVSDE","IMU_OVSEE","IMU_OVSAE","IMU_OVPT","IMU_OVHAC","IMU_OVSREF","IMU_OVSINT","IMU_OSCEL","IMU_AGEB_N","IMU_POB_TOT"];
+    const present = keys.filter(k => props?.[k] !== undefined && props?.[k] !== null && props?.[k] !== "");
+    if(!present.length) return `<div class="muted">Esta localidad/colonia no tiene IMU agregado.</div>`;
+    return present.map(k => row(k, props[k])).join("");
+  }
+
+  // DENUE render
+  function renderDenue(p){
+    const keys = ["nom_estab","raz_social","codigo_act","nombre_act","per_ocu","tipo_vial","nom_vial","numero_ext","letra_ext","tipo_asent","nomb_asent","cod_postal","telefono","correoelec","www","tipoUniEco","fecha_alta","colonia_nombre","LOC","NOM_LOC"];
+    const inner = keys.filter(k=>p[k]!==undefined && p[k]!==null && p[k]!=="").map(k=>row(k,p[k])).join("");
+    return details("Unidad económica (DENUE)", p.nom_estab || "—", inner, true);
+  }
+
+  function renderDenueSummaryForLoc(loc){
+    const list = denueByLOC.get(Number(loc)) || [];
+    const count = list.length;
+    const top = list.slice(0, 30).map(f=>f.properties?.nom_estab || "(sin nombre)");
+    const html = count
+      ? `<div class="muted" style="margin-bottom:8px">Total: <b>${count}</b> (mostrando 30)</div><div class="cols-list"><ul>${top.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`
+      : `<div class="muted">No se encontraron unidades económicas DENUE para este LOC.</div>`;
+    return details("DENUE en esta localidad", `Unidades económicas: ${count}`, html, false);
+  }
+
+  function renderDenueSummaryForCol(colName){
+    const list = denueByColonia.get(colName) || [];
+    const count = list.length;
+    const top = list.slice(0, 30).map(f=>f.properties?.nom_estab || "(sin nombre)");
+    const html = count
+      ? `<div class="muted" style="margin-bottom:8px">Total: <b>${count}</b> (mostrando 30)</div><div class="cols-list"><ul>${top.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`
+      : `<div class="muted">No se encontraron unidades económicas DENUE para esta colonia.</div>`;
+    return details("DENUE en esta colonia", `Unidades económicas: ${count}`, html, false);
+  }
+
+  // Selection
+  function select(type, feature, layer){
+    const p=feature.properties||{};
+    const loc=Number(p.LOC);
+
+    // Guardar selección para impresión
+    // Nota: locPoint puede ser null; denue lists se calculan abajo donde aplica
+    currentSelection = { type, feature, locPointFeature: null, coloniasList: [], denueListLoc: [], denueListCol: [] };
+
+    if(layer && layer.setStyle){
+      if(type==="colonia") highlight(layer, "colonia");
+      else if(type==="localidad"){
+        const isPoint = (feature.geometry?.type === "Point");
+        highlight(layer, isPoint ? "punto" : "localidad");
+      } else {
+        highlight(layer, "denue");
+      }
+    } else {
+      clearHighlight();
+    }
+
+    if(type==="denue"){
+
+      // para ficha
+      currentSelection = { type:"denue", feature, locPointFeature:null, coloniasList:[], denueListLoc:[], denueListCol:[] };
+      pill.textContent = "DENUE";
+      info.innerHTML = renderDenue(p);
+      return;
+    }
+
+    if(type==="colonia"){
+      pill.textContent = "Colonia";
+      const locPoint = locPointByLOC.get(loc);
+      const cols = coloniasDeLocalidad(loc);
+
+      // para ficha
+      currentSelection.locPointFeature = locPoint || null;
+      currentSelection.coloniasList = cols.slice();
+      currentSelection.denueListCol = (denueByColonia.get(p.Nombre || "") || []).slice();
+      currentSelection.denueListLoc = (denueByLOC.get(Number(loc)) || []).slice();
+
+      const colFields = ["Nombre","Caracter","Pres_Hab","AREA_APROX","LOC","NOM_LOC","dist_m_a_localidad"];
+      const colHtml = colFields.filter(k=>p[k]!==undefined).map(k=>row(k,p[k])).join("");
+      const censoHtml = locPoint ? renderLocalidadCenso(locPoint) : `<div class="muted">No se encontró el punto de localidad (para mostrar censo).</div>`;
+      const listHtml = cols.length ? `<div class="cols-list"><ul>${cols.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>` : `<div class="muted">Sin colonias asociadas.</div>`;
+      const imuHtml = renderIMU(p);
+
+      info.innerHTML =
+        details("Colonia", p.Nombre || "—", colHtml, true) +
+        details("Marginación (IMU 2020)", `LOC ${fmt(loc)} · agregado por localidad`, imuHtml, true) +
+        details("Censo (localidad asociada)", `LOC ${fmt(loc)} · ${esc(p.NOM_LOC||"")}`, censoHtml, false) +
+        details("Colonias en esta localidad", `${cols.length} colonias`, listHtml, false) +
+        renderDenueSummaryForCol(p.Nombre || "");
+
+      if(locPoint) hookAllVars(locPoint);
+      return;
+    }
+
+    // Localidad
+    pill.textContent = "Localidad";
+    const locPoint = locPointByLOC.get(loc) || feature;
+    const cols = coloniasDeLocalidad(loc);
+
+    // para ficha
+    currentSelection.locPointFeature = locPoint || null;
+    currentSelection.coloniasList = cols.slice();
+    currentSelection.denueListLoc = (denueByLOC.get(Number(loc)) || []).slice();
+
+    const locFields = ["LOC","NOM_LOC","AMBITO","POBTOT","ALTITUD","colonias_count","metodo_poligono"];
+    const locHtml = locFields.filter(k=>p[k]!==undefined).map(k=>row(k,p[k])).join("");
+    const censoHtml = locPoint ? renderLocalidadCenso(locPoint) : `<div class="muted">No se encontró el punto de localidad (para mostrar censo).</div>`;
+    const listHtml = cols.length ? `<div class="cols-list"><ul>${cols.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>` : `<div class="muted">Esta localidad no tiene colonias en la capa (según asignación).</div>`;
+    const imuHtml = renderIMU(p);
+
+    info.innerHTML =
+      details("Localidad", p.NOM_LOC || "—", locHtml, true) +
+      details("Marginación (IMU 2020)", "Agregado por localidad (LOC) desde AGEB urbanas", imuHtml, true) +
+      details("Censo (localidad)", `LOC ${fmt(loc)}`, censoHtml, false) +
+      details("Colonias en esta localidad", `${cols.length} colonias`, listHtml, false) +
+      renderDenueSummaryForLoc(loc);
+
+    if(locPoint) hookAllVars(locPoint);
+  }
+
+  // Buttons
+  const btnHome = document.getElementById("btnHome");
+  const btnClear = document.getElementById("btnClear");
+  const btnPrint = document.getElementById("btnPrint");
+  let homeBounds = null;
+
+  btnClear.onclick = () => {
+    currentSelection = null;
+    clearHighlight();
+    pill.textContent = "Nada";
+    info.innerHTML = `<div class="muted">Da click sobre el mapa o usa el buscador.</div>`;
+  };
+  btnHome.onclick = () => {
+    if(homeBounds){
+      map.fitBounds(homeBounds, {padding:[22,22]});
+    } else {
+      map.setView([20.06,-98.74], 12);
+    }
+  };
+  btnPrint.onclick = () => printCurrentSelection();
+
+
+  // Search
+  const q=document.getElementById("q");
+  const results=document.getElementById("results");
+  let searchIndex=[];
+
+  function showResults(items){
+    if(!items.length){results.style.display="none";results.innerHTML="";return;}
+    results.style.display="block";
+    results.innerHTML = items.map((it,i)=>`
+      <div class="item" data-i="${i}">
+        <div class="k">${esc(it.type)}</div>
+        <div class="v">${esc(it.name)}</div>
+        <div class="k">${esc(it.meta||"")}</div>
+      </div>`).join("");
+    [...results.querySelectorAll(".item")].forEach(el=>{
+      el.onclick=()=>{
+        const it=items[Number(el.dataset.i)];
+        focus(it);
+        results.style.display="none";
+      };
+    });
+  }
+
+  function focus(it){
+    if(it.type==="Localidad"){
+      let target=null;
+      layerLocPolys.eachLayer(l=>{ if(Number(l.feature?.properties?.LOC)===Number(it.loc)) target=l; });
+      if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("localidad", target.feature, target); return; }
+      layerLocPoints.eachLayer(l=>{ if(Number(l.feature?.properties?.LOC)===Number(it.loc)) target=l; });
+      if(target){ map.setView(target.getLatLng(),14); select("localidad", target.feature, target); }
+      return;
+    }
+    if(it.type==="Colonia"){
+      let target=null;
+      layerColonias.eachLayer(l=>{ if(l.feature?.properties?.col_id===it.col_id) target=l; });
+      if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("colonia", target.feature, target); }
+      return;
+    }
+    // DENUE
+    const denLayer = denueById.get(String(it.denue_id));
+    if(denLayer){
+      map.setView(denLayer.getLatLng(), 17);
+      select("denue", denLayer.feature, denLayer);
+    }
+  }
+
+  q.addEventListener("input",()=>{
+    const s=norm(q.value);
+    if(s.length<3){showResults([]);return;}
+    const items = searchIndex.filter(it=>it.norm.includes(s)).slice(0, 25);
+    showResults(items);
+  });
+
+  // Layer UI (opacity + toggles + basemap + IMU mode)
+  const chkColonias = document.getElementById("chkColonias");
+  const chkLocPolys = document.getElementById("chkLocPolys");
+  const chkLocPoints = document.getElementById("chkLocPoints");
+  const chkDenue = document.getElementById("chkDenue");
+
+  const opColonias = document.getElementById("opColonias");
+  const opLocPolys = document.getElementById("opLocPolys");
+  const opLocPoints = document.getElementById("opLocPoints");
+  const opDenue = document.getElementById("opDenue");
+
+  const pctColonias = document.getElementById("pctColonias");
+  const pctLocPolys = document.getElementById("pctLocPolys");
+  const pctLocPoints = document.getElementById("pctLocPoints");
+  const pctDenue = document.getElementById("pctDenue");
+
+  function setPct(el, v){ el.textContent = `${v}%`; }
+
+  chkColonias.onchange = () => setLayerVisible(layerColonias, chkColonias.checked);
+  chkLocPolys.onchange = () => setLayerVisible(layerLocPolys, chkLocPolys.checked);
+  chkLocPoints.onchange = () => setLayerVisible(layerLocPoints, chkLocPoints.checked);
+  chkDenue.onchange = () => setLayerVisible(layerDenue, chkDenue.checked);
+
+  opColonias.oninput = () => { const v=Number(opColonias.value); setPct(pctColonias,v); opacityState.colonias=v/100; applyOpacity(); };
+  opLocPolys.oninput = () => { const v=Number(opLocPolys.value); setPct(pctLocPolys,v); opacityState.locPolys=v/100; applyOpacity(); };
+  opLocPoints.oninput = () => { const v=Number(opLocPoints.value); setPct(pctLocPoints,v); opacityState.locPoints=v/100; applyOpacity(); };
+  opDenue.oninput = () => { const v=Number(opDenue.value); setPct(pctDenue,v); opacityState.denue=v/100; applyOpacity(); };
+
+  // Basemap
+  const bmOsmBtn = document.getElementById("bmOsm");
+  const bmSatBtn = document.getElementById("bmSat");
+
+  function setBasemap(which){
+    if(which==="osm"){
+      if(map.hasLayer(bmSAT)) map.removeLayer(bmSAT);
+      if(!map.hasLayer(bmOSM)) bmOSM.addTo(map);
+      bmOsmBtn.classList.add("active"); bmSatBtn.classList.remove("active");
+    } else {
+      if(map.hasLayer(bmOSM)) map.removeLayer(bmOSM);
+      if(!map.hasLayer(bmSAT)) bmSAT.addTo(map);
+      bmSatBtn.classList.add("active"); bmOsmBtn.classList.remove("active");
+    }
+  }
+  bmOsmBtn.onclick = () => setBasemap("osm");
+  bmSatBtn.onclick = () => setBasemap("sat");
+
+  // IMU mode button
+  const btnIMU = document.getElementById("btnIMU");
+  function setImuMode(on){
+    imuMode = !!on;
+    if(imuMode){
+      btnIMU.classList.add("active");
+      legendIMU.style.display="block";
+    } else {
+      btnIMU.classList.remove("active");
+      legendIMU.style.display="none";
+    }
+    // refresh styles
+    layerLocPolys.setStyle((f)=>styleLocPolys(f));
+    if(activeLayer && activeKind==="localidad") highlight(activeLayer, activeKind);
+  }
+  btnIMU.onclick = () => setImuMode(!imuMode);
+
+  // Init
+  (async ()=>{
+    // Diccionarios
+    let censoDict = {};
+    try{ censoDict = await load(FILE_DICT_CENSO); }catch(e){ console.warn("No se pudo cargar diccionario.json:", e); }
+    let denueDict = {};
+    try{ denueDict = await load(FILE_DICT_DENUE); }catch(e){ console.warn("No se pudo cargar diccionario_denue.json:", e); }
+    let imuDict = {};
+    try{ imuDict = await load(FILE_DICT_IMU); }catch(e){ console.warn("No se pudo cargar diccionario_imu2020.json:", e); }
+
+    DICT = { ...censoDict };
+    for(const [k,v] of Object.entries(denueDict)){ if(!(k in DICT)) DICT[k]=v; }
+    for(const [k,v] of Object.entries(imuDict)){ if(!(k in DICT)) DICT[k]=v; }
+
+    // Capas base (ya incluyen IMU)
+    const [gjC, gjLP, gjLPoly] = await Promise.all([
+      load(FILE_COLONIAS),
+      load(FILE_LOC_POINTS),
+      load(FILE_LOC_POLYS),
+    ]);
+
+    coloniasFeatures = gjC.features || [];
+    layerColonias.addData(gjC);
+    layerLocPoints.addData(gjLP);
+    layerLocPolys.addData(gjLPoly);
+
+    for(const f of (gjLP.features||[])){
+      const loc = Number(f.properties?.LOC);
+      if(!Number.isNaN(loc)) locPointByLOC.set(loc, f);
+    }
+
+    // DENUE (opcional)
+    try{
+      const gjD = await load(FILE_DENUE);
+      denueFeatures = gjD.features || [];
+      layerDenue.addData(gjD);
+      indexDenue();
+    }catch(e){
+      console.warn("No se pudo cargar denue.geojson (opcional):", e);
+      chkDenue.checked = false;
+      setLayerVisible(layerDenue, false);
+    }
+
+    // Search index
+    searchIndex = [
+      ...coloniasFeatures.map(f=>({
+        type:"Colonia",
+        name:f.properties?.Nombre ?? "(sin nombre)",
+        norm:norm(f.properties?.Nombre),
+        meta:`LOC ${fmt(f.properties?.LOC)} · ${f.properties?.NOM_LOC||""}`,
+        loc:f.properties?.LOC,
+        col_id:f.properties?.col_id
+      })),
+      ...(gjLP.features||[]).map(f=>({
+        type:"Localidad",
+        name:f.properties?.NOM_LOC ?? ("LOC "+f.properties?.LOC),
+        norm:norm(f.properties?.NOM_LOC),
+        meta:`LOC ${fmt(f.properties?.LOC)} · ${f.properties?.IMU_GM_2020 ? ("IMU: "+f.properties?.IMU_GM_2020) : ""}`,
+        loc:f.properties?.LOC
+      })),
+      ...(denueFeatures||[]).slice(0, 50000).map(f=>({
+        type:"DENUE",
+        name:f.properties?.nom_estab ?? "(sin nombre)",
+        norm:norm((f.properties?.nom_estab||"") + " " + (f.properties?.raz_social||"") + " " + (f.properties?.nombre_act||"")),
+        meta:`${f.properties?.nombre_act||""} · ${f.properties?.colonia_nombre||""}`,
+        denue_id:f.properties?.id
+      }))
+    ];
+
+    // Fit bounds
+    try{
+      const b = layerColonias.getBounds();
+      homeBounds = b;
+      map.fitBounds(b, {padding:[22,22]});
+    }catch(e){}
+
+    // Opacity UI init
+    setPct(pctColonias, Number(opColonias.value));
+    setPct(pctLocPolys, Number(opLocPolys.value));
+    setPct(pctLocPoints, Number(opLocPoints.value));
+    setPct(pctDenue, Number(opDenue.value));
+    applyOpacity();
+
+  })().catch(err=>{
+    alert("Error cargando GeoJSON. Abre con servidor local y revisa nombres de archivos.\n\n"+err.message);
+    console.error(err);
+  });
+</script>
+</body>
+</html>

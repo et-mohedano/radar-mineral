@@ -1,0 +1,66 @@
+{
+  "IMU_POB_TOT": {
+    "indicador": "Población total sumada (IMU 2020)",
+    "descripcion": "Suma de POB_TOT de las AGEB urbanas (IMU 2020) usadas para agregar los indicadores a nivel localidad."
+  },
+  "IMU_P6A14NAE": {
+    "indicador": "Porcentaje de población de 6 a 14 años que no asiste a la escuela (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de población de 6 a 14 años que no asiste a la escuela. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_SBASC": {
+    "indicador": "Porcentaje de población de 15 años o más sin educación básica (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de población de 15 años o más sin educación básica. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_PSDSS": {
+    "indicador": "Porcentaje de población sin derechohabiencia a los servicios de salud (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de población sin derechohabiencia a los servicios de salud. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_OVSDE": {
+    "indicador": "Porcentaje de ocupantes en viviendas particulares habitadas sin drenaje ni excusado (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de ocupantes en viviendas particulares habitadas sin drenaje ni excusado. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_OVSEE": {
+    "indicador": "Porcentaje de ocupantes en viviendas particulares habitadas sin energía eléctrica (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de ocupantes en viviendas particulares habitadas sin energía eléctrica. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_OVSAE": {
+    "indicador": "Porcentaje de ocupantes en viviendas particulares habitadas sin agua entubada (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de ocupantes en viviendas particulares habitadas sin agua entubada. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_OVPT": {
+    "indicador": "Porcentaje de ocupantes en viviendas particulares habitadas con piso de tierra (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de ocupantes en viviendas particulares habitadas con piso de tierra. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_OVHAC": {
+    "indicador": "Porcentaje de ocupantes en viviendas particulares habitadas con hacinamiento (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de ocupantes en viviendas particulares habitadas con hacinamiento. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_OVSREF": {
+    "indicador": "Porcentaje de ocupantes en viviendas particulares habitadas sin refrigerador (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de ocupantes en viviendas particulares habitadas sin refrigerador. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_OVSINT": {
+    "indicador": "Porcentaje de ocupantes en viviendas particulares habitadas sin internet (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de ocupantes en viviendas particulares habitadas sin internet. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_OSCEL": {
+    "indicador": "Porcentaje de ocupantes en viviendas particulares habitadas sin celular (IMU 2020, agregado por localidad)",
+    "descripcion": "Porcentaje de ocupantes en viviendas particulares habitadas sin celular. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_IM_2020": {
+    "indicador": "Índice de marginación a nivel AGEB, 2020 (IMU 2020, agregado por localidad)",
+    "descripcion": "Índice de marginación a nivel AGEB, 2020. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_IMN_2020": {
+    "indicador": "Índice de marginación normalizado a nivel AGEB, 2020 (IMU 2020, agregado por localidad)",
+    "descripcion": "Índice de marginación normalizado a nivel AGEB, 2020. Valor agregado por localidad (LOC) como promedio ponderado por población total de AGEB (POB_TOT), usando la base IMU 2020."
+  },
+  "IMU_AGEB_N": {
+    "indicador": "AGEB urbanas consideradas (IMU 2020)",
+    "descripcion": "Número de AGEB urbanas en IMU 2020 que se agregaron para esta localidad (LOC) dentro del municipio."
+  },
+  "IMU_GM_2020": {
+    "indicador": "Grado de marginación (IMU 2020)",
+    "descripcion": "Grado de marginación urbana a nivel AGEB (IMU 2020) agregado por localidad como categoría con mayor población (modo ponderado por POB_TOT)."
+  }
+}

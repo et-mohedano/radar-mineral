@@ -1,0 +1,182 @@
+{
+  "id": {
+    "indicador": "Id",
+    "descripcion": "Número  de identificación del DENUE, es una clave numérica única para cada registro de la base de datos del Directorio Estadístico Nacional de Unidades Económicas (DENUE)."
+  },
+  "nom_estab": {
+    "indicador": "Nom estab",
+    "descripcion": "Es el nombre comercial o nombre exterior con el que se identifica o anuncia la unidad económica.Generalmente es fácil reconocerlo porque está visible y escrito en rótulos, fachadas o anuncios luminosos. Ejemplo: ABARROTES LUPITA.Cuando la unidad económica no tiene ningún apelativo comercial, entonces se registra con el nombre genérico de la actividad o la descripción de la actividad económica, ejemplo: ABARROTES o Comercio al por menor en tiendas de abarrotes, ultramarinos y misceláneas."
+  },
+  "raz_social": {
+    "indicador": "Raz social",
+    "descripcion": "Es la forma con que está legalmente constituida y registrada la persona moral, o la denominación de una sociedad legalmente constituida.Es importante considerar que en algunas sociedades mercantiles, la razón social y el nombre comercial pueden ser los mismos, ejemplo: GILSA, S.A. de C.V.Cuando la unidad económica pertenece a una persona física, el dato no se incluye para proteger la confidencialidad de la información."
+  },
+  "codigo_act": {
+    "indicador": "Codigo act",
+    "descripcion": "La clasificación de las actividades desarrolladas por las unidades económicas debe hacerse utilizando el SCIAN y sus actualizaciones, con base en lo dispuesto en el acuerdo para el uso del SCIAN y en la recopilación, análisis y presentación de estadísticas económicas, publicado en el Diario Oficial de la Federación del 10 de julio de 2009.\nEl código está asignado con base en la actividad principal que desarrolla la unidad económica y de acuerdo con el Sistema de Clasificación Industrial para América del Norte, versión 2018.\nPara la asignación del código de actividad correspondiente, según el SCIAN 2018, se consideraron tanto los productos (bienes y servicios) desarrollados por el establecimiento como sus procesos de producción."
+  },
+  "nombre_act": {
+    "indicador": "Nombre act",
+    "descripcion": "Nombre del código de actividad conforme al SCIAN 2018."
+  },
+  "per_ocu": {
+    "indicador": "Per ocu",
+    "descripcion": "Comprende al personal contratado directamente por la razón social y al personal ajeno suministrado por otra razón social, que trabajó para la unidad económica, sujeto a su dirección y control y que cubrió, como mínimo, una tercera parte de la jornada laboral. Puede ser personal de planta, eventual remunerado o no remunerado.\n\nLas unidades económicas se clasifican por rangos de personal ocupado, que permiten identificar el tamaño de Unidades Económicas por el número de personal que emplean; es decir, según su personal ocupado total. Para el Directorio las Unidades Económicas están agrupadas en rangos o estratos de personal ocupado, con base en el personal ocupado total reportado por éstas, como se indica en la siguiente tabla.\n\nPersonal Ocupado\n1 = 0 a 5\n2 = 6 a 10\n3 = 11 a 30\n4 = 31 a 50\n5 = 51 a 100\n6 = 101 a 250\n7 = 251 y más"
+  },
+  "tipo_vial": {
+    "indicador": "Tipo vial",
+    "descripcion": "Es la superficie del terreno destinada para el tránsito vehicular y/o peatonal, en la cual se encuentra ubicada la unidad económica (calle, avenida, andador, etc.)"
+  },
+  "nom_vial": {
+    "indicador": "Nom vial",
+    "descripcion": "Es el sustantivo propio con el cual se identifica la vialidad."
+  },
+  "tipo_v_e_1": {
+    "indicador": "Tipo v e 1",
+    "descripcion": "Es la superficie del terreno destinada para el tránsito vehicular y/o peatonal, en la cual se encuentra ubicada la unidad económica (calle, avenida, andador, etc.)"
+  },
+  "nom_v_e_1": {
+    "indicador": "Nom v e 1",
+    "descripcion": "Es el sustantivo propio con el cual se identifica la vialidad."
+  },
+  "tipo_v_e_2": {
+    "indicador": "Tipo v e 2",
+    "descripcion": "Es la superficie del terreno destinada para el tránsito vehicular y/o peatonal, en la cual se encuentra ubicada la unidad económica (calle, avenida, andador, etc.)"
+  },
+  "nom_v_e_2": {
+    "indicador": "Nom v e 2",
+    "descripcion": "Es el sustantivo propio con el cual se identifica la vialidad."
+  },
+  "tipo_v_e_3": {
+    "indicador": "Tipo v e 3",
+    "descripcion": "Es la superficie del terreno destinada para el tránsito vehicular y/o peatonal, en la cual se encuentra ubicada la unidad económica (calle, avenida, andador, etc.)"
+  },
+  "nom_v_e_3": {
+    "indicador": "Nom v e 3",
+    "descripcion": "Es el sustantivo propio con el cual se identifica la vialidad."
+  },
+  "numero_ext": {
+    "indicador": "Numero ext",
+    "descripcion": "Son los valores numéricos que identifican a uno o varios inmuebles en una vialidad."
+  },
+  "letra_ext": {
+    "indicador": "Letra ext",
+    "descripcion": "Son los caracteres alfanuméricos que identifican a uno o varios inmuebles en una vialidad."
+  },
+  "edificio": {
+    "indicador": "Edificio",
+    "descripcion": "Es el sustantivo propio con el que se identifica el inmueble donde está ubicada la unidad económica."
+  },
+  "edificio_e": {
+    "indicador": "Edificio e",
+    "descripcion": "Es con el que se identifica el piso o nivel del inmueble donde está ubicada la unidad económica."
+  },
+  "numero_int": {
+    "indicador": "Numero int",
+    "descripcion": "Son los valores numéricos que identifican el domicilio de la unidad económica al interior de un inmueble."
+  },
+  "letra_int": {
+    "indicador": "Letra int",
+    "descripcion": "Son los caracteres alfanuméricos que identifican un domicilio al interior de un inmueble."
+  },
+  "tipo_asent": {
+    "indicador": "Tipo asent",
+    "descripcion": "Es la clasificación que se da al asentamiento humano de acuerdo con su función (colonia, fraccionamiento, unidad habitacional, etc.)"
+  },
+  "nomb_asent": {
+    "indicador": "Nomb asent",
+    "descripcion": "Es el sustantivo propio con el cual se identifica el asentamiento humano en el que se ubica la unidad económica."
+  },
+  "tipoCenCom": {
+    "indicador": "TipoCenCom",
+    "descripcion": "Tipo de plaza, centro comercial, etcétera donde se encuentra la unidad económica."
+  },
+  "nom_CenCom": {
+    "indicador": "Nom CenCom",
+    "descripcion": "Nombre de la plaza, centro comercial, etcétera donde se encuentra la unidad económica."
+  },
+  "num_local": {
+    "indicador": "Num local",
+    "descripcion": "Dato alfanumérico que corresponde al local en donde se localizó la unidad económica."
+  },
+  "cod_postal": {
+    "indicador": "Cod postal",
+    "descripcion": "Clave numérica integrada por cinco dígitos establecido por el Servicio Postal Mexicano."
+  },
+  "cve_ent": {
+    "indicador": "Cve ent",
+    "descripcion": "Clave que identifica a la entidad federativa estadística."
+  },
+  "entidad": {
+    "indicador": "Entidad",
+    "descripcion": "Es el sustantivo propio que identifica a la entidad federativa."
+  },
+  "cve_mun": {
+    "indicador": "Cve mun",
+    "descripcion": "Clave que identifica al Municipio estadístico, y en el caso de la Ciudad de México, las que identifican a las Alcaldías."
+  },
+  "municipio": {
+    "indicador": "Municipio",
+    "descripcion": "Es el sustantivo propio que identifica al Municipio, y en el caso de la Ciudad de México los que identifican a las Alcaldías."
+  },
+  "cve_loc": {
+    "indicador": "Cve loc",
+    "descripcion": "Clave que identifica a la localidad estadística. Esta es el lugar ocupado con una o más edificaciones utilizadas como viviendas, las cuales pueden estar habitadas o no, este lugar es reconocido por un nombre dado por alguna disposición legal o la costumbre."
+  },
+  "localidad": {
+    "indicador": "Localidad",
+    "descripcion": "Es el sustantivo propio que identifica a la localidad. Esta es el lugar ocupado con una o más edificaciones utilizadas como viviendas, las cuales pueden estar habitadas o no, este lugar es reconocido por un nombre dado por alguna disposición legal o la costumbre."
+  },
+  "ageb": {
+    "indicador": "Ageb",
+    "descripcion": "Es la extensión territorial que corresponde a la subdivisión de las AGEM. Constituye la unidad básica del Marco Geoestadístico Nacional y, dependiendo de sus características, se clasifica en dos tipos, Áreas Geoestadísticas Básicas Urbanas y Áreas Geoestadísticas Básicas Rurales."
+  },
+  "manzana": {
+    "indicador": "Manzana",
+    "descripcion": "Clave geoestadística de la manzana, compuesta por tres dígitos, que identifica a una extensión territorial que está constituida por un grupo de viviendas, edificios, predios, lotes o terrenos de uso habitacional, comercial, industrial o de servicios."
+  },
+  "telefono": {
+    "indicador": "Telefono",
+    "descripcion": "Número telefónico, secuencia de dígitos que permite la comunicación vía telefónica con la unidad económica."
+  },
+  "correoelec": {
+    "indicador": "Correoelec",
+    "descripcion": "Correo electrónico, es la serie de caracteres cuya finalidad es acceder a un servicio de red que posibilita a las unidades económicas el envío y recepción de mensajes mediante sistemas de comunicación electrónicos."
+  },
+  "www": {
+    "indicador": "Www",
+    "descripcion": "Son los datos que permiten el acceso a información de la unidad económica en Internet."
+  },
+  "tipoUniEco": {
+    "indicador": "TipoUniEco",
+    "descripcion": "Grupo de categorías que sirve para identificar si el establecimiento es fijo o semifijo, bajo las siguientes definiciones: \nEstablecimiento fijo: es la unidad que en una sola ubicación física, asentada en un lugar de manera permanente y delimitada por construcciones e instalaciones fijas, combina acciones y recursos bajo el control de una sola entidad propietaria o controladora para realizar alguna actividad económica con y sin fines de lucro, excepto las destinadas al autoconsumo. En este tipo de establecimiento están comprendidas las viviendas cuando en algún espacio de la casa-habitación, que también está destinado a otras actividades cotidianas, se realiza alguna actividad económica. \nEstablecimiento semifijo: establecimientos que están fijos, enclavados en el suelo, y que permanecen de día y de noche en el mismo sitio aunque sus instalaciones sean frágiles o rústicas. También aquellas instalaciones que aun cuando no estén enclavadas al suelo no pueden ser removidas de donde están, aunque lleven a cabo actividades que tienen carácter temporal o estacional, siempre y cuando permanezcan activas y en un solo lugar durante un periodo de por lo menos tres meses seguidos."
+  },
+  "latitud": {
+    "indicador": "Latitud",
+    "descripcion": "Es la distancia que existe entre la unidad económica y el ecuador, medida sobre el meridiano que pasa por dicho punto."
+  },
+  "longitud": {
+    "indicador": "Longitud",
+    "descripcion": "Es la distancia que existe entre la unidad económica y el meridiano de Greenwich, medida sobre el paralelo que pasa por dicho punto."
+  },
+  "fecha_alta": {
+    "indicador": "Fecha alta",
+    "descripcion": "Fecha en la que la unidad económica se integró al Directorio Estadístico Nacional de Unidades Económicas y al Registro Estadístico de Negocios de México (RENEM)."
+  },
+  "clee": {
+    "indicador": "Clee",
+    "descripcion": "Es la llave única de identificación estadística, asignada exclusivamente por el INEGI a cada uno de los establecimientos y empresas registrados en el RENEM, cuya función es identificarlos unívocamente y vincular a los establecimientos de una misma empresa."
+  },
+  "colonia_nombre": {
+    "indicador": "Colonia (asignada)",
+    "descripcion": "Colonia asignada por contención/vecino más cercano (a partir de los polígonos de colonias)."
+  },
+  "LOC": {
+    "indicador": "Clave de localidad (LOC)",
+    "descripcion": "Clave de localidad del censo asignada mediante la colonia."
+  },
+  "NOM_LOC": {
+    "indicador": "Localidad (asignada)",
+    "descripcion": "Nombre de localidad del censo asignada mediante la colonia."
+  }
+}

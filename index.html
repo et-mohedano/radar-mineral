@@ -358,6 +358,19 @@
         </div>
 
         <div class="layer-row">
+        <input class="chk" id="chkSecciones" type="checkbox" checked>
+        <div class="layer-name">
+          <b><span class="swatch" style="background:rgba(88,160,255,.45)"></span>Secciones</b>
+          <span>INE · Polígonos</span>
+          <div class="slider-wrap">
+            <input id="opSecciones" type="range" min="0" max="100" value="25">
+            <span class="pct" id="pctSecciones">25%</span>
+          </div>
+        </div>
+        <span class="pill mono">fill</span>
+      </div>
+
+        <div class="layer-row">
           <input class="chk" id="chkLocPoints" type="checkbox" checked>
           <div class="layer-name">
             <b><span class="swatch" style="background:rgba(122,20,54,.55)"></span>Localidades</b>
@@ -415,6 +428,7 @@
   const FILE_COLONIAS    = "colonias_con_imu2020.geojson";
   const FILE_LOC_POINTS  = "localidades_puntos_con_imu2020.geojson";
   const FILE_LOC_POLYS   = "localidades_poligonos_con_imu2020.geojson";
+  const FILE_SECCIONES   = "secciones_mr.geojson";
 
   const FILE_DICT_CENSO  = "diccionario.json";
   const FILE_DENUE       = "denue.geojson";
@@ -742,8 +756,7 @@
     setTimeout(()=>{ w.focus(); w.print(); }, 250);
   }
   // Opacity state
-  const opacityState = { colonias:0.35, locPolys:0.18, locPoints:0.80, denue:0.65 };
-
+const opacityState = { colonias:0.35, locPolys:0.18, locPoints:0.80, denue:0.65, secciones:0.25 };
   // IMU mode
   let imuMode = false;
   const legendIMU = document.getElementById("legendIMU");
@@ -776,6 +789,23 @@
   function styleDenue(){
     return { radius: 4, weight: 1.5, opacity: Math.min(0.95, opacityState.denue + 0.15), fillOpacity: opacityState.denue };
   }
+  function styleSecciones(){
+  return {
+    weight: 2,
+    color: "rgba(88,160,255,.95)",
+    opacity: Math.min(0.95, opacityState.secciones + 0.25),
+    fillOpacity: opacityState.secciones,
+    fillColor: "rgba(88,160,255,.18)"
+  };
+}
+
+const layerSecciones = L.geoJSON(null, {
+  style: () => styleSecciones(),
+  onEachFeature: (f, l) => {
+    l.on("click", () => select("seccion", f, l));
+    l.on("mouseover", () => { try { l.bringToFront(); } catch(e){} });
+  }
+});
 
   // Stores
   let coloniasFeatures=[];
@@ -815,33 +845,38 @@
   layerLocPolys.addTo(map);
   layerLocPoints.addTo(map);
   layerDenue.addTo(map);
+  layerSecciones.addTo(map);
 
   // Highlight logic
   let activeLayer=null;
   let activeKind=null;
 
   function clearHighlight(){
-    if(activeLayer && activeLayer.setStyle){
-      if(activeKind==="colonia") activeLayer.setStyle(styleColonias());
-      else if(activeKind==="localidad") activeLayer.setStyle(styleLocPolys(activeLayer.feature));
-      else if(activeKind==="punto") activeLayer.setStyle(styleLocPoints());
-      else if(activeKind==="denue") activeLayer.setStyle(styleDenue());
-    }
-    activeLayer=null;
-    activeKind=null;
+  if(activeLayer && activeLayer.setStyle){
+    if(activeKind==="colonia") activeLayer.setStyle(styleColonias());
+    else if(activeKind==="localidad") activeLayer.setStyle(styleLocPolys(activeLayer.feature));
+    else if(activeKind==="punto") activeLayer.setStyle(styleLocPoints());
+    else if(activeKind==="seccion") activeLayer.setStyle(styleSecciones()); // 👈 NUEVO
+    else if(activeKind==="denue") activeLayer.setStyle(styleDenue());
   }
+  activeLayer=null;
+  activeKind=null;
+}
 
-  function highlight(layer, kind){
-    if(!layer || !layer.setStyle) return;
-    if(kind==="colonia") layer.setStyle(styleColonias());
-    else if(kind==="localidad") layer.setStyle(styleLocPolys(layer.feature));
-    else if(kind==="punto") layer.setStyle(styleLocPoints());
-    else layer.setStyle(styleDenue());
+function highlight(layer, kind){
+  if(!layer || !layer.setStyle) return;
 
-    layer.setStyle({ weight: 4, opacity: 0.98, fillOpacity: 0.95 });
-    activeLayer=layer;
-    activeKind=kind;
-  }
+  if(kind==="colonia") layer.setStyle(styleColonias());
+  else if(kind==="localidad") layer.setStyle(styleLocPolys(layer.feature));
+  else if(kind==="punto") layer.setStyle(styleLocPoints());
+  else if(kind==="seccion") layer.setStyle(styleSecciones());  // 👈 NUEVO
+  else layer.setStyle(styleDenue());
+
+  // resaltado
+  layer.setStyle({ weight: 4, opacity: 0.98, fillOpacity: 0.45 });
+  activeLayer=layer;
+  activeKind=kind;
+}
 
   // Layer helpers
   function setLayerVisible(layer, visible){
@@ -855,6 +890,7 @@
     layerLocPolys.setStyle((f)=>styleLocPolys(f));
     layerLocPoints.eachLayer(l=>l.setStyle && l.setStyle(styleLocPoints()));
     layerDenue.eachLayer(l=>l.setStyle && l.setStyle(styleDenue()));
+    layerSecciones.setStyle(styleSecciones);
     if(activeLayer) highlight(activeLayer, activeKind);
   }
 
@@ -1019,16 +1055,21 @@
     currentSelection = { type, feature, locPointFeature: null, coloniasList: [], denueListLoc: [], denueListCol: [] };
 
     if(layer && layer.setStyle){
-      if(type==="colonia") highlight(layer, "colonia");
-      else if(type==="localidad"){
-        const isPoint = (feature.geometry?.type === "Point");
-        highlight(layer, isPoint ? "punto" : "localidad");
-      } else {
-        highlight(layer, "denue");
-      }
-    } else {
-      clearHighlight();
-    }
+  if(type==="colonia") highlight(layer, "colonia");
+  else if(type==="localidad"){
+    const isPoint = (feature.geometry?.type === "Point");
+    highlight(layer, isPoint ? "punto" : "localidad");
+  }
+  else if(type==="seccion"){
+    highlight(layer, "seccion");
+    if(layer.bringToFront) layer.bringToFront();
+  }
+  else {
+    highlight(layer, "denue");
+  }
+} else {
+  clearHighlight();
+}
 
     if(type==="denue"){
 
@@ -1036,6 +1077,19 @@
       currentSelection = { type:"denue", feature, locPointFeature:null, coloniasList:[], denueListLoc:[], denueListCol:[] };
       pill.textContent = "DENUE";
       info.innerHTML = renderDenue(p);
+      return;
+    }
+
+    if(type === "seccion"){
+      const p = feature.properties || {};
+      currentSelection = { type:"seccion", feature, locPointFeature:null, coloniasList:[], denueListLoc:[], denueListCol:[] };
+
+      pill.textContent = "Sección";
+      const keys = ["seccion","distrito_f","distrito_l","id","tipo","control","entidad","municipio"];
+      const inner = keys.filter(k => p[k] !== undefined).map(k => row(k, p[k])).join("")
+                  || `<div class="muted">Sin atributos esperados.</div>`;
+
+      info.innerHTML = details("Sección electoral", `Sección ${fmt(p.seccion)}`, inner, true);
       return;
     }
 
@@ -1184,8 +1238,21 @@
   const pctLocPoints = document.getElementById("pctLocPoints");
   const pctDenue = document.getElementById("pctDenue");
 
-  function setPct(el, v){ el.textContent = `${v}%`; }
+  const chkSecciones = document.getElementById("chkSecciones");
+  const opSecciones  = document.getElementById("opSecciones");
+  const pctSecciones = document.getElementById("pctSecciones");
 
+  chkSecciones.onchange = () => setLayerVisible(layerSecciones, chkSecciones.checked);
+
+  opSecciones.oninput = () => {
+    const v = Number(opSecciones.value);
+    setPct(pctSecciones, v);
+    opacityState.secciones = v/100;
+    applyOpacity();
+  };
+
+  function setPct(el, v){ el.textContent = `${v}%`; }
+  setPct(pctSecciones, Number(opSecciones.value));
   chkColonias.onchange = () => setLayerVisible(layerColonias, chkColonias.checked);
   chkLocPolys.onchange = () => setLayerVisible(layerLocPolys, chkLocPolys.checked);
   chkLocPoints.onchange = () => setLayerVisible(layerLocPoints, chkLocPoints.checked);
@@ -1240,7 +1307,15 @@
     try{ denueDict = await load(FILE_DICT_DENUE); }catch(e){ console.warn("No se pudo cargar diccionario_denue.json:", e); }
     let imuDict = {};
     try{ imuDict = await load(FILE_DICT_IMU); }catch(e){ console.warn("No se pudo cargar diccionario_imu2020.json:", e); }
-
+    // Secciones (INE)
+    try{
+      const gjS = await load(FILE_SECCIONES);
+      layerSecciones.addData(gjS);
+    }catch(e){
+      console.warn("No se pudo cargar secciones:", e);
+      chkSecciones.checked = false;
+      setLayerVisible(layerSecciones, false);
+    }
     DICT = { ...censoDict };
     for(const [k,v] of Object.entries(denueDict)){ if(!(k in DICT)) DICT[k]=v; }
     for(const [k,v] of Object.entries(imuDict)){ if(!(k in DICT)) DICT[k]=v; }

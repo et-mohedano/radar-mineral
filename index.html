@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Visor · Colonias, Localidades, DENUE y Marginación (IMU 2020) · Mineral de la Reforma</title>
+  <title>Visor · Colonias, Localidades, DENUE, IMU 2020 y Rentabilidad · Mineral de la Reforma</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
@@ -171,9 +171,10 @@
     }
     .seg button:hover{background: rgba(255,255,255,.10);}
 
+    /* 4 columnas ahora: check | info | tag | color */
     .layer-row{
       display:grid;
-      grid-template-columns: 22px 1fr auto;
+      grid-template-columns: 22px 1fr auto auto;
       gap:10px;
       align-items:center;
       padding:8px 8px;
@@ -191,6 +192,19 @@
     .slider-wrap{margin-top:8px;display:grid;grid-template-columns: 1fr auto;gap:10px;align-items:center;}
     input[type="range"]{width:100%; accent-color: var(--accent2);}
     .pct{font-size:11px;color: rgba(232,236,255,.90);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px 8px;background: rgba(255,255,255,.03);min-width:52px;text-align:center;}
+
+    /* Color pickers */
+    .clr{
+      width:34px; height:34px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.05);
+      padding:3px;
+      cursor:pointer;
+    }
+    input[type="color"]{ -webkit-appearance:none; appearance:none; }
+    input[type="color"]::-webkit-color-swatch-wrapper{padding:0}
+    input[type="color"]::-webkit-color-swatch{border:none;border-radius:9px}
 
     /* Info rows */
     .row{
@@ -256,7 +270,7 @@
       border-radius:14px;
       padding:10px 12px;
       box-shadow: 0 12px 24px rgba(0,0,0,.35);
-      max-width: 230px;
+      max-width: 260px;
       display:none;
     }
     .legend h3{margin:0 0 6px 0; font-size:12px; letter-spacing:.3px; text-transform:uppercase;}
@@ -284,12 +298,8 @@
       margin:0 10px 10px 0!important;
       padding:6px 10px!important;
     }
-  
-    /* Print helpers (only affects report window) */
-    @media print{
-      .no-print{display:none!important;}
-    }
 
+    @media print{ .no-print{display:none!important;} }
   </style>
 </head>
 <body>
@@ -298,8 +308,8 @@
     <div class="header">
       <div class="brand-pill">Mineral</div>
       <div>
-        <h1>Visor · DENUE + Marginación (IMU 2020)</h1>
-        <div class="muted">Cruce por <b class="mono">LOC</b>. IMU agregado por localidad.</div>
+        <h1>Visor · DENUE + IMU 2020 + Rentabilidad (Secciones)</h1>
+        <div class="muted">IMU por <b class="mono">LOC</b> · Rentabilidad por <b class="mono">SECCIÓN</b>.</div>
       </div>
       <div class="header-actions">
         <button id="btnHome" class="icon-btn" title="Centrar mapa">⌂</button>
@@ -309,7 +319,7 @@
     </div>
 
     <div class="sticky">
-      <input id="q" type="text" placeholder="Buscar colonia, localidad o DENUE (3+ letras)…">
+      <input id="q" type="text" placeholder="Buscar colonia, localidad, sección o DENUE (3+ letras)…">
       <div id="results" class="results"></div>
       <div class="muted" style="margin-top:8px">
         Servidor local: <span class="mono">python -m http.server 8000</span><br/>
@@ -323,18 +333,24 @@
         <span class="pill" id="pillLayers">Listo</span>
       </div>
       <div class="card-b">
-        <div class="muted" style="margin-bottom:10px">Activa/desactiva capas, ajusta transparencia y cambia a satelital. El “Modo IMU” colorea localidades por grado de marginación.</div>
+        <div class="muted" style="margin-bottom:10px">
+          Activa/desactiva capas, ajusta transparencia, cambia a satelital.
+          <br/>• <b>Modo IMU</b>: colorea localidades por marginación.
+          <br/>• <b>Modo Rentabilidad</b>: colorea secciones por rentabilidad.
+          <br/>• Cambia el <b>color</b> de cada capa con el selector.
+        </div>
 
         <div class="seg" style="margin-bottom:10px">
           <button id="bmOsm" class="active" type="button">Mapa</button>
           <button id="bmSat" type="button">Satelital</button>
           <button id="btnIMU" type="button">Modo IMU</button>
+          <button id="btnRent" class="active" type="button">Rentabilidad</button>
         </div>
 
         <div class="layer-row">
           <input class="chk" id="chkColonias" type="checkbox" checked>
           <div class="layer-name">
-            <b><span class="swatch" style="background:rgba(255,255,255,.25)"></span>Colonias</b>
+            <b><span class="swatch" id="swColonias"></span>Colonias</b>
             <span>Polígonos</span>
             <div class="slider-wrap">
               <input id="opColonias" type="range" min="0" max="100" value="35">
@@ -342,12 +358,13 @@
             </div>
           </div>
           <span class="pill mono">fill</span>
+          <input id="clrColonias" class="clr" type="color" value="#ffffff" title="Color colonias">
         </div>
 
         <div class="layer-row">
           <input class="chk" id="chkLocPolys" type="checkbox" checked>
           <div class="layer-name">
-            <b><span class="swatch" style="background:rgba(179,142,93,.26)"></span>Localidades</b>
+            <b><span class="swatch" id="swLocPolys"></span>Localidades</b>
             <span>Polígonos (unión de colonias)</span>
             <div class="slider-wrap">
               <input id="opLocPolys" type="range" min="0" max="100" value="18">
@@ -355,45 +372,49 @@
             </div>
           </div>
           <span class="pill mono">fill</span>
+          <input id="clrLocPolys" class="clr" type="color" value="#B38E5D" title="Color localidades (cuando IMU está apagado)">
         </div>
 
         <div class="layer-row">
-        <input class="chk" id="chkSecciones" type="checkbox" checked>
-        <div class="layer-name">
-          <b><span class="swatch" style="background:rgba(88,160,255,.45)"></span>Secciones</b>
-          <span>INE · Polígonos</span>
-          <div class="slider-wrap">
-            <input id="opSecciones" type="range" min="0" max="100" value="25">
-            <span class="pct" id="pctSecciones">25%</span>
+          <input class="chk" id="chkSecciones" type="checkbox" checked>
+          <div class="layer-name">
+            <b><span class="swatch" id="swSecciones"></span>Secciones</b>
+            <span>INE · Polígonos (rentabilidad/meta/ln/zona)</span>
+            <div class="slider-wrap">
+              <input id="opSecciones" type="range" min="0" max="100" value="35">
+              <span class="pct" id="pctSecciones">35%</span>
+            </div>
           </div>
+          <span class="pill mono">fill</span>
+          <input id="clrSecciones" class="clr" type="color" value="#58a0ff" title="Color de borde secciones (y relleno si Rentabilidad está apagado)">
         </div>
-        <span class="pill mono">fill</span>
-      </div>
 
         <div class="layer-row">
           <input class="chk" id="chkLocPoints" type="checkbox" checked>
           <div class="layer-name">
-            <b><span class="swatch" style="background:rgba(122,20,54,.55)"></span>Localidades</b>
+            <b><span class="swatch" id="swLocPoints"></span>Localidades</b>
             <span>Puntos (Censo)</span>
             <div class="slider-wrap">
               <input id="opLocPoints" type="range" min="0" max="100" value="80">
               <span class="pct" id="pctLocPoints">80%</span>
             </div>
           </div>
-          <span class="pill mono">fill</span>
+          <span class="pill mono">pt</span>
+          <input id="clrLocPoints" class="clr" type="color" value="#7A1436" title="Color puntos localidades">
         </div>
 
         <div class="layer-row">
           <input class="chk" id="chkDenue" type="checkbox" checked>
           <div class="layer-name">
-            <b><span class="swatch" style="background:rgba(80,200,120,.55)"></span>DENUE</b>
+            <b><span class="swatch" id="swDenue"></span>DENUE</b>
             <span>Unidades económicas (puntos)</span>
             <div class="slider-wrap">
               <input id="opDenue" type="range" min="0" max="100" value="65">
               <span class="pct" id="pctDenue">65%</span>
             </div>
           </div>
-          <span class="pill mono">fill</span>
+          <span class="pill mono">pt</span>
+          <input id="clrDenue" class="clr" type="color" value="#50c878" title="Color puntos DENUE">
         </div>
       </div>
     </div>
@@ -419,6 +440,14 @@
       <div class="leg-row"><span class="leg-sq" style="background:#F4A261"></span> Alto</div>
       <div class="leg-row"><span class="leg-sq" style="background:#E76F51"></span> Muy alto</div>
     </div>
+
+    <div id="legendRent" class="legend" style="bottom:16px; right:16px;">
+      <h3>Rentabilidad (Sección)</h3>
+      <div class="muted" style="margin-bottom:6px">
+        Colorea secciones por <span class="mono">rentabilidad</span>. (Auto-detecta: texto o numérico)
+      </div>
+      <div id="legendRentRows"></div>
+    </div>
   </main>
 </div>
 
@@ -428,6 +457,7 @@
   const FILE_COLONIAS    = "colonias_con_imu2020.geojson";
   const FILE_LOC_POINTS  = "localidades_puntos_con_imu2020.geojson";
   const FILE_LOC_POLYS   = "localidades_poligonos_con_imu2020.geojson";
+  // OJO: tu archivo se sigue llamando así (ya reemplazado con rentabilidad/meta/zona/LN)
   const FILE_SECCIONES   = "secciones_mr.geojson";
 
   const FILE_DICT_CENSO  = "diccionario.json";
@@ -456,6 +486,14 @@
     return String(v);
   }
   function esc(s){return (s??"").toString().replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
+  function hexToRgba(hex, alpha){
+    const h = (hex||"").replace("#","");
+    if(h.length !== 6) return `rgba(255,255,255,${alpha})`;
+    const r = parseInt(h.slice(0,2),16);
+    const g = parseInt(h.slice(2,4),16);
+    const b = parseInt(h.slice(4,6),16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
 
   async function load(url){
     const r=await fetch(url);
@@ -465,6 +503,16 @@
 
   // Diccionario unificado
   let DICT = {};
+  const DICT_SECCIONES = {
+    seccion: { indicador:"Sección", descripcion:"Sección electoral (INE)." },
+    distrito_f: { indicador:"Distrito federal", descripcion:"Distrito electoral federal." },
+    distrito_l: { indicador:"Distrito local", descripcion:"Distrito electoral local." },
+    zona: { indicador:"Zona", descripcion:"Zona operativa/estratégica asociada a la sección." },
+    lista_nominal: { indicador:"Lista nominal", descripcion:"LN de la sección (lista nominal)." },
+    meta: { indicador:"Meta", descripcion:"Meta asignada para la sección." },
+    rentabilidad: { indicador:"Rentabilidad", descripcion:"Clasificación/score de rentabilidad de la sección." }
+  };
+
   function labelFor(code){
     const m = DICT[code];
     if(!m) return code;
@@ -475,12 +523,11 @@
     return m?.descripcion || "";
   }
 
-
   // -----------------------------
   // Estado de selección (para imprimir)
   // -----------------------------
-  let currentSelection = null; 
-  // { type: "colonia"|"localidad"|"denue", feature, locPointFeature, denueListLoc, denueListCol, coloniasList }
+  let currentSelection = null;
+  // { type: "colonia"|"localidad"|"denue"|"seccion", feature, locPointFeature, denueListLoc, denueListCol, coloniasList }
 
   function nowMX(){
     const d = new Date();
@@ -490,12 +537,6 @@
   function sortKeysForReport(obj){
     return Object.keys(obj||{}).sort((a,b)=>a.localeCompare(b,"es"));
   }
-
-  function labelWithCode(code){
-    const lbl = labelFor(code);
-    return (lbl && lbl !== code) ? `${lbl} (${code})` : code;
-  }
-
   function buildRows(props, keys){
     const arr = [];
     const useKeys = keys && keys.length ? keys : sortKeysForReport(props);
@@ -602,22 +643,26 @@
       ? `Ficha de Colonia · ${p.Nombre || "—"}`
       : (type === "localidad")
         ? `Ficha de Localidad · ${p.NOM_LOC || "—"}`
-        : `Ficha DENUE · ${p.nom_estab || "—"}`;
+        : (type === "seccion")
+          ? `Ficha de Sección · ${p.seccion || "—"}`
+          : `Ficha DENUE · ${p.nom_estab || "—"}`;
 
     const subtitle = `Municipio: Mineral de la Reforma · Generado: ${nowMX()}`;
 
-    // Sections
     let sections = "";
+
+    if(type === "seccion"){
+      const secKeys = ["seccion","distrito_f","distrito_l","zona","lista_nominal","meta","rentabilidad","id","tipo","control","entidad","municipio"];
+      sections += tableHTML("Datos de la sección", buildRows(p, secKeys));
+    }
 
     if(type === "colonia"){
       const coloniaKeys = ["Nombre","Caracter","Pres_Hab","AREA_APROX","LOC","NOM_LOC","dist_m_a_localidad"];
       sections += tableHTML("Datos de la colonia", buildRows(p, coloniaKeys));
 
-      // IMU keys (prefixed)
       const imuKeys = sortKeysForReport(p).filter(k => k.startsWith("IMU_"));
       sections += tableHTML("Marginación (IMU 2020) · agregado por LOC", buildRows(p, imuKeys));
 
-      // Censo: all from localidad punto
       if(Object.keys(lp).length){
         sections += tableHTML("Censo · Localidad asociada (todas las variables)", buildRows(lp, null));
       } else {
@@ -638,7 +683,6 @@
       if(Object.keys(lp).length){
         sections += tableHTML("Censo (todas las variables)", buildRows(lp, null));
       } else {
-        // if click was point, feature contains censo
         sections += tableHTML("Censo (todas las variables)", buildRows(p, null));
       }
 
@@ -650,7 +694,6 @@
       sections += tableHTML("Datos de la unidad económica (DENUE)", buildRows(p, denKeys));
     }
 
-    // Report HTML
     return `<!doctype html>
 <html lang="es">
 <head>
@@ -671,13 +714,10 @@
       display:flex; justify-content:space-between; align-items:flex-start;
       gap:16px; border-bottom:3px solid var(--accent); padding-bottom:10px; margin-bottom:14px;
     }
-    .brand{
-      display:flex; flex-direction:column; gap:4px;
-    }
+    .brand{ display:flex; flex-direction:column; gap:4px; }
     .brand .t{ font-weight:900; font-size:16px; color:var(--accent); }
     .brand .s{ font-size:12px; color:var(--muted); }
     .meta{ text-align:right; font-size:12px; color:var(--muted); }
-    h1{ margin:0; font-size:18px; }
     .sec{ margin-top:14px; }
     .sec h2{
       margin:0 0 8px 0; font-size:13px; letter-spacing:.2px; text-transform:uppercase;
@@ -702,14 +742,9 @@
     ol.list li{ margin:4px 0; }
     .footer{ margin-top:16px; border-top:1px solid var(--border); padding-top:10px; font-size:11px; color:var(--muted); }
     .actions{ margin-top:10px; display:flex; gap:8px; }
-    .btn{
-      border:1px solid var(--border); background:#fff; padding:8px 10px; border-radius:8px;
-      font-weight:700; cursor:pointer; font-size:12px;
-    }
+    .btn{ border:1px solid var(--border); background:#fff; padding:8px 10px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px; }
     .btn.primary{ border-color: var(--accent); }
-    @media print{
-      .no-print{ display:none !important; }
-    }
+    @media print{ .no-print{ display:none !important; } }
   </style>
 </head>
 <body>
@@ -732,7 +767,7 @@
   ${sections}
 
   <div class="footer">
-    Fuente: Censo/INEGI (Localidades), IMU 2020 (CONAPO), DENUE (INEGI). Integración por LOC/colonia (aprox).
+    Fuente: Censo/INEGI (Localidades), IMU 2020 (CONAPO), DENUE (INEGI), Secciones INE + metas/rentabilidad (integración local).
   </div>
 </body>
 </html>`;
@@ -740,7 +775,7 @@
 
   function printCurrentSelection(){
     if(!currentSelection || !currentSelection.feature){
-      alert("Primero selecciona una colonia, localidad o punto DENUE en el mapa.");
+      alert("Primero selecciona una colonia, localidad, sección o punto DENUE en el mapa.");
       return;
     }
     const html = buildReportDocument(currentSelection);
@@ -752,15 +787,35 @@
     w.document.open();
     w.document.write(html);
     w.document.close();
-    // Wait a tick before printing for better reliability
     setTimeout(()=>{ w.focus(); w.print(); }, 250);
   }
-  // Opacity state
-const opacityState = { colonias:0.35, locPolys:0.18, locPoints:0.80, denue:0.65, secciones:0.25 };
-  // IMU mode
-  let imuMode = false;
-  const legendIMU = document.getElementById("legendIMU");
 
+  // -----------------------------
+  // Estado visual (opacidad + color)
+  // -----------------------------
+  const opacityState = { colonias:0.35, locPolys:0.18, secciones:0.35, locPoints:0.80, denue:0.65 };
+
+  const colorState = {
+    coloniasFill: "#ffffff",
+    coloniasStroke: "#ffffff",
+    locPolysFill: "#B38E5D",
+    locPoints: "#7A1436",
+    denue: "#50c878",
+    seccionesStroke: "#58a0ff",
+    seccionesFill: "#58a0ff"
+  };
+
+  // -----------------------------
+  // Modos (IMU / Rentabilidad)
+  // -----------------------------
+  let imuMode = false;
+  let rentMode = true;
+
+  const legendIMU = document.getElementById("legendIMU");
+  const legendRent = document.getElementById("legendRent");
+  const legendRentRows = document.getElementById("legendRentRows");
+
+  // IMU colors
   function gmColor(gm){
     const g = (gm||"").toString().toLowerCase();
     if(g.includes("muy bajo")) return "#2A9D8F";
@@ -768,47 +823,210 @@ const opacityState = { colonias:0.35, locPolys:0.18, locPoints:0.80, denue:0.65,
     if(g.includes("medio")) return "#F2CC8F";
     if(g.includes("alto") && !g.includes("muy")) return "#F4A261";
     if(g.includes("muy alto")) return "#E76F51";
-    return "#8D99AE"; // sin dato
+    return "#8D99AE";
   }
 
-  function styleColonias(){
-    return { weight: 1, opacity: Math.min(0.95, opacityState.colonias + 0.25), fillOpacity: opacityState.colonias, fillColor:"#ffffff" };
+  // Rentabilidad (auto: categórica o numérica)
+  let rentInfo = {
+    mode: "categorical", // "categorical" | "numeric"
+    // categorical:
+    cats: ["Muy baja","Baja","Media","Alta","Muy alta","Sin dato"],
+    catColors: {
+      "Muy baja":"#E76F51",
+      "Baja":"#F4A261",
+      "Media":"#F2CC8F",
+      "Alta":"#A7C957",
+      "Muy alta":"#2A9D8F",
+      "Sin dato":"#8D99AE"
+    },
+    // numeric:
+    breaks: null, // [b1,b2,b3,b4] for 5 classes
+    numColors: ["#E76F51","#F4A261","#F2CC8F","#A7C957","#2A9D8F"], // low->high
+  };
+
+  function parseNumberMaybe(v){
+    if(v === null || v === undefined) return null;
+    if(typeof v === "number" && !Number.isNaN(v)) return v;
+    const s = String(v).replace(",", ".").replace(/[^\d.\-]/g,"").trim();
+    if(!s) return null;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : null;
   }
-  function styleLocPolys(feature){
-    const base = { weight: 2, opacity: Math.min(0.90, opacityState.locPolys + 0.25), fillOpacity: opacityState.locPolys };
-    if(imuMode){
-      base.fillColor = gmColor(feature?.properties?.IMU_GM_2020);
+
+  function rentCategory(v){
+    if(v === null || v === undefined || String(v).trim()==="") return "Sin dato";
+    const s = String(v).toLowerCase();
+
+    // común: "alta", "media", "baja", "muy alta", "muy baja"
+    if(s.includes("muy") && s.includes("alta")) return "Muy alta";
+    if(s.includes("muy") && s.includes("baja")) return "Muy baja";
+    if(s.includes("alta")) return "Alta";
+    if(s.includes("media")) return "Media";
+    if(s.includes("baja")) return "Baja";
+
+    // a veces vienen como A/B/M o 1-5
+    if(s === "a" || s === "alta") return "Alta";
+    if(s === "m" || s === "media") return "Media";
+    if(s === "b" || s === "baja") return "Baja";
+
+    // numérico pero guardado en texto
+    const n = parseNumberMaybe(v);
+    if(n !== null && rentInfo.mode === "numeric") return null; // se atiende en numérico
+
+    return "Sin dato";
+  }
+
+  function rentColorForFeature(feature){
+    const v = feature?.properties?.rentabilidad;
+    if(rentInfo.mode === "numeric"){
+      const n = parseNumberMaybe(v);
+      if(n === null || !rentInfo.breaks) return rentInfo.catColors["Sin dato"];
+      const [b1,b2,b3,b4] = rentInfo.breaks;
+      const idx = (n <= b1) ? 0 : (n <= b2) ? 1 : (n <= b3) ? 2 : (n <= b4) ? 3 : 4;
+      return rentInfo.numColors[idx] || rentInfo.catColors["Sin dato"];
     } else {
-      base.fillColor = "#B38E5D";
+      const cat = rentCategory(v) || "Sin dato";
+      return rentInfo.catColors[cat] || rentInfo.catColors["Sin dato"];
     }
+  }
+
+  function renderRentLegend(){
+    if(!rentMode){
+      legendRent.style.display = "none";
+      return;
+    }
+    legendRent.style.display = "block";
+    if(rentInfo.mode === "numeric" && rentInfo.breaks){
+      const [b1,b2,b3,b4] = rentInfo.breaks;
+      const rows = [
+        {c:rentInfo.numColors[0], t:`≤ ${fmt(b1)}`},
+        {c:rentInfo.numColors[1], t:`${fmt(b1)} – ${fmt(b2)}`},
+        {c:rentInfo.numColors[2], t:`${fmt(b2)} – ${fmt(b3)}`},
+        {c:rentInfo.numColors[3], t:`${fmt(b3)} – ${fmt(b4)}`},
+        {c:rentInfo.numColors[4], t:`> ${fmt(b4)}`},
+        {c:rentInfo.catColors["Sin dato"], t:"Sin dato"},
+      ];
+      legendRentRows.innerHTML = rows.map(r=>`
+        <div class="leg-row"><span class="leg-sq" style="background:${r.c}"></span> ${esc(r.t)}</div>
+      `).join("");
+    } else {
+      const rows = rentInfo.cats.map(cat => ({
+        c: rentInfo.catColors[cat] || rentInfo.catColors["Sin dato"],
+        t: cat
+      }));
+      legendRentRows.innerHTML = rows.map(r=>`
+        <div class="leg-row"><span class="leg-sq" style="background:${r.c}"></span> ${esc(r.t)}</div>
+      `).join("");
+    }
+  }
+
+  function detectRentModeFromFeatures(features){
+    const vals = [];
+    for(const f of (features||[])){
+      const v = f?.properties?.rentabilidad;
+      if(v === undefined || v === null || String(v).trim()==="") continue;
+      vals.push(v);
+    }
+    if(!vals.length){
+      rentInfo.mode = "categorical";
+      rentInfo.breaks = null;
+      renderRentLegend();
+      return;
+    }
+
+    // ¿mayoría numérica?
+    let numCount = 0;
+    const nums = [];
+    for(const v of vals){
+      const n = parseNumberMaybe(v);
+      if(n !== null){
+        numCount++;
+        nums.push(n);
+      }
+    }
+    const ratio = numCount / vals.length;
+
+    if(ratio >= 0.75 && nums.length >= 10){
+      rentInfo.mode = "numeric";
+      nums.sort((a,b)=>a-b);
+
+      // cuantiles (20/40/60/80)
+      function q(p){
+        const idx = (nums.length-1)*p;
+        const lo = Math.floor(idx), hi = Math.ceil(idx);
+        if(lo === hi) return nums[lo];
+        const t = idx - lo;
+        return nums[lo]*(1-t) + nums[hi]*t;
+      }
+      const b1 = q(0.20), b2 = q(0.40), b3 = q(0.60), b4 = q(0.80);
+      rentInfo.breaks = [b1,b2,b3,b4];
+    } else {
+      rentInfo.mode = "categorical";
+      rentInfo.breaks = null;
+    }
+    renderRentLegend();
+  }
+
+  // -----------------------------
+  // Estilos por capa
+  // -----------------------------
+  function styleColonias(){
+    return {
+      weight: 1,
+      color: hexToRgba(colorState.coloniasStroke, Math.min(0.95, opacityState.colonias + 0.25)),
+      opacity: Math.min(0.95, opacityState.colonias + 0.25),
+      fillOpacity: opacityState.colonias,
+      fillColor: colorState.coloniasFill
+    };
+  }
+
+  function styleLocPolys(feature){
+    const base = {
+      weight: 2,
+      color: hexToRgba("#ffffff", 0.55),
+      opacity: Math.min(0.90, opacityState.locPolys + 0.25),
+      fillOpacity: opacityState.locPolys
+    };
+    base.fillColor = imuMode ? gmColor(feature?.properties?.IMU_GM_2020) : colorState.locPolysFill;
     return base;
   }
-  function styleLocPoints(){
-    return { radius: 6, weight: 2, opacity: Math.min(0.95, opacityState.locPoints + 0.15), fillOpacity: opacityState.locPoints };
-  }
-  function styleDenue(){
-    return { radius: 4, weight: 1.5, opacity: Math.min(0.95, opacityState.denue + 0.15), fillOpacity: opacityState.denue };
-  }
-  function styleSecciones(){
-  return {
-    weight: 2,
-    color: "rgba(88,160,255,.95)",
-    opacity: Math.min(0.95, opacityState.secciones + 0.25),
-    fillOpacity: opacityState.secciones,
-    fillColor: "rgba(88,160,255,.18)"
-  };
-}
 
-const layerSecciones = L.geoJSON(null, {
-  style: () => styleSecciones(),
-  onEachFeature: (f, l) => {
-    l.on("click", () => select("seccion", f, l));
-    l.on("mouseover", () => { try { l.bringToFront(); } catch(e){} });
+  function styleLocPoints(){
+    return {
+      radius: 6,
+      color: hexToRgba(colorState.locPoints, 0.95),
+      weight: 2,
+      opacity: Math.min(0.95, opacityState.locPoints + 0.15),
+      fillColor: colorState.locPoints,
+      fillOpacity: opacityState.locPoints
+    };
   }
-});
+
+  function styleDenue(){
+    return {
+      radius: 4,
+      color: hexToRgba(colorState.denue, 0.95),
+      weight: 1.5,
+      opacity: Math.min(0.95, opacityState.denue + 0.15),
+      fillColor: colorState.denue,
+      fillOpacity: opacityState.denue
+    };
+  }
+
+  function styleSecciones(feature){
+    const fill = rentMode ? rentColorForFeature(feature) : colorState.seccionesFill;
+    return {
+      weight: 2,
+      color: hexToRgba(colorState.seccionesStroke, 0.95),
+      opacity: Math.min(0.95, opacityState.secciones + 0.25),
+      fillOpacity: opacityState.secciones,
+      fillColor: fill
+    };
+  }
 
   // Stores
   let coloniasFeatures=[];
+  let seccionesFeatures=[];
   const locPointByLOC = new Map();
   const denueById = new Map();
   let denueFeatures=[];
@@ -841,42 +1059,56 @@ const layerSecciones = L.geoJSON(null, {
     }
   });
 
+  // Pane para que secciones siempre queden arriba de colonias/localidades
+  map.createPane("paneSecciones");
+  map.getPane("paneSecciones").style.zIndex = 650;
+
+  const layerSecciones = L.geoJSON(null, {
+    pane: "paneSecciones",
+    style: (f) => styleSecciones(f),
+    onEachFeature: (f, l) => {
+      l.on("click", () => select("seccion", f, l));
+      l.on("mouseover", () => { try { l.bringToFront(); } catch(e){} });
+    }
+  });
+
   layerColonias.addTo(map);
   layerLocPolys.addTo(map);
+  layerSecciones.addTo(map);
   layerLocPoints.addTo(map);
   layerDenue.addTo(map);
-  layerSecciones.addTo(map);
 
   // Highlight logic
   let activeLayer=null;
   let activeKind=null;
 
   function clearHighlight(){
-  if(activeLayer && activeLayer.setStyle){
-    if(activeKind==="colonia") activeLayer.setStyle(styleColonias());
-    else if(activeKind==="localidad") activeLayer.setStyle(styleLocPolys(activeLayer.feature));
-    else if(activeKind==="punto") activeLayer.setStyle(styleLocPoints());
-    else if(activeKind==="seccion") activeLayer.setStyle(styleSecciones()); // 👈 NUEVO
-    else if(activeKind==="denue") activeLayer.setStyle(styleDenue());
+    if(activeLayer && activeLayer.setStyle){
+      if(activeKind==="colonia") activeLayer.setStyle(styleColonias());
+      else if(activeKind==="localidad") activeLayer.setStyle(styleLocPolys(activeLayer.feature));
+      else if(activeKind==="punto") activeLayer.setStyle(styleLocPoints());
+      else if(activeKind==="seccion") activeLayer.setStyle(styleSecciones(activeLayer.feature));
+      else if(activeKind==="denue") activeLayer.setStyle(styleDenue());
+    }
+    activeLayer=null;
+    activeKind=null;
   }
-  activeLayer=null;
-  activeKind=null;
-}
 
-function highlight(layer, kind){
-  if(!layer || !layer.setStyle) return;
+  function highlight(layer, kind){
+    if(!layer || !layer.setStyle) return;
 
-  if(kind==="colonia") layer.setStyle(styleColonias());
-  else if(kind==="localidad") layer.setStyle(styleLocPolys(layer.feature));
-  else if(kind==="punto") layer.setStyle(styleLocPoints());
-  else if(kind==="seccion") layer.setStyle(styleSecciones());  // 👈 NUEVO
-  else layer.setStyle(styleDenue());
+    if(kind==="colonia") layer.setStyle(styleColonias());
+    else if(kind==="localidad") layer.setStyle(styleLocPolys(layer.feature));
+    else if(kind==="punto") layer.setStyle(styleLocPoints());
+    else if(kind==="seccion") layer.setStyle(styleSecciones(layer.feature));
+    else layer.setStyle(styleDenue());
 
-  // resaltado
-  layer.setStyle({ weight: 4, opacity: 0.98, fillOpacity: 0.45 });
-  activeLayer=layer;
-  activeKind=kind;
-}
+    // resaltado
+    layer.setStyle({ weight: 5, opacity: 1, fillOpacity: Math.max(0.55, opacityState.secciones) });
+    if(layer.bringToFront) layer.bringToFront();
+    activeLayer=layer;
+    activeKind=kind;
+  }
 
   // Layer helpers
   function setLayerVisible(layer, visible){
@@ -885,13 +1117,14 @@ function highlight(layer, kind){
     if(!visible && has) map.removeLayer(layer);
   }
 
-  function applyOpacity(){
+  function applyOpacityAndColors(){
     layerColonias.setStyle(styleColonias());
     layerLocPolys.setStyle((f)=>styleLocPolys(f));
+    layerSecciones.setStyle((f)=>styleSecciones(f));
     layerLocPoints.eachLayer(l=>l.setStyle && l.setStyle(styleLocPoints()));
     layerDenue.eachLayer(l=>l.setStyle && l.setStyle(styleDenue()));
-    layerSecciones.setStyle(styleSecciones);
     if(activeLayer) highlight(activeLayer, activeKind);
+    refreshSwatches();
   }
 
   // List helpers
@@ -1018,6 +1251,25 @@ function highlight(layer, kind){
     return present.map(k => row(k, props[k])).join("");
   }
 
+  // Rent block (sección)
+  function renderRentSection(props){
+    const keys = ["rentabilidad","meta","zona","lista_nominal"];
+    const present = keys.filter(k => props?.[k] !== undefined && props?.[k] !== null && String(props?.[k]).trim() !== "");
+    if(!present.length) return `<div class="muted">Esta sección no tiene datos de rentabilidad/meta/zona/LN.</div>`;
+    const rent = props?.rentabilidad;
+    const chip = `<span class="pill mono" style="margin-left:6px;border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.03)">
+      <span style="display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;border:1px solid rgba(255,255,255,.22);background:${rentColorForFeature({properties:props})}"></span>
+      ${esc(fmt(rent))}
+    </span>`;
+    return (
+      row("rentabilidad", props.rentabilidad) +
+      row("meta", props.meta) +
+      row("zona", props.zona) +
+      row("lista_nominal", props.lista_nominal) +
+      `<div class="muted" style="margin-top:8px">Color (modo rentabilidad): ${chip}</div>`
+    );
+  }
+
   // DENUE render
   function renderDenue(p){
     const keys = ["nom_estab","raz_social","codigo_act","nombre_act","per_ocu","tipo_vial","nom_vial","numero_ext","letra_ext","tipo_asent","nomb_asent","cod_postal","telefono","correoelec","www","tipoUniEco","fecha_alta","colonia_nombre","LOC","NOM_LOC"];
@@ -1050,46 +1302,41 @@ function highlight(layer, kind){
     const p=feature.properties||{};
     const loc=Number(p.LOC);
 
-    // Guardar selección para impresión
-    // Nota: locPoint puede ser null; denue lists se calculan abajo donde aplica
     currentSelection = { type, feature, locPointFeature: null, coloniasList: [], denueListLoc: [], denueListCol: [] };
 
     if(layer && layer.setStyle){
-  if(type==="colonia") highlight(layer, "colonia");
-  else if(type==="localidad"){
-    const isPoint = (feature.geometry?.type === "Point");
-    highlight(layer, isPoint ? "punto" : "localidad");
-  }
-  else if(type==="seccion"){
-    highlight(layer, "seccion");
-    if(layer.bringToFront) layer.bringToFront();
-  }
-  else {
-    highlight(layer, "denue");
-  }
-} else {
-  clearHighlight();
-}
+      if(type==="colonia") highlight(layer, "colonia");
+      else if(type==="localidad"){
+        const isPoint = (feature.geometry?.type === "Point");
+        highlight(layer, isPoint ? "punto" : "localidad");
+      }
+      else if(type==="seccion"){
+        highlight(layer, "seccion");
+      }
+      else {
+        highlight(layer, "denue");
+      }
+    } else {
+      clearHighlight();
+    }
 
     if(type==="denue"){
-
-      // para ficha
       currentSelection = { type:"denue", feature, locPointFeature:null, coloniasList:[], denueListLoc:[], denueListCol:[] };
       pill.textContent = "DENUE";
       info.innerHTML = renderDenue(p);
       return;
     }
 
-    if(type === "seccion"){
-      const p = feature.properties || {};
-      currentSelection = { type:"seccion", feature, locPointFeature:null, coloniasList:[], denueListLoc:[], denueListCol:[] };
-
+    if(type==="seccion"){
       pill.textContent = "Sección";
-      const keys = ["seccion","distrito_f","distrito_l","id","tipo","control","entidad","municipio"];
-      const inner = keys.filter(k => p[k] !== undefined).map(k => row(k, p[k])).join("")
-                  || `<div class="muted">Sin atributos esperados.</div>`;
 
-      info.innerHTML = details("Sección electoral", `Sección ${fmt(p.seccion)}`, inner, true);
+      const secKeys = ["seccion","distrito_f","distrito_l","entidad","municipio","id","tipo","control"];
+      const secHtml = secKeys.filter(k=>p[k]!==undefined).map(k=>row(k,p[k])).join("");
+
+      info.innerHTML =
+        details("Sección electoral", `Sección ${fmt(p.seccion)} · DF ${fmt(p.distrito_f)} · DL ${fmt(p.distrito_l)}`, secHtml, true) +
+        details("Estrategia", `Rentabilidad/Meta/Zona/LN`, renderRentSection(p), true);
+
       return;
     }
 
@@ -1098,7 +1345,6 @@ function highlight(layer, kind){
       const locPoint = locPointByLOC.get(loc);
       const cols = coloniasDeLocalidad(loc);
 
-      // para ficha
       currentSelection.locPointFeature = locPoint || null;
       currentSelection.coloniasList = cols.slice();
       currentSelection.denueListCol = (denueByColonia.get(p.Nombre || "") || []).slice();
@@ -1126,7 +1372,6 @@ function highlight(layer, kind){
     const locPoint = locPointByLOC.get(loc) || feature;
     const cols = coloniasDeLocalidad(loc);
 
-    // para ficha
     currentSelection.locPointFeature = locPoint || null;
     currentSelection.coloniasList = cols.slice();
     currentSelection.denueListLoc = (denueByLOC.get(Number(loc)) || []).slice();
@@ -1168,7 +1413,6 @@ function highlight(layer, kind){
   };
   btnPrint.onclick = () => printCurrentSelection();
 
-
   // Search
   const q=document.getElementById("q");
   const results=document.getElementById("results");
@@ -1207,6 +1451,12 @@ function highlight(layer, kind){
       if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("colonia", target.feature, target); }
       return;
     }
+    if(it.type==="Sección"){
+      let target=null;
+      layerSecciones.eachLayer(l=>{ if(Number(l.feature?.properties?.seccion)===Number(it.seccion)) target=l; });
+      if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("seccion", target.feature, target); }
+      return;
+    }
     // DENUE
     const denLayer = denueById.get(String(it.denue_id));
     if(denLayer){
@@ -1222,46 +1472,65 @@ function highlight(layer, kind){
     showResults(items);
   });
 
-  // Layer UI (opacity + toggles + basemap + IMU mode)
+  // Layer UI (opacity + toggles + basemap + modes + colors)
   const chkColonias = document.getElementById("chkColonias");
   const chkLocPolys = document.getElementById("chkLocPolys");
+  const chkSecciones = document.getElementById("chkSecciones");
   const chkLocPoints = document.getElementById("chkLocPoints");
   const chkDenue = document.getElementById("chkDenue");
 
   const opColonias = document.getElementById("opColonias");
   const opLocPolys = document.getElementById("opLocPolys");
+  const opSecciones = document.getElementById("opSecciones");
   const opLocPoints = document.getElementById("opLocPoints");
   const opDenue = document.getElementById("opDenue");
 
   const pctColonias = document.getElementById("pctColonias");
   const pctLocPolys = document.getElementById("pctLocPolys");
+  const pctSecciones = document.getElementById("pctSecciones");
   const pctLocPoints = document.getElementById("pctLocPoints");
   const pctDenue = document.getElementById("pctDenue");
 
-  const chkSecciones = document.getElementById("chkSecciones");
-  const opSecciones  = document.getElementById("opSecciones");
-  const pctSecciones = document.getElementById("pctSecciones");
+  const clrColonias = document.getElementById("clrColonias");
+  const clrLocPolys = document.getElementById("clrLocPolys");
+  const clrSecciones = document.getElementById("clrSecciones");
+  const clrLocPoints = document.getElementById("clrLocPoints");
+  const clrDenue = document.getElementById("clrDenue");
 
-  chkSecciones.onchange = () => setLayerVisible(layerSecciones, chkSecciones.checked);
+  const swColonias = document.getElementById("swColonias");
+  const swLocPolys = document.getElementById("swLocPolys");
+  const swSecciones = document.getElementById("swSecciones");
+  const swLocPoints = document.getElementById("swLocPoints");
+  const swDenue = document.getElementById("swDenue");
 
-  opSecciones.oninput = () => {
-    const v = Number(opSecciones.value);
-    setPct(pctSecciones, v);
-    opacityState.secciones = v/100;
-    applyOpacity();
-  };
+  function refreshSwatches(){
+    swColonias.style.background = hexToRgba(colorState.coloniasFill, 0.25);
+    swLocPolys.style.background = hexToRgba(colorState.locPolysFill, 0.26);
+    swSecciones.style.background = hexToRgba(colorState.seccionesStroke, 0.45);
+    swLocPoints.style.background = hexToRgba(colorState.locPoints, 0.55);
+    swDenue.style.background = hexToRgba(colorState.denue, 0.55);
+  }
 
   function setPct(el, v){ el.textContent = `${v}%`; }
-  setPct(pctSecciones, Number(opSecciones.value));
+
   chkColonias.onchange = () => setLayerVisible(layerColonias, chkColonias.checked);
   chkLocPolys.onchange = () => setLayerVisible(layerLocPolys, chkLocPolys.checked);
+  chkSecciones.onchange = () => setLayerVisible(layerSecciones, chkSecciones.checked);
   chkLocPoints.onchange = () => setLayerVisible(layerLocPoints, chkLocPoints.checked);
   chkDenue.onchange = () => setLayerVisible(layerDenue, chkDenue.checked);
 
-  opColonias.oninput = () => { const v=Number(opColonias.value); setPct(pctColonias,v); opacityState.colonias=v/100; applyOpacity(); };
-  opLocPolys.oninput = () => { const v=Number(opLocPolys.value); setPct(pctLocPolys,v); opacityState.locPolys=v/100; applyOpacity(); };
-  opLocPoints.oninput = () => { const v=Number(opLocPoints.value); setPct(pctLocPoints,v); opacityState.locPoints=v/100; applyOpacity(); };
-  opDenue.oninput = () => { const v=Number(opDenue.value); setPct(pctDenue,v); opacityState.denue=v/100; applyOpacity(); };
+  opColonias.oninput = () => { const v=Number(opColonias.value); setPct(pctColonias,v); opacityState.colonias=v/100; applyOpacityAndColors(); };
+  opLocPolys.oninput = () => { const v=Number(opLocPolys.value); setPct(pctLocPolys,v); opacityState.locPolys=v/100; applyOpacityAndColors(); };
+  opSecciones.oninput = () => { const v=Number(opSecciones.value); setPct(pctSecciones,v); opacityState.secciones=v/100; applyOpacityAndColors(); };
+  opLocPoints.oninput = () => { const v=Number(opLocPoints.value); setPct(pctLocPoints,v); opacityState.locPoints=v/100; applyOpacityAndColors(); };
+  opDenue.oninput = () => { const v=Number(opDenue.value); setPct(pctDenue,v); opacityState.denue=v/100; applyOpacityAndColors(); };
+
+  // Color pickers
+  clrColonias.oninput = () => { colorState.coloniasFill = clrColonias.value; applyOpacityAndColors(); };
+  clrLocPolys.oninput = () => { colorState.locPolysFill = clrLocPolys.value; applyOpacityAndColors(); };
+  clrSecciones.oninput = () => { colorState.seccionesStroke = clrSecciones.value; colorState.seccionesFill = clrSecciones.value; applyOpacityAndColors(); };
+  clrLocPoints.oninput = () => { colorState.locPoints = clrLocPoints.value; applyOpacityAndColors(); };
+  clrDenue.oninput = () => { colorState.denue = clrDenue.value; applyOpacityAndColors(); };
 
   // Basemap
   const bmOsmBtn = document.getElementById("bmOsm");
@@ -1281,7 +1550,7 @@ function highlight(layer, kind){
   bmOsmBtn.onclick = () => setBasemap("osm");
   bmSatBtn.onclick = () => setBasemap("sat");
 
-  // IMU mode button
+  // IMU mode
   const btnIMU = document.getElementById("btnIMU");
   function setImuMode(on){
     imuMode = !!on;
@@ -1292,11 +1561,26 @@ function highlight(layer, kind){
       btnIMU.classList.remove("active");
       legendIMU.style.display="none";
     }
-    // refresh styles
     layerLocPolys.setStyle((f)=>styleLocPolys(f));
     if(activeLayer && activeKind==="localidad") highlight(activeLayer, activeKind);
   }
   btnIMU.onclick = () => setImuMode(!imuMode);
+
+  // Rent mode
+  const btnRent = document.getElementById("btnRent");
+  function setRentMode(on){
+    rentMode = !!on;
+    if(rentMode){
+      btnRent.classList.add("active");
+      renderRentLegend();
+    } else {
+      btnRent.classList.remove("active");
+      legendRent.style.display="none";
+    }
+    layerSecciones.setStyle((f)=>styleSecciones(f));
+    if(activeLayer && activeKind==="seccion") highlight(activeLayer, activeKind);
+  }
+  btnRent.onclick = () => setRentMode(!rentMode);
 
   // Init
   (async ()=>{
@@ -1307,18 +1591,21 @@ function highlight(layer, kind){
     try{ denueDict = await load(FILE_DICT_DENUE); }catch(e){ console.warn("No se pudo cargar diccionario_denue.json:", e); }
     let imuDict = {};
     try{ imuDict = await load(FILE_DICT_IMU); }catch(e){ console.warn("No se pudo cargar diccionario_imu2020.json:", e); }
-    // Secciones (INE)
+
+    DICT = { ...censoDict, ...denueDict, ...imuDict, ...DICT_SECCIONES };
+
+    // Secciones (INE + rentabilidad/meta/zona/LN)
     try{
       const gjS = await load(FILE_SECCIONES);
+      seccionesFeatures = gjS.features || [];
       layerSecciones.addData(gjS);
+      detectRentModeFromFeatures(seccionesFeatures);
     }catch(e){
       console.warn("No se pudo cargar secciones:", e);
       chkSecciones.checked = false;
       setLayerVisible(layerSecciones, false);
+      setRentMode(false);
     }
-    DICT = { ...censoDict };
-    for(const [k,v] of Object.entries(denueDict)){ if(!(k in DICT)) DICT[k]=v; }
-    for(const [k,v] of Object.entries(imuDict)){ if(!(k in DICT)) DICT[k]=v; }
 
     // Capas base (ya incluyen IMU)
     const [gjC, gjLP, gjLPoly] = await Promise.all([
@@ -1349,7 +1636,7 @@ function highlight(layer, kind){
       setLayerVisible(layerDenue, false);
     }
 
-    // Search index
+    // Search index (Colonia + Localidad + Sección + DENUE)
     searchIndex = [
       ...coloniasFeatures.map(f=>({
         type:"Colonia",
@@ -1366,6 +1653,13 @@ function highlight(layer, kind){
         meta:`LOC ${fmt(f.properties?.LOC)} · ${f.properties?.IMU_GM_2020 ? ("IMU: "+f.properties?.IMU_GM_2020) : ""}`,
         loc:f.properties?.LOC
       })),
+      ...(seccionesFeatures||[]).map(f=>({
+        type:"Sección",
+        name:`Sección ${f.properties?.seccion ?? "—"}`,
+        norm:norm(String(f.properties?.seccion ?? "")),
+        meta:`Zona: ${f.properties?.zona ?? "—"} · Rent: ${f.properties?.rentabilidad ?? "—"}`,
+        seccion:f.properties?.seccion
+      })),
       ...(denueFeatures||[]).slice(0, 50000).map(f=>({
         type:"DENUE",
         name:f.properties?.nom_estab ?? "(sin nombre)",
@@ -1375,19 +1669,29 @@ function highlight(layer, kind){
       }))
     ];
 
-    // Fit bounds
+    // Fit bounds (usa colonias como base, extendiendo con secciones si existen)
     try{
       const b = layerColonias.getBounds();
       homeBounds = b;
-      map.fitBounds(b, {padding:[22,22]});
+      if(layerSecciones.getLayers().length){
+        try{
+          const bs = layerSecciones.getBounds();
+          if(bs.isValid()) homeBounds = homeBounds.extend(bs);
+        }catch(e){}
+      }
+      map.fitBounds(homeBounds, {padding:[22,22]});
     }catch(e){}
 
-    // Opacity UI init
+    // Init UI
     setPct(pctColonias, Number(opColonias.value));
     setPct(pctLocPolys, Number(opLocPolys.value));
+    setPct(pctSecciones, Number(opSecciones.value));
     setPct(pctLocPoints, Number(opLocPoints.value));
     setPct(pctDenue, Number(opDenue.value));
-    applyOpacity();
+
+    refreshSwatches();
+    setRentMode(true);
+    applyOpacityAndColors();
 
   })().catch(err=>{
     alert("Error cargando GeoJSON. Abre con servidor local y revisa nombres de archivos.\n\n"+err.message);

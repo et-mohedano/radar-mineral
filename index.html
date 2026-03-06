@@ -8,456 +8,1135 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     :root{
-      --bg:#0b1020;
-      --panel:#121a33;
-      --panel2:#0f1730;
-      --text:#e8ecff;
-      --muted:#aab3d6;
-      --border:rgba(255,255,255,.12);
-      --border2:rgba(255,255,255,.18);
+      --bg:#09111f;
+      --bg2:#0d1830;
+      --panel:#101b35;
+      --panel2:#0c162c;
+      --panel3:rgba(255,255,255,.04);
+      --text:#ecf1ff;
+      --muted:#aab7d7;
+      --muted2:#7f90ba;
+      --border:rgba(255,255,255,.10);
+      --border2:rgba(255,255,255,.16);
       --accent:#7A1436;
       --accent2:#B38E5D;
-      --shadow: 0 14px 30px rgba(0,0,0,.35);
-      --radius: 18px;
+      --ok:#2A9D8F;
+      --warn:#F4A261;
+      --danger:#E76F51;
+      --info:#4dabf7;
+      --shadow:0 18px 38px rgba(0,0,0,.34);
+      --radius:20px;
+      --radius-sm:14px;
+      --glass:rgba(255,255,255,.05);
+      --glass-2:rgba(255,255,255,.08);
     }
 
+    *{box-sizing:border-box}
     html,body{height:100%;margin:0}
     body{
-      font-family:system-ui, Segoe UI, Roboto, Arial, sans-serif;
-      background:var(--bg);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 700px at 0% 0%, rgba(122,20,54,.22) 0%, rgba(0,0,0,0) 55%),
+        radial-gradient(1000px 600px at 100% 0%, rgba(179,142,93,.12) 0%, rgba(0,0,0,0) 48%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
       color:var(--text);
       overflow:hidden;
     }
 
-    .app{display:grid;grid-template-columns:440px 1fr;height:100%}
+    .app{
+      display:grid;
+      grid-template-columns:550px 1fr;
+      height:100%;
+    }
+
     aside{
-      background: radial-gradient(1200px 600px at -20% 0%, rgba(122,20,54,.25) 0%, rgba(0,0,0,0) 60%),
-                  linear-gradient(180deg,var(--panel),var(--panel2));
-      border-right:1px solid var(--border);
-      padding:14px;
-      overflow:auto;
-    }
-    #map{height:100%;width:100%}
-
-    h1{font-size:15px;margin:0;line-height:1.2}
-    .muted{color:var(--muted);font-size:12px;line-height:1.45}
-    .mono{font-family:ui-monospace, Menlo, Consolas, monospace;font-size:11px}
-
-    .header{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 10px;
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.04);
-      box-shadow: 0 10px 24px rgba(0,0,0,.25);
-    }
-    .brand-pill{
-      font-size:11px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: linear-gradient(135deg,var(--accent),#4f0f25);
-      font-weight:900;
-      letter-spacing:.2px;
-      white-space:nowrap;
-    }
-    .header-actions{
-      margin-left:auto;
+      position:relative;
       display:flex;
-      gap:8px;
-      align-items:center;
+      flex-direction:column;
+      min-width:0;
+      border-right:1px solid var(--border);
+      background:
+        radial-gradient(1000px 520px at -20% 0%, rgba(122,20,54,.25) 0%, rgba(0,0,0,0) 60%),
+        linear-gradient(180deg,var(--panel),var(--panel2));
+      overflow:hidden;
     }
-    .icon-btn{
-      width:34px;height:34px;
-      border-radius:12px;
+
+    .sidebar-scroll{
+      overflow:auto;
+      padding:14px;
+      height:100%;
+      scrollbar-width:thin;
+      scrollbar-color:rgba(255,255,255,.20) transparent;
+    }
+    .sidebar-scroll::-webkit-scrollbar{width:9px}
+    .sidebar-scroll::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,.16);
+      border-radius:999px;
+      border:2px solid transparent;
+      background-clip:padding-box;
+    }
+
+    #map{
+      position:relative;
+      height:100%;
+      width:100%;
+    }
+
+    h1{margin:0;font-size:16px;line-height:1.15}
+    h2,h3,p{margin:0}
+    .muted{color:var(--muted);font-size:12px;line-height:1.5}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px}
+    .hidden{display:none!important}
+
+    .topbar{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(12px);
+    }
+
+    .brand-mark{
+      flex:0 0 auto;
+      width:46px;height:46px;
+      display:grid;place-items:center;
+      border-radius:16px;
+      background:
+        linear-gradient(135deg,var(--accent),#4d0c22);
       border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.05);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+      font-weight:900;
+      font-size:12px;
+      letter-spacing:.4px;
+    }
+
+    .title-wrap{min-width:0;flex:1}
+    .title-wrap .sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .top-actions{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      flex:0 0 auto;
+    }
+
+    .icon-btn{
+      width:38px;height:38px;
+      display:flex;align-items:center;justify-content:center;
+      border:none;
+      border-radius:14px;
+      background:rgba(255,255,255,.07);
       color:var(--text);
       cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      font-weight:900;
+      font-size:15px;
+      transition:.18s ease;
+      border:1px solid rgba(255,255,255,.14);
     }
-    .icon-btn:hover{background: rgba(255,255,255,.10);}
+    .icon-btn:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.12);
+      border-color:rgba(255,255,255,.24);
+    }
+
+    .stats-row{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-top:12px;
+    }
+    .stat-chip{
+      padding:10px 12px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--border);
+      min-width:0;
+    }
+    .stat-chip .k{
+      color:var(--muted2);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.35px;
+    }
+    .stat-chip .v{
+      margin-top:4px;
+      font-size:16px;
+      font-weight:900;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
 
     .sticky{
       position:sticky;
       top:0;
-      background: linear-gradient(180deg,rgba(18,26,51,.98),rgba(15,23,48,.92));
-      padding:12px 0 12px 0;
-      border-bottom:1px solid var(--border);
-      backdrop-filter: blur(8px);
       z-index:10;
+      padding-top:12px;
+      padding-bottom:10px;
+      background:linear-gradient(180deg,rgba(16,27,53,.98),rgba(12,22,44,.92));
+      backdrop-filter:blur(10px);
+    }
+
+    .card{
       margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      overflow:hidden;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+      box-shadow:var(--shadow);
+    }
+
+    .card-h{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+    }
+    .card-h .title{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.45px;
+      font-weight:900;
+      color:rgba(236,241,255,.94);
+    }
+    .card-b{padding:14px}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      font-weight:800;
+      padding:5px 10px;
+      border-radius:999px;
+      color:rgba(236,241,255,.94);
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.05);
+      white-space:nowrap;
+    }
+
+    .section-note{
+      margin-bottom:12px;
+      padding:12px 13px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.09);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.55;
+    }
+
+    .search-shell{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      overflow:hidden;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+    }
+
+    .search-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px 0 14px;
+    }
+    .search-label{
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    .search-box{
+      padding:12px 14px 10px 14px;
+    }
+
+    .search-input-wrap{
+      position:relative;
+    }
+
+    .search-icon{
+      position:absolute;
+      left:13px;
+      top:50%;
+      transform:translateY(-50%);
+      color:var(--muted2);
+      font-size:14px;
+      pointer-events:none;
     }
 
     input[type="text"]{
       width:100%;
-      padding:10px 12px;
-      border-radius:14px;
+      padding:13px 44px 13px 40px;
+      border-radius:16px;
       border:1px solid var(--border2);
-      background: rgba(255,255,255,.06);
+      background:rgba(255,255,255,.06);
       color:var(--text);
       outline:none;
+      font-size:14px;
+      transition:.18s ease;
     }
-    input::placeholder{color:rgba(232,236,255,.55)}
-    .results{
-      margin-top:8px;
-      border:1px solid var(--border);
-      border-radius:14px;
-      overflow:hidden;
-      display:none;
-      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+    input[type="text"]:focus{
+      border-color:rgba(179,142,93,.55);
+      box-shadow:0 0 0 4px rgba(179,142,93,.12);
+      background:rgba(255,255,255,.08);
     }
-    .item{
-      padding:10px 12px;
-      border-bottom:1px solid var(--border);
+    input::placeholder{color:rgba(236,241,255,.52)}
+
+    .input-clear{
+      position:absolute;
+      right:8px;
+      top:50%;
+      transform:translateY(-50%);
+      width:30px;height:30px;
+      border:none;
+      border-radius:10px;
+      background:transparent;
+      color:var(--muted);
       cursor:pointer;
-      background: rgba(255,255,255,.03);
+      display:none;
     }
-    .item:hover{background: rgba(255,255,255,.08)}
-    .item:last-child{border-bottom:none}
-    .k{font-size:11px;color:var(--muted)}
-    .v{font-size:13px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+    .input-clear:hover{background:rgba(255,255,255,.08)}
+    .input-clear.show{display:flex;align-items:center;justify-content:center}
 
-    .card{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      overflow:hidden;
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow: var(--shadow);
-      margin-top:12px;
-    }
-    .card-h{
-      padding:10px 12px;
-      background: rgba(255,255,255,.04);
-      border-bottom:1px solid var(--border);
+    .scope-row{
       display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
     }
-    .card-h .title{
-      font-size:12px;
-      letter-spacing:.3px;
-      text-transform:uppercase;
-      color:rgba(232,236,255,.90);
-    }
-    .pill{
+    .scope-btn{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      padding:8px 10px;
       font-size:11px;
-      padding:4px 9px;
+      font-weight:900;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      color:rgba(232,236,255,.90);
-      white-space:nowrap;
-      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      transition:.18s ease;
     }
-    .card-b{padding:12px}
+    .scope-btn:hover{
+      background:rgba(255,255,255,.10);
+      transform:translateY(-1px);
+    }
+    .scope-btn.active{
+      background:linear-gradient(135deg,rgba(179,142,93,.24),rgba(255,255,255,.06));
+      border-color:rgba(179,142,93,.52);
+    }
 
-    .seg{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+    .search-meta{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    .results{
+      display:none;
+      border-top:1px solid var(--border);
+      max-height:320px;
+      overflow:auto;
+      background:rgba(8,14,26,.42);
+    }
+    .results::-webkit-scrollbar{width:8px}
+    .results::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:999px}
+
+    .item{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      padding:11px 14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      cursor:pointer;
+      transition:.14s ease;
+      background:rgba(255,255,255,.02);
+    }
+    .item:last-child{border-bottom:none}
+    .item:hover,
+    .item.active{
+      background:rgba(255,255,255,.08);
+    }
+
+    .result-type{
+      align-self:start;
+      font-size:10px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      min-width:72px;
+      text-align:center;
+    }
+    .result-type.colonia{background:rgba(255,255,255,.07)}
+    .result-type.localidad{background:rgba(179,142,93,.16)}
+    .result-type.zona{background:rgba(199,125,255,.15)}
+    .result-type.seccion{background:rgba(77,171,247,.16)}
+    .result-type.casilla{background:rgba(255,209,102,.16)}
+    .result-type.denue{background:rgba(80,200,120,.16)}
+
+    .item-main .v{
+      font-size:13px;
+      font-weight:900;
+      line-height:1.25;
+      overflow-wrap:anywhere;
+    }
+    .item-main .k{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.4;
+    }
+
+    .seg{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
     .seg button{
       cursor:pointer;
-      padding:8px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.05);
+      padding:9px 11px;
+      border-radius:13px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.05);
       color:var(--text);
       font-weight:900;
       font-size:12px;
+      transition:.18s ease;
+    }
+    .seg button:hover{
+      background:rgba(255,255,255,.10);
+      transform:translateY(-1px);
     }
     .seg button.active{
-      background: linear-gradient(135deg, rgba(179,142,93,.25), rgba(255,255,255,.06));
-      border-color: rgba(179,142,93,.55);
+      background:linear-gradient(135deg, rgba(179,142,93,.26), rgba(255,255,255,.07));
+      border-color:rgba(179,142,93,.55);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
     }
-    .seg button:hover{background: rgba(255,255,255,.10);}
+
+    .group-title{
+      margin:16px 0 10px;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.45px;
+      color:var(--muted2);
+      font-weight:900;
+    }
 
     .layer-row{
       display:grid;
-      grid-template-columns: 22px 1fr auto auto;
-      gap:10px;
-      align-items:center;
-      padding:8px 8px;
+      grid-template-columns:24px minmax(0,1fr) auto auto;
+      gap:12px;
+      align-items:start;
+      padding:11px;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:14px;
-      background: rgba(0,0,0,.10);
+      border-radius:16px;
+      background:rgba(0,0,0,.10);
       margin-bottom:10px;
+      transition:.16s ease;
+    }
+    .layer-row:hover{
+      background:rgba(255,255,255,.05);
+      border-color:rgba(255,255,255,.16);
+      transform:translateY(-1px);
     }
     .layer-row:last-child{margin-bottom:0}
-    .chk{width:18px;height:18px; cursor:pointer;}
-    .layer-name{display:flex; flex-direction:column; gap:2px;}
-    .layer-name b{font-size:12px}
-    .layer-name span{font-size:11px;color:var(--muted)}
-    .swatch{width:12px;height:12px;border-radius:4px;border:1px solid rgba(255,255,255,.22);display:inline-block;margin-right:6px;}
-    .slider-wrap{margin-top:8px;display:grid;grid-template-columns: 1fr auto;gap:10px;align-items:center;}
-    input[type="range"]{width:100%; accent-color: var(--accent2);}
-    .pct{font-size:11px;color: rgba(232,236,255,.90);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px 8px;background: rgba(255,255,255,.03);min-width:52px;text-align:center;}
+
+    .chk{
+      width:18px;height:18px;
+      margin-top:3px;
+      cursor:pointer;
+      accent-color:var(--accent2);
+    }
+
+    .layer-name{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+    .layer-name b{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+      line-height:1.2;
+    }
+    .layer-name span{
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .swatch{
+      width:12px;height:12px;
+      border-radius:4px;
+      border:1px solid rgba(255,255,255,.20);
+      display:inline-block;
+      flex:0 0 auto;
+    }
+
+    .slider-wrap{
+      margin-top:8px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+
+    input[type="range"]{
+      width:100%;
+      accent-color:var(--accent2);
+      cursor:pointer;
+    }
+
+    .pct{
+      font-size:11px;
+      color:rgba(236,241,255,.92);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:999px;
+      padding:4px 8px;
+      background:rgba(255,255,255,.04);
+      min-width:55px;
+      text-align:center;
+    }
 
     .clr{
-      width:34px; height:34px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.05);
+      width:36px;height:36px;
+      border-radius:13px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.05);
       padding:3px;
       cursor:pointer;
     }
-    input[type="color"]{ -webkit-appearance:none; appearance:none; }
+    input[type="color"]{-webkit-appearance:none;appearance:none}
     input[type="color"]::-webkit-color-swatch-wrapper{padding:0}
-    input[type="color"]::-webkit-color-swatch{border:none;border-radius:9px}
+    input[type="color"]::-webkit-color-swatch{border:none;border-radius:10px}
+
+    .selection-hero{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      margin-bottom:12px;
+    }
+    .selection-hero .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+      color:var(--muted2);
+      font-weight:900;
+    }
+    .selection-hero h2{
+      margin-top:7px;
+      font-size:20px;
+      line-height:1.15;
+      overflow-wrap:anywhere;
+    }
+    .selection-hero .sub{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .mini-metrics{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+    .mini-metric{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      color:rgba(236,241,255,.94);
+      max-width:100%;
+    }
+    .mini-metric .mk{color:var(--muted)}
+    .mini-metric .mv{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:180px;
+    }
 
     .row{
-      padding:9px 10px;
+      padding:10px 11px;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:14px;
-      background: rgba(0,0,0,.10);
+      border-radius:15px;
+      background:rgba(0,0,0,.10);
       margin-bottom:8px;
       display:grid;
-      grid-template-columns: 1fr auto;
-      gap:10px;
+      grid-template-columns:1fr auto;
+      gap:12px;
       align-items:start;
     }
     .row:last-child{margin-bottom:0}
     .row .k{
-      font-size:11px;color: rgba(232,236,255,.75);
-      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+      font-size:11px;
+      color:rgba(236,241,255,.76);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      line-height:1.45;
     }
-    .row .v{font-size:13px;font-weight:900;text-align:right;white-space:pre-wrap;}
+    .row .v{
+      font-size:13px;
+      font-weight:900;
+      text-align:right;
+      white-space:pre-wrap;
+      max-width:180px;
+      overflow-wrap:anywhere;
+    }
+
     .help{
-      display:inline-flex;align-items:center;justify-content:center;
-      width:16px;height:16px;border-radius:999px;background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.18);
-      font-size:11px;color: rgba(232,236,255,.9);cursor:help;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:16px;height:16px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      font-size:11px;
+      color:rgba(236,241,255,.92);
+      cursor:help;
+      flex:0 0 auto;
     }
 
     details{
       border:1px solid rgba(255,255,255,.10);
-      border-radius:14px;
-      background: rgba(0,0,0,.08);
+      border-radius:16px;
+      background:rgba(0,0,0,.08);
       overflow:hidden;
       margin-top:10px;
     }
     summary{
       list-style:none;
       cursor:pointer;
-      padding:10px 12px;
+      padding:12px 14px;
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:10px;
-      background: rgba(255,255,255,.03);
+      background:rgba(255,255,255,.03);
       border-bottom:1px solid rgba(255,255,255,.08);
       user-select:none;
     }
     summary::-webkit-details-marker{display:none}
-    .sum-title{font-size:12px; font-weight:950; letter-spacing:.2px;}
-    .sum-meta{font-size:11px;color:var(--muted)}
+
+    .sum-title{
+      font-size:12px;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    .sum-meta{
+      font-size:11px;
+      color:var(--muted);
+      margin-top:3px;
+      line-height:1.45;
+    }
+    .sum-arrow{
+      width:26px;height:26px;
+      border-radius:999px;
+      display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:11px;
+      transition:.15s ease;
+      flex:0 0 auto;
+    }
+    details[open] .sum-arrow{
+      transform:rotate(180deg);
+      color:var(--text);
+      background:rgba(255,255,255,.08);
+    }
+
     .details-b{padding:12px}
 
-    .cols-list{max-height:220px; overflow:auto; padding-right:6px;}
+    .cols-list{
+      max-height:240px;
+      overflow:auto;
+      padding-right:6px;
+    }
     .cols-list::-webkit-scrollbar{width:8px}
     .cols-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px}
+    .cols-list ul,
+    .cols-list ol{
+      margin:0;
+      padding-left:18px;
+      color:var(--text);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .cols-list li{margin:4px 0}
+
+    .empty-state{
+      padding:18px 14px;
+      text-align:center;
+      border:1px dashed rgba(255,255,255,.14);
+      border-radius:16px;
+      color:var(--muted);
+      background:rgba(255,255,255,.03);
+      line-height:1.55;
+      font-size:12px;
+    }
 
     .legend{
       position:absolute;
       right:16px;
       bottom:16px;
       z-index:500;
-      background: rgba(17,26,53,.86);
+      background:rgba(15,23,48,.88);
       border:1px solid rgba(255,255,255,.14);
-      border-radius:14px;
-      padding:10px 12px;
-      box-shadow: 0 12px 24px rgba(0,0,0,.35);
-      max-width: 260px;
+      border-radius:16px;
+      padding:11px 12px;
+      box-shadow:0 12px 24px rgba(0,0,0,.35);
+      max-width:270px;
       display:none;
+      backdrop-filter:blur(10px);
     }
-    .legend h3{margin:0 0 6px 0; font-size:12px; letter-spacing:.3px; text-transform:uppercase;}
-    .leg-row{display:flex; gap:10px; align-items:center; font-size:12px; color:rgba(232,236,255,.9); margin-top:6px;}
-    .leg-sq{width:12px; height:12px; border-radius:4px; border:1px solid rgba(255,255,255,.20);}
+    .legend h3{
+      margin:0 0 6px 0;
+      font-size:12px;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+    .leg-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-size:12px;
+      color:rgba(236,241,255,.9);
+      margin-top:6px;
+      line-height:1.35;
+    }
+    .leg-sq{
+      width:12px;height:12px;
+      border-radius:4px;
+      border:1px solid rgba(255,255,255,.20);
+      flex:0 0 auto;
+    }
+
+    .hover-card{
+      position:absolute;
+      left:16px;
+      bottom:16px;
+      z-index:520;
+      max-width:340px;
+      display:none;
+      pointer-events:none;
+      background:rgba(9,17,31,.92);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:18px;
+      box-shadow:0 18px 36px rgba(0,0,0,.36);
+      backdrop-filter:blur(12px);
+      overflow:hidden;
+    }
+    .hover-card .bar{
+      height:4px;
+      background:var(--info);
+    }
+    .hover-card .body{
+      padding:12px 14px;
+    }
+    .hover-card .t{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.42px;
+      color:var(--muted2);
+      font-weight:900;
+    }
+    .hover-card .v{
+      margin-top:5px;
+      font-size:15px;
+      font-weight:900;
+      line-height:1.25;
+      overflow-wrap:anywhere;
+    }
+    .hover-card .m{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .map-floating{
+      position:absolute;
+      top:16px;
+      left:16px;
+      z-index:500;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      max-width:calc(100% - 32px);
+      pointer-events:none;
+    }
+    .map-badge{
+      pointer-events:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 11px;
+      border-radius:999px;
+      background:rgba(15,23,48,.82);
+      border:1px solid rgba(255,255,255,.12);
+      color:rgba(236,241,255,.92);
+      font-size:11px;
+      font-weight:800;
+      backdrop-filter:blur(10px);
+      box-shadow:0 8px 18px rgba(0,0,0,.25);
+    }
+
+    .loading-overlay{
+      position:absolute;
+      inset:0;
+      z-index:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(6,10,18,.52);
+      backdrop-filter:blur(6px);
+    }
+    .loading-box{
+      width:min(420px,calc(100% - 28px));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      padding:20px;
+      background:rgba(15,23,48,.92);
+      box-shadow:0 20px 42px rgba(0,0,0,.36);
+      text-align:center;
+    }
+    .spinner{
+      width:42px;height:42px;
+      border-radius:999px;
+      border:3px solid rgba(255,255,255,.15);
+      border-top-color:var(--accent2);
+      margin:0 auto 12px;
+      animation:spin .9s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
 
     .leaflet-control-zoom{
-      border:1px solid rgba(255,255,255,.18)!important;
-      box-shadow: 0 10px 20px rgba(0,0,0,.35)!important;
-      border-radius:14px!important;
+      border:1px solid rgba(255,255,255,.16)!important;
+      box-shadow:0 12px 24px rgba(0,0,0,.32)!important;
+      border-radius:16px!important;
       overflow:hidden;
     }
     .leaflet-control-zoom a{
-      background: rgba(17,26,53,.85)!important;
-      color: var(--text)!important;
-      border-bottom:1px solid rgba(255,255,255,.12)!important;
+      background:rgba(15,23,48,.88)!important;
+      color:var(--text)!important;
+      border-bottom:1px solid rgba(255,255,255,.10)!important;
+      transition:.15s ease;
     }
-    .leaflet-control-zoom a:hover{background: rgba(255,255,255,.10)!important;}
+    .leaflet-control-zoom a:hover{
+      background:rgba(255,255,255,.11)!important;
+    }
+
     .leaflet-control-attribution{
-      background: rgba(17,26,53,.78)!important;
-      color: rgba(232,236,255,.8)!important;
+      background:rgba(15,23,48,.78)!important;
+      color:rgba(236,241,255,.82)!important;
       border:1px solid rgba(255,255,255,.12)!important;
       border-radius:12px!important;
       margin:0 10px 10px 0!important;
       padding:6px 10px!important;
+      backdrop-filter:blur(8px);
+    }
+    .leaflet-control-attribution a{color:rgba(236,241,255,.9)!important}
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip{
+      background:#122041;
+      color:var(--text);
     }
 
-    .leaflet-interactive{ cursor:pointer; }
+    .leaflet-interactive{cursor:pointer}
 
-    @media print{ .no-print{display:none!important;} }
+    @media (max-width:1100px){
+      .app{grid-template-columns:500px 1fr}
+      .stats-row{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media (max-width:860px){
+      body{overflow:auto}
+      .app{grid-template-columns:1fr;height:auto;min-height:100%}
+      aside{border-right:none;border-bottom:1px solid var(--border)}
+      #map{height:70vh;min-height:460px}
+      .hover-card{max-width:calc(100% - 32px)}
+    }
+
+    @media print{
+      .no-print{display:none!important}
+    }
   </style>
 </head>
 <body>
 <div class="app">
   <aside>
-    <div class="header">
-      <div class="brand-pill">Mineral</div>
-      <div>
-        <h1>Visor · DENUE + IMU + Zonas + Rentabilidad + Casillas</h1>
-        <div class="muted">IMU por <b class="mono">LOC</b> · Rentabilidad por <b class="mono">SECCIÓN</b> · Zonas disueltas · Casillas seccionales.</div>
-      </div>
-      <div class="header-actions">
-        <button id="btnHome" class="icon-btn" title="Centrar mapa">⌂</button>
-        <button id="btnClear" class="icon-btn" title="Limpiar selección">✕</button>
-        <button id="btnPrint" class="icon-btn" title="Imprimir ficha">🖨</button>
-      </div>
-    </div>
+    <div class="sidebar-scroll">
+      <div class="topbar">
+        <div class="brand-mark">MR</div>
+        <div class="title-wrap">
+          <h1>Visor geográfico de Mineral de la Reforma</h1>
+          <div class="sub">
+            Colonias, localidades, zonas, secciones, casillas, DENUE e IMU 2020 en un mismo mapa.
+          </div>
 
-    <div class="sticky">
-      <input id="q" type="text" placeholder="Buscar colonia, zona, localidad, sección, casilla o DENUE (3+ letras)…">
-      <div id="results" class="results"></div>
-      <div class="muted" style="margin-top:8px">
-        Servidor local: <span class="mono">python -m http.server 8000</span><br/>
-        Abrir: <span class="mono">http://localhost:8000/visor_mr_colonias_localidades_denue_imu2020_v5.html</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-h">
-        <div class="title">Capas y fondo</div>
-        <span class="pill" id="pillLayers">Listo</span>
-      </div>
-      <div class="card-b">
-        <div class="muted" style="margin-bottom:10px">
-          Activa/desactiva capas, ajusta transparencia, cambia a satelital.
-          <br/>• <b>Modo IMU</b>: colorea localidades por marginación.
-          <br/>• <b>Modo Rentabilidad</b>: colorea secciones por <b>ALTA / MEDIA / BAJA</b>.
-          <br/>• Las <b>zonas</b> se colorean automáticamente por su atributo <b>zona</b>.
-        </div>
-
-        <div class="seg" style="margin-bottom:10px">
-          <button id="bmOsm" class="active" type="button">Mapa</button>
-          <button id="bmSat" type="button">Satelital</button>
-          <button id="btnIMU" type="button">Modo IMU</button>
-          <button id="btnRent" class="active" type="button">Rentabilidad</button>
-        </div>
-
-        <div class="layer-row">
-          <input class="chk" id="chkColonias" type="checkbox" checked>
-          <div class="layer-name">
-            <b><span class="swatch" id="swColonias"></span>Colonias</b>
-            <span>Polígonos</span>
-            <div class="slider-wrap">
-              <input id="opColonias" type="range" min="0" max="100" value="35">
-              <span class="pct" id="pctColonias">35%</span>
+          <div class="stats-row">
+            <div class="stat-chip">
+              <div class="k">Colonias</div>
+              <div class="v" id="statColonias">—</div>
+            </div>
+            <div class="stat-chip">
+              <div class="k">Localidades</div>
+              <div class="v" id="statLocalidades">—</div>
+            </div>
+            <div class="stat-chip">
+              <div class="k">Secciones</div>
+              <div class="v" id="statSecciones">—</div>
+            </div>
+            <div class="stat-chip">
+              <div class="k">DENUE</div>
+              <div class="v" id="statDenue">—</div>
             </div>
           </div>
-          <span class="pill mono">fill</span>
-          <input id="clrColonias" class="clr" type="color" value="#ffffff" title="Color colonias">
         </div>
 
-        <div class="layer-row">
-          <input class="chk" id="chkLocPolys" type="checkbox" checked>
-          <div class="layer-name">
-            <b><span class="swatch" id="swLocPolys"></span>Localidades</b>
-            <span>Polígonos (unión de colonias)</span>
-            <div class="slider-wrap">
-              <input id="opLocPolys" type="range" min="0" max="100" value="18">
-              <span class="pct" id="pctLocPolys">18%</span>
-            </div>
-          </div>
-          <span class="pill mono">fill</span>
-          <input id="clrLocPolys" class="clr" type="color" value="#B38E5D" title="Color localidades (si IMU está apagado)">
-        </div>
-
-        <div class="layer-row">
-          <input class="chk" id="chkZonas" type="checkbox" checked>
-          <div class="layer-name">
-            <b><span class="swatch" id="swZonas"></span>Zonas</b>
-            <span>Polígonos disueltos por zona</span>
-            <div class="slider-wrap">
-              <input id="opZonas" type="range" min="0" max="100" value="20">
-              <span class="pct" id="pctZonas">20%</span>
-            </div>
-          </div>
-          <span class="pill mono">auto</span>
-          <div class="pill mono" title="Color automático por zona">auto</div>
-        </div>
-
-        <div class="layer-row">
-          <input class="chk" id="chkSecciones" type="checkbox" checked>
-          <div class="layer-name">
-            <b><span class="swatch" id="swSecciones"></span>Secciones</b>
-            <span>INE · Polígonos (rentabilidad/meta/zona/LN)</span>
-            <div class="slider-wrap">
-              <input id="opSecciones" type="range" min="0" max="100" value="35">
-              <span class="pct" id="pctSecciones">35%</span>
-            </div>
-          </div>
-          <span class="pill mono">fill</span>
-          <input id="clrSecciones" class="clr" type="color" value="#58a0ff" title="Color borde secciones">
-        </div>
-
-        <div class="layer-row">
-          <input class="chk" id="chkCasillas" type="checkbox" checked>
-          <div class="layer-name">
-            <b><span class="swatch" id="swCasillas"></span>Casillas</b>
-            <span>Casillas seccionales (puntos clickeables)</span>
-            <div class="slider-wrap">
-              <input id="opCasillas" type="range" min="0" max="100" value="90">
-              <span class="pct" id="pctCasillas">90%</span>
-            </div>
-          </div>
-          <span class="pill mono">pt</span>
-          <input id="clrCasillas" class="clr" type="color" value="#ffd166" title="Color casillas">
-        </div>
-
-        <div class="layer-row">
-          <input class="chk" id="chkLocPoints" type="checkbox" checked>
-          <div class="layer-name">
-            <b><span class="swatch" id="swLocPoints"></span>Localidades</b>
-            <span>Puntos (Censo)</span>
-            <div class="slider-wrap">
-              <input id="opLocPoints" type="range" min="0" max="100" value="80">
-              <span class="pct" id="pctLocPoints">80%</span>
-            </div>
-          </div>
-          <span class="pill mono">pt</span>
-          <input id="clrLocPoints" class="clr" type="color" value="#7A1436" title="Color puntos localidades">
-        </div>
-
-        <div class="layer-row">
-          <input class="chk" id="chkDenue" type="checkbox" checked>
-          <div class="layer-name">
-            <b><span class="swatch" id="swDenue"></span>DENUE</b>
-            <span>Unidades económicas (puntos)</span>
-            <div class="slider-wrap">
-              <input id="opDenue" type="range" min="0" max="100" value="65">
-              <span class="pct" id="pctDenue">65%</span>
-            </div>
-          </div>
-          <span class="pill mono">pt</span>
-          <input id="clrDenue" class="clr" type="color" value="#50c878" title="Color puntos DENUE">
+        <div class="top-actions">
+          <button id="btnHome" class="icon-btn" title="Centrar mapa">⌂</button>
+          <button id="btnClear" class="icon-btn" title="Limpiar selección">✕</button>
+          <button id="btnPrint" class="icon-btn" title="Imprimir ficha">🖨</button>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-h">
-        <div class="title">Panel de información</div>
-        <span id="pill" class="pill">Nada</span>
+      <div class="sticky no-print">
+        <div class="search-shell">
+          <div class="search-head">
+            <div class="search-label">Búsqueda inteligente</div>
+            <span class="pill" id="pillSearch">0 resultados</span>
+          </div>
+
+          <div class="search-box">
+            <div class="search-input-wrap">
+              <span class="search-icon">⌕</span>
+              <input id="q" type="text" placeholder="Buscar colonia, localidad, zona, sección, casilla o negocio…">
+              <button id="btnClearSearch" class="input-clear" type="button" title="Limpiar búsqueda">✕</button>
+            </div>
+
+            <div class="scope-row" id="scopeGroup">
+              <button class="scope-btn active" data-scope="all" type="button">Todo</button>
+              <button class="scope-btn" data-scope="colonia" type="button">Colonias</button>
+              <button class="scope-btn" data-scope="localidad" type="button">Localidades</button>
+              <button class="scope-btn" data-scope="zona" type="button">Zonas</button>
+              <button class="scope-btn" data-scope="seccion" type="button">Secciones</button>
+              <button class="scope-btn" data-scope="casilla" type="button">Casillas</button>
+              <button class="scope-btn" data-scope="denue" type="button">DENUE</button>
+            </div>
+
+            <div class="search-meta">
+              <span>Usa <b>↑</b> <b>↓</b> y <b>Enter</b> para navegar.</span>
+              <span class="mono">3+ letras</span>
+            </div>
+          </div>
+
+          <div id="results" class="results"></div>
+        </div>
+
+        <div class="muted" style="margin-top:8px;padding:0 2px">
+          Servidor local: <span class="mono">python -m http.server 8000</span><br/>
+          Abrir: <span class="mono">http://localhost:8000/visor_mr_colonias_localidades_denue_imu2020_v5.html</span>
+        </div>
       </div>
-      <div id="info" class="card-b">
-        <div class="muted">Da click sobre el mapa o usa el buscador.</div>
+
+      <div class="card">
+        <div class="card-h">
+          <div class="title">Capas y fondo</div>
+          <span class="pill" id="pillLayers">7 capas visibles</span>
+        </div>
+        <div class="card-b">
+          <div class="section-note">
+            Activa o desactiva capas, ajusta transparencia y cambia el fondo.
+            <br>• <b>Modo IMU</b>: colorea localidades por marginación.
+            <br>• <b>Rentabilidad</b>: colorea secciones por <b>ALTA / MEDIA / BAJA</b>.
+            <br>• Las <b>zonas</b> se colorean automáticamente por su atributo <b>zona</b>.
+          </div>
+
+          <div class="seg" style="margin-bottom:10px">
+            <button id="bmOsm" class="active" type="button">Mapa base</button>
+            <button id="bmSat" type="button">Satelital</button>
+            <button id="btnIMU" type="button">Modo IMU</button>
+            <button id="btnRent" class="active" type="button">Rentabilidad</button>
+          </div>
+
+          <div class="group-title">Polígonos</div>
+
+          <div class="layer-row" data-hover-title="Colonias" data-hover-meta="Polígonos base de colonias">
+            <input class="chk" id="chkColonias" type="checkbox" checked>
+            <div class="layer-name">
+              <b><span class="swatch" id="swColonias"></span>Colonias</b>
+              <span>Polígonos base para lectura territorial.</span>
+              <div class="slider-wrap">
+                <input id="opColonias" type="range" min="0" max="100" value="35">
+                <span class="pct" id="pctColonias">35%</span>
+              </div>
+            </div>
+            <span class="pill mono">fill</span>
+            <input id="clrColonias" class="clr" type="color" value="#ffffff" title="Color colonias">
+          </div>
+
+          <div class="layer-row" data-hover-title="Localidades" data-hover-meta="Polígonos por unión de colonias">
+            <input class="chk" id="chkLocPolys" type="checkbox" checked>
+            <div class="layer-name">
+              <b><span class="swatch" id="swLocPolys"></span>Localidades</b>
+              <span>Polígonos agregados por localidad.</span>
+              <div class="slider-wrap">
+                <input id="opLocPolys" type="range" min="0" max="100" value="18">
+                <span class="pct" id="pctLocPolys">18%</span>
+              </div>
+            </div>
+            <span class="pill mono">fill</span>
+            <input id="clrLocPolys" class="clr" type="color" value="#B38E5D" title="Color localidades">
+          </div>
+
+          <div class="layer-row" data-hover-title="Zonas" data-hover-meta="Polígonos disueltos por zona">
+            <input class="chk" id="chkZonas" type="checkbox" checked>
+            <div class="layer-name">
+              <b><span class="swatch" id="swZonas"></span>Zonas</b>
+              <span>Polígonos disueltos y coloreados automáticamente.</span>
+              <div class="slider-wrap">
+                <input id="opZonas" type="range" min="0" max="100" value="20">
+                <span class="pct" id="pctZonas">20%</span>
+              </div>
+            </div>
+            <span class="pill mono">auto</span>
+            <div class="pill mono" title="Color automático por zona">auto</div>
+          </div>
+
+          <div class="layer-row" data-hover-title="Secciones" data-hover-meta="Secciones electorales con rentabilidad">
+            <input class="chk" id="chkSecciones" type="checkbox" checked>
+            <div class="layer-name">
+              <b><span class="swatch" id="swSecciones"></span>Secciones</b>
+              <span>INE · Polígonos con rentabilidad, meta, zona y LN.</span>
+              <div class="slider-wrap">
+                <input id="opSecciones" type="range" min="0" max="100" value="35">
+                <span class="pct" id="pctSecciones">35%</span>
+              </div>
+            </div>
+            <span class="pill mono">fill</span>
+            <input id="clrSecciones" class="clr" type="color" value="#58a0ff" title="Color secciones">
+          </div>
+
+          <div class="group-title">Puntos</div>
+
+          <div class="layer-row" data-hover-title="Casillas" data-hover-meta="Puntos clickeables de casillas seccionales">
+            <input class="chk" id="chkCasillas" type="checkbox" checked>
+            <div class="layer-name">
+              <b><span class="swatch" id="swCasillas"></span>Casillas</b>
+              <span>Casillas seccionales con ubicación e integración.</span>
+              <div class="slider-wrap">
+                <input id="opCasillas" type="range" min="0" max="100" value="90">
+                <span class="pct" id="pctCasillas">90%</span>
+              </div>
+            </div>
+            <span class="pill mono">pt</span>
+            <input id="clrCasillas" class="clr" type="color" value="#ffd166" title="Color casillas">
+          </div>
+
+          <div class="layer-row" data-hover-title="Localidades punto" data-hover-meta="Puntos censales de localidad">
+            <input class="chk" id="chkLocPoints" type="checkbox" checked>
+            <div class="layer-name">
+              <b><span class="swatch" id="swLocPoints"></span>Localidades</b>
+              <span>Puntos de localidad con información censal.</span>
+              <div class="slider-wrap">
+                <input id="opLocPoints" type="range" min="0" max="100" value="80">
+                <span class="pct" id="pctLocPoints">80%</span>
+              </div>
+            </div>
+            <span class="pill mono">pt</span>
+            <input id="clrLocPoints" class="clr" type="color" value="#7A1436" title="Color localidades punto">
+          </div>
+
+          <div class="layer-row" data-hover-title="DENUE" data-hover-meta="Unidades económicas">
+            <input class="chk" id="chkDenue" type="checkbox" checked>
+            <div class="layer-name">
+              <b><span class="swatch" id="swDenue"></span>DENUE</b>
+              <span>Unidades económicas georreferenciadas.</span>
+              <div class="slider-wrap">
+                <input id="opDenue" type="range" min="0" max="100" value="65">
+                <span class="pct" id="pctDenue">65%</span>
+              </div>
+            </div>
+            <span class="pill mono">pt</span>
+            <input id="clrDenue" class="clr" type="color" value="#50c878" title="Color DENUE">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <div class="title">Panel de información</div>
+          <span id="pill" class="pill">Nada seleccionado</span>
+        </div>
+        <div id="info" class="card-b">
+          <div class="empty-state">
+            Da click en el mapa o usa el buscador para ver una ficha detallada.
+          </div>
+        </div>
       </div>
     </div>
   </aside>
 
-  <main id="map" style="position:relative">
+  <main id="map">
+    <div class="map-floating no-print">
+      <div class="map-badge">Haz hover para previsualizar y click para fijar una ficha</div>
+      <div class="map-badge">Fondo: <span id="activeBasemapLabel">Mapa base</span></div>
+    </div>
+
+    <div id="hoverCard" class="hover-card no-print">
+      <div id="hoverBar" class="bar"></div>
+      <div class="body">
+        <div class="t" id="hoverType">Capa</div>
+        <div class="v" id="hoverTitle">—</div>
+        <div class="m" id="hoverMeta">—</div>
+      </div>
+    </div>
+
     <div id="legendIMU" class="legend">
       <h3>Grado de marginación (IMU)</h3>
-      <div class="muted" style="margin-bottom:6px">Colorea localidades por <span class="mono">IMU_GM_2020</span> (agregado por LOC).</div>
+      <div class="muted" style="margin-bottom:6px">Localidades coloreadas por <span class="mono">IMU_GM_2020</span>.</div>
       <div class="leg-row"><span class="leg-sq" style="background:#2A9D8F"></span> Muy bajo</div>
       <div class="leg-row"><span class="leg-sq" style="background:#A7C957"></span> Bajo</div>
       <div class="leg-row"><span class="leg-sq" style="background:#F2CC8F"></span> Medio</div>
@@ -468,9 +1147,19 @@
     <div id="legendRent" class="legend" style="bottom:16px; right:16px;">
       <h3>Rentabilidad (Sección)</h3>
       <div class="muted" style="margin-bottom:6px">
-        Colorea secciones por <span class="mono">rentabilidad</span>: <b>ALTA</b>, <b>MEDIA</b>, <b>BAJA</b>.
+        Clasificación por <span class="mono">rentabilidad</span>: <b>ALTA</b>, <b>MEDIA</b>, <b>BAJA</b>.
       </div>
       <div id="legendRentRows"></div>
+    </div>
+
+    <div id="loadingState" class="loading-overlay no-print">
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <div style="font-size:16px;font-weight:900">Cargando capas del visor</div>
+        <div class="muted" style="margin-top:8px">
+          Se están leyendo GeoJSON, diccionarios y relaciones para el panel de información.
+        </div>
+      </div>
     </div>
   </main>
 </div>
@@ -489,10 +1178,17 @@
   const FILE_DICT_DENUE  = "diccionario_denue.json";
   const FILE_DICT_IMU    = "diccionario_imu2020.json";
 
-  const bmOSM = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{ maxZoom: 20, attribution:"© OpenStreetMap" });
-  const bmSAT = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{ maxZoom: 20, attribution:"Tiles © Esri" });
+  const bmOSM = L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    { maxZoom:20, attribution:"© OpenStreetMap" }
+  );
 
-  const map = L.map("map", { zoomControl: true }).setView([20.06,-98.74], 12);
+  const bmSAT = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom:20, attribution:"Tiles © Esri" }
+  );
+
+  const map = L.map("map", { zoomControl:true }).setView([20.06,-98.74], 12);
   bmOSM.addTo(map);
 
   function norm(s){
@@ -503,15 +1199,24 @@
       .toLowerCase()
       .trim();
   }
+
   function fmt(v){
-    if(v===null||v===undefined||v==="") return "—";
-    if(typeof v==="number") return Number.isInteger(v)? String(v) : v.toFixed(4);
+    if(v===null || v===undefined || v==="") return "—";
+    if(typeof v==="number") return Number.isInteger(v) ? String(v) : v.toFixed(4);
     if(typeof v==="object") return JSON.stringify(v, null, 0);
     return String(v);
   }
-  function esc(s){return (s??"").toString().replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
+
+  function esc(s){
+    return (s ?? "")
+      .toString()
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
+
   function hexToRgba(hex, alpha){
-    const h = (hex||"").replace("#","");
+    const h = (hex || "").replace("#","");
     if(h.length !== 6) return `rgba(255,255,255,${alpha})`;
     const r = parseInt(h.slice(0,2),16);
     const g = parseInt(h.slice(2,4),16);
@@ -520,8 +1225,8 @@
   }
 
   async function load(url){
-    const r=await fetch(url);
-    if(!r.ok) throw new Error("No se pudo cargar "+url);
+    const r = await fetch(url);
+    if(!r.ok) throw new Error("No se pudo cargar " + url);
     return await r.json();
   }
 
@@ -582,6 +1287,7 @@
     if(!m) return code;
     return m.indicador || code;
   }
+
   function descFor(code){
     const m = DICT[code];
     return m?.descripcion || "";
@@ -591,19 +1297,26 @@
 
   function nowMX(){
     const d = new Date();
-    return d.toLocaleString("es-MX", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+    return d.toLocaleString("es-MX", {
+      year:"numeric",
+      month:"2-digit",
+      day:"2-digit",
+      hour:"2-digit",
+      minute:"2-digit"
+    });
   }
 
   function sortKeysForReport(obj){
-    return Object.keys(obj||{}).sort((a,b)=>a.localeCompare(b,"es"));
+    return Object.keys(obj || {}).sort((a,b)=>a.localeCompare(b,"es"));
   }
+
   function buildRows(props, keys){
     const arr = [];
     const useKeys = keys && keys.length ? keys : sortKeysForReport(props);
     for(const k of useKeys){
       const v = props?.[k];
       if(v === undefined) continue;
-      arr.push({ key:k, label: labelFor(k), desc: descFor(k), value: v });
+      arr.push({ key:k, label:labelFor(k), desc:descFor(k), value:v });
     }
     return arr;
   }
@@ -630,6 +1343,7 @@
           <td class="v">${val}</td>
         </tr>`;
     }).join("");
+
     return `
       <section class="sec">
         <h2>${esc(title)}</h2>
@@ -640,12 +1354,15 @@
   }
 
   function listHTML(title, items, subtitle=""){
-    if(!items || !items.length) return `
-      <section class="sec">
-        <h2>${esc(title)}</h2>
-        ${subtitle ? `<div class="sub">${esc(subtitle)}</div>` : ``}
-        <div class="empty">Sin registros.</div>
-      </section>`;
+    if(!items || !items.length){
+      return `
+        <section class="sec">
+          <h2>${esc(title)}</h2>
+          ${subtitle ? `<div class="sub">${esc(subtitle)}</div>` : ``}
+          <div class="empty">Sin registros.</div>
+        </section>`;
+    }
+
     const lis = items.map(x=>`<li>${esc(x)}</li>`).join("");
     return `
       <section class="sec">
@@ -810,14 +1527,14 @@
   };
 
   const colorState = {
-    coloniasFill: "#ffffff",
-    coloniasStroke: "#ffffff",
-    locPolysFill: "#B38E5D",
-    locPoints: "#7A1436",
-    denue: "#50c878",
-    seccionesStroke: "#58a0ff",
-    seccionesFill: "#58a0ff",
-    casillas: "#ffd166"
+    coloniasFill:"#ffffff",
+    coloniasStroke:"#ffffff",
+    locPolysFill:"#B38E5D",
+    locPoints:"#7A1436",
+    denue:"#50c878",
+    seccionesStroke:"#58a0ff",
+    seccionesFill:"#58a0ff",
+    casillas:"#ffd166"
   };
 
   let imuMode = false;
@@ -828,7 +1545,7 @@
   const legendRentRows = document.getElementById("legendRentRows");
 
   function gmColor(gm){
-    const g = (gm||"").toString().toLowerCase();
+    const g = (gm || "").toString().toLowerCase();
     if(g.includes("muy bajo")) return "#2A9D8F";
     if(g.includes("bajo")) return "#A7C957";
     if(g.includes("medio")) return "#F2CC8F";
@@ -839,32 +1556,22 @@
 
   const rentCats = ["BAJA","MEDIA","ALTA","Sin dato"];
   const rentColors = {
-    "BAJA": "#E76F51",
-    "MEDIA": "#F2CC8F",
-    "ALTA": "#2A9D8F",
-    "Sin dato": "#8D99AE"
+    "BAJA":"#E76F51",
+    "MEDIA":"#F2CC8F",
+    "ALTA":"#2A9D8F",
+    "Sin dato":"#8D99AE"
   };
 
   const zonePalette = [
-    "#c77dff",
-    "#ff6b6b",
-    "#4dabf7",
-    "#51cf66",
-    "#ffd43b",
-    "#ff922b",
-    "#20c997",
-    "#f06595",
-    "#94d82d",
-    "#74c0fc",
-    "#845ef7",
-    "#ffa94d"
+    "#c77dff","#ff6b6b","#4dabf7","#51cf66","#ffd43b","#ff922b",
+    "#20c997","#f06595","#94d82d","#74c0fc","#845ef7","#ffa94d"
   ];
 
   function zoneColor(zona){
     const z = String(zona ?? "").trim();
     if(!z) return "#8D99AE";
     let hash = 0;
-    for(let i = 0; i < z.length; i++){
+    for(let i=0;i<z.length;i++){
       hash = ((hash << 5) - hash) + z.charCodeAt(i);
       hash |= 0;
     }
@@ -900,11 +1607,11 @@
     `).join("");
   }
 
-  let coloniasFeatures=[];
-  let zonasFeatures=[];
-  let seccionesFeatures=[];
-  let casillasFeatures=[];
-  let denueFeatures=[];
+  let coloniasFeatures = [];
+  let zonasFeatures = [];
+  let seccionesFeatures = [];
+  let casillasFeatures = [];
+  let denueFeatures = [];
 
   const locPointByLOC = new Map();
   const denueById = new Map();
@@ -916,20 +1623,20 @@
 
   function styleColonias(){
     return {
-      weight: 1,
-      color: hexToRgba(colorState.coloniasStroke, Math.min(0.95, opacityState.colonias + 0.25)),
-      opacity: Math.min(0.95, opacityState.colonias + 0.25),
-      fillOpacity: opacityState.colonias,
-      fillColor: colorState.coloniasFill
+      weight:1.15,
+      color:hexToRgba(colorState.coloniasStroke, Math.min(0.95, opacityState.colonias + 0.28)),
+      opacity:Math.min(0.95, opacityState.colonias + 0.28),
+      fillOpacity:opacityState.colonias,
+      fillColor:colorState.coloniasFill
     };
   }
 
   function styleLocPolys(feature){
     const base = {
-      weight: 2,
-      color: hexToRgba("#ffffff", 0.55),
-      opacity: Math.min(0.90, opacityState.locPolys + 0.25),
-      fillOpacity: opacityState.locPolys
+      weight:2.2,
+      color:hexToRgba("#ffffff", 0.55),
+      opacity:Math.min(0.90, opacityState.locPolys + 0.26),
+      fillOpacity:opacityState.locPolys
     };
     base.fillColor = imuMode ? gmColor(feature?.properties?.IMU_GM_2020) : colorState.locPolysFill;
     return base;
@@ -938,56 +1645,56 @@
   function styleZonas(feature){
     const c = zoneColor(feature?.properties?.zona);
     return {
-      weight: 3,
-      color: hexToRgba(c, 0.98),
-      opacity: Math.min(0.95, opacityState.zonas + 0.30),
-      fillOpacity: opacityState.zonas,
-      fillColor: c,
-      dashArray: "8 6"
+      weight:3.2,
+      color:hexToRgba(c, 0.98),
+      opacity:Math.min(0.95, opacityState.zonas + 0.30),
+      fillOpacity:opacityState.zonas,
+      fillColor:c,
+      dashArray:"8 6"
     };
   }
 
   function styleSecciones(feature){
     const fill = rentMode ? rentColorForFeature(feature) : colorState.seccionesFill;
     return {
-      weight: 2,
-      color: hexToRgba(colorState.seccionesStroke, 0.95),
-      opacity: Math.min(0.95, opacityState.secciones + 0.25),
-      fillOpacity: opacityState.secciones,
-      fillColor: fill
+      weight:2.1,
+      color:hexToRgba(colorState.seccionesStroke, 0.97),
+      opacity:Math.min(0.95, opacityState.secciones + 0.28),
+      fillOpacity:opacityState.secciones,
+      fillColor:fill
     };
   }
 
   function styleLocPoints(){
     return {
-      radius: 6,
-      color: hexToRgba(colorState.locPoints, 0.95),
-      weight: 2,
-      opacity: Math.min(0.95, opacityState.locPoints + 0.15),
-      fillColor: colorState.locPoints,
-      fillOpacity: opacityState.locPoints
+      radius:6,
+      color:hexToRgba(colorState.locPoints, 0.98),
+      weight:2,
+      opacity:Math.min(0.95, opacityState.locPoints + 0.15),
+      fillColor:colorState.locPoints,
+      fillOpacity:opacityState.locPoints
     };
   }
 
   function styleDenue(){
     return {
-      radius: 4,
-      color: hexToRgba(colorState.denue, 0.95),
-      weight: 1.5,
-      opacity: Math.min(0.95, opacityState.denue + 0.15),
-      fillColor: colorState.denue,
-      fillOpacity: opacityState.denue
+      radius:4.2,
+      color:hexToRgba(colorState.denue, 0.95),
+      weight:1.6,
+      opacity:Math.min(0.95, opacityState.denue + 0.15),
+      fillColor:colorState.denue,
+      fillOpacity:opacityState.denue
     };
   }
 
   function styleCasillas(){
     return {
-      radius: 8,
-      color: hexToRgba(colorState.casillas, 1),
-      weight: 2.6,
-      opacity: Math.min(1, opacityState.casillas + 0.08),
-      fillColor: colorState.casillas,
-      fillOpacity: opacityState.casillas
+      radius:8,
+      color:hexToRgba(colorState.casillas, 1),
+      weight:2.8,
+      opacity:Math.min(1, opacityState.casillas + 0.08),
+      fillColor:colorState.casillas,
+      fillOpacity:opacityState.casillas
     };
   }
 
@@ -1003,50 +1710,66 @@
   map.getPane("paneCasillas").style.zIndex = 760;
   map.getPane("paneCasillas").style.pointerEvents = "auto";
 
-  const casillasRenderer = L.svg({ pane: "paneCasillas" });
+  const casillasRenderer = L.svg({ pane:"paneCasillas" });
+  const canvasDenue = L.canvas({ padding:0.5 });
 
   const layerColonias = L.geoJSON(null,{
     style:()=>styleColonias(),
-    onEachFeature:(f,l)=>l.on("click",()=>select("colonia",f,l))
+    onEachFeature:(f,l)=>{
+      l.on("click",()=>select("colonia", f, l));
+      l.on("mouseover",()=>featureHover("colonia", f, l));
+      l.on("mouseout",()=>featureOut("colonia", f, l));
+    }
   });
 
   const layerLocPolys = L.geoJSON(null,{
     style:(f)=>styleLocPolys(f),
-    onEachFeature:(f,l)=>l.on("click",()=>select("localidad",f,l))
-  });
-
-  const layerZonas = L.geoJSON(null,{
-    pane: "paneZonas",
-    interactive: true,
-    style: (f)=>styleZonas(f),
     onEachFeature:(f,l)=>{
-      l.on("click", ()=>select("zona", f, l));
-      l.on("mouseover", ()=>{ try{ l.bringToFront(); }catch(e){} });
+      l.on("click",()=>select("localidad", f, l));
+      l.on("mouseover",()=>featureHover("localidad", f, l));
+      l.on("mouseout",()=>featureOut("localidad", f, l));
     }
   });
 
-  const layerSecciones = L.geoJSON(null, {
-    pane: "paneSecciones",
-    interactive: true,
-    style: (f) => styleSecciones(f),
-    onEachFeature: (f, l) => {
-      l.on("click", () => select("seccion", f, l));
-      l.on("mouseover", () => { try { l.bringToFront(); } catch(e){} });
+  const layerZonas = L.geoJSON(null,{
+    pane:"paneZonas",
+    interactive:true,
+    style:(f)=>styleZonas(f),
+    onEachFeature:(f,l)=>{
+      l.on("click",()=>select("zona", f, l));
+      l.on("mouseover",()=>featureHover("zona", f, l));
+      l.on("mouseout",()=>featureOut("zona", f, l));
+    }
+  });
+
+  const layerSecciones = L.geoJSON(null,{
+    pane:"paneSecciones",
+    interactive:true,
+    style:(f)=>styleSecciones(f),
+    onEachFeature:(f,l)=>{
+      l.on("click",()=>select("seccion", f, l));
+      l.on("mouseover",()=>featureHover("seccion", f, l));
+      l.on("mouseout",()=>featureOut("seccion", f, l));
     }
   });
 
   const layerLocPoints = L.geoJSON(null,{
     pointToLayer:(f,latlng)=>L.circleMarker(latlng, styleLocPoints()),
-    onEachFeature:(f,l)=>l.on("click",()=>select("localidad",f,l))
+    onEachFeature:(f,l)=>{
+      l.on("click",()=>select("localidad", f, l));
+      l.on("mouseover",()=>featureHover("localidad", f, l));
+      l.on("mouseout",()=>featureOut("localidad", f, l));
+    }
   });
 
-  const canvasDenue = L.canvas({ padding: 0.5 });
   const layerDenue = L.geoJSON(null,{
-    pointToLayer:(f,latlng)=>L.circleMarker(latlng, { ...styleDenue(), renderer: canvasDenue }),
+    pointToLayer:(f,latlng)=>L.circleMarker(latlng, { ...styleDenue(), renderer:canvasDenue }),
     onEachFeature:(f,l)=>{
       const id = f.properties?.id;
       if(id !== undefined && id !== null) denueById.set(String(id), l);
-      l.on("click", ()=>select("denue", f, l));
+      l.on("click",()=>select("denue", f, l));
+      l.on("mouseover",()=>featureHover("denue", f, l));
+      l.on("mouseout",()=>featureOut("denue", f, l));
     }
   });
 
@@ -1055,9 +1778,9 @@
     interactive:true,
     pointToLayer:(f,latlng)=>L.circleMarker(latlng, {
       ...styleCasillas(),
-      renderer: casillasRenderer,
-      bubblingMouseEvents: false,
-      interactive: true
+      renderer:casillasRenderer,
+      bubblingMouseEvents:false,
+      interactive:true
     }),
     onEachFeature:(f,l)=>{
       const id = f.properties?.casilla_id;
@@ -1069,7 +1792,12 @@
         L.DomEvent.stopPropagation(e);
         select("casilla", f, l);
       });
-      l.on("mouseover", ()=>{ if(l.bringToFront) l.bringToFront(); });
+      l.on("mouseover",()=>{
+        featureHover("casilla", f, l);
+      });
+      l.on("mouseout",()=>{
+        featureOut("casilla", f, l);
+      });
     }
   });
 
@@ -1081,33 +1809,52 @@
   layerCasillas.addTo(map);
   layerDenue.addTo(map);
 
-  let activeLayer=null;
-  let activeKind=null;
+  let activeLayer = null;
+  let activeKind = null;
+
+  function kindFromType(type, feature){
+    if(type === "localidad"){
+      return feature?.geometry?.type === "Point" ? "punto" : "localidad";
+    }
+    if(type === "colonia") return "colonia";
+    if(type === "zona") return "zona";
+    if(type === "seccion") return "seccion";
+    if(type === "casilla") return "casilla";
+    return "denue";
+  }
+
+  function resetLayerStyle(layer, kind){
+    if(!layer || !layer.setStyle) return;
+    if(kind === "colonia") layer.setStyle(styleColonias());
+    else if(kind === "localidad") layer.setStyle(styleLocPolys(layer.feature));
+    else if(kind === "zona") layer.setStyle(styleZonas(layer.feature));
+    else if(kind === "seccion") layer.setStyle(styleSecciones(layer.feature));
+    else if(kind === "punto") layer.setStyle(styleLocPoints());
+    else if(kind === "casilla") layer.setStyle(styleCasillas());
+    else if(kind === "denue") layer.setStyle(styleDenue());
+  }
+
+  function opacityForKind(kind){
+    if(kind === "colonia") return opacityState.colonias;
+    if(kind === "localidad") return opacityState.locPolys;
+    if(kind === "zona") return opacityState.zonas;
+    if(kind === "seccion") return opacityState.secciones;
+    if(kind === "punto") return opacityState.locPoints;
+    if(kind === "casilla") return opacityState.casillas;
+    return opacityState.denue;
+  }
 
   function clearHighlight(){
     if(activeLayer && activeLayer.setStyle){
-      if(activeKind==="colonia") activeLayer.setStyle(styleColonias());
-      else if(activeKind==="localidad") activeLayer.setStyle(styleLocPolys(activeLayer.feature));
-      else if(activeKind==="zona") activeLayer.setStyle(styleZonas(activeLayer.feature));
-      else if(activeKind==="seccion") activeLayer.setStyle(styleSecciones(activeLayer.feature));
-      else if(activeKind==="punto") activeLayer.setStyle(styleLocPoints());
-      else if(activeKind==="casilla") activeLayer.setStyle(styleCasillas());
-      else if(activeKind==="denue") activeLayer.setStyle(styleDenue());
+      resetLayerStyle(activeLayer, activeKind);
     }
-    activeLayer=null;
-    activeKind=null;
+    activeLayer = null;
+    activeKind = null;
   }
 
   function highlight(layer, kind){
     if(!layer || !layer.setStyle) return;
-
-    if(kind==="colonia") layer.setStyle(styleColonias());
-    else if(kind==="localidad") layer.setStyle(styleLocPolys(layer.feature));
-    else if(kind==="zona") layer.setStyle(styleZonas(layer.feature));
-    else if(kind==="seccion") layer.setStyle(styleSecciones(layer.feature));
-    else if(kind==="punto") layer.setStyle(styleLocPoints());
-    else if(kind==="casilla") layer.setStyle(styleCasillas());
-    else layer.setStyle(styleDenue());
+    resetLayerStyle(layer, kind);
 
     let hiFill = 0.55;
     if(kind==="colonia") hiFill = Math.max(0.55, opacityState.colonias);
@@ -1118,7 +1865,7 @@
     if(kind==="casilla") hiFill = Math.max(0.95, opacityState.casillas);
     if(kind==="denue") hiFill = Math.max(0.75, opacityState.denue);
 
-    const extra = { weight: 5, opacity: 1, fillOpacity: hiFill };
+    const extra = { weight:5, opacity:1, fillOpacity:hiFill };
     if(kind==="zona") extra.dashArray = null;
     if(kind==="casilla") extra.radius = 11;
     if(kind==="denue") extra.radius = 7;
@@ -1126,14 +1873,50 @@
 
     layer.setStyle(extra);
     if(layer.bringToFront) layer.bringToFront();
-    activeLayer=layer;
-    activeKind=kind;
+    activeLayer = layer;
+    activeKind = kind;
+  }
+
+  function previewHighlight(layer, kind){
+    if(!layer || !layer.setStyle || layer === activeLayer) return;
+    resetLayerStyle(layer, kind);
+
+    const extra = {
+      weight: Math.max(3.2, (kind==="colonia" ? 2.2 : 3.2)),
+      opacity: 1,
+      fillOpacity: Math.min(0.78, opacityForKind(kind) + 0.18)
+    };
+
+    if(kind === "zona"){
+      extra.weight = 4.2;
+      extra.dashArray = "";
+      extra.fillOpacity = Math.min(0.48, opacityState.zonas + 0.15);
+    }
+    if(kind === "casilla"){
+      extra.radius = 10;
+      extra.weight = 3.2;
+      extra.fillOpacity = 1;
+    }
+    if(kind === "denue"){
+      extra.radius = 6.2;
+      extra.weight = 2.2;
+      extra.fillOpacity = Math.max(0.85, opacityState.denue);
+    }
+    if(kind === "punto"){
+      extra.radius = 8.2;
+      extra.weight = 2.8;
+      extra.fillOpacity = Math.max(0.85, opacityState.locPoints);
+    }
+
+    layer.setStyle(extra);
+    if(layer.bringToFront) layer.bringToFront();
   }
 
   function setLayerVisible(layer, visible){
     const has = map.hasLayer(layer);
     if(visible && !has) layer.addTo(map);
     if(!visible && has) map.removeLayer(layer);
+    updateLayerPill();
   }
 
   function applyOpacityAndColors(){
@@ -1149,7 +1932,7 @@
   }
 
   function coloniasDeLocalidad(loc){
-    const L=Number(loc);
+    const L = Number(loc);
     return coloniasFeatures
       .filter(f=>Number(f.properties?.LOC)===L)
       .map(f=>f.properties?.Nombre ?? "(sin nombre)")
@@ -1159,14 +1942,17 @@
   function indexDenue(){
     denueByLOC.clear();
     denueByColonia.clear();
+
     for(const f of denueFeatures){
-      const p=f.properties||{};
-      const loc=Number(p.LOC);
-      const col=(p.colonia_nombre||"").toString();
+      const p = f.properties || {};
+      const loc = Number(p.LOC);
+      const col = (p.colonia_nombre || "").toString();
+
       if(!Number.isNaN(loc)){
         if(!denueByLOC.has(loc)) denueByLOC.set(loc, []);
         denueByLOC.get(loc).push(f);
       }
+
       if(col){
         if(!denueByColonia.has(col)) denueByColonia.set(col, []);
         denueByColonia.get(col).push(f);
@@ -1185,8 +1971,118 @@
     }
   }
 
-  const pill=document.getElementById("pill");
-  const info=document.getElementById("info");
+  const hoverCard = document.getElementById("hoverCard");
+  const hoverBar = document.getElementById("hoverBar");
+  const hoverType = document.getElementById("hoverType");
+  const hoverTitle = document.getElementById("hoverTitle");
+  const hoverMeta = document.getElementById("hoverMeta");
+
+  function showHoverCard(type, title, meta, color="#4dabf7"){
+    hoverBar.style.background = color;
+    hoverType.textContent = type || "Elemento";
+    hoverTitle.textContent = title || "—";
+    hoverMeta.textContent = meta || "—";
+    hoverCard.style.display = "block";
+  }
+
+  function hideHoverCard(){
+    hoverCard.style.display = "none";
+  }
+
+  function hoverInfo(type, feature){
+    const p = feature?.properties || {};
+
+    if(type === "colonia"){
+      return {
+        type:"Colonia",
+        title:p.Nombre || "Sin nombre",
+        meta:`LOC ${fmt(p.LOC)} · ${p.NOM_LOC || "Sin localidad"}`,
+        color:"#ffffff"
+      };
+    }
+
+    if(type === "localidad"){
+      return {
+        type:"Localidad",
+        title:p.NOM_LOC || `LOC ${fmt(p.LOC)}`,
+        meta:p.IMU_GM_2020 ? `IMU: ${p.IMU_GM_2020}` : `LOC ${fmt(p.LOC)}`,
+        color: imuMode ? gmColor(p.IMU_GM_2020) : colorState.locPolysFill
+      };
+    }
+
+    if(type === "zona"){
+      return {
+        type:"Zona",
+        title:`Zona ${fmt(p.zona)}`,
+        meta:`Secciones: ${fmt(p.secciones_count)} · Dominante: ${p.rentabilidad_dominante || "—"}`,
+        color:zoneColor(p.zona)
+      };
+    }
+
+    if(type === "seccion"){
+      return {
+        type:"Sección",
+        title:`Sección ${fmt(p.seccion)}`,
+        meta:`Zona ${fmt(p.zona)} · Rentabilidad: ${rentCategory(p.rentabilidad)}`,
+        color: rentMode ? rentColorForFeature(feature) : colorState.seccionesStroke
+      };
+    }
+
+    if(type === "casilla"){
+      return {
+        type:"Casilla",
+        title:p.casilla_id || "Casilla",
+        meta:`Sección ${fmt(p.seccion)} · ${p.localidad_nom || "Sin localidad"}`,
+        color:colorState.casillas
+      };
+    }
+
+    return {
+      type:"DENUE",
+      title:p.nom_estab || "(sin nombre)",
+      meta:`${p.nombre_act || "Actividad sin etiqueta"} · ${p.colonia_nombre || "Sin colonia"}`,
+      color:colorState.denue
+    };
+  }
+
+  function featureHover(type, feature, layer){
+    const kind = kindFromType(type, feature);
+    previewHighlight(layer, kind);
+    const h = hoverInfo(type, feature);
+    showHoverCard(h.type, h.title, h.meta, h.color);
+  }
+
+  function featureOut(type, feature, layer){
+    const kind = kindFromType(type, feature);
+    if(layer !== activeLayer){
+      resetLayerStyle(layer, kind);
+    }
+    hideHoverCard();
+  }
+
+  map.on("mouseout", ()=>hideHoverCard());
+
+  const pill = document.getElementById("pill");
+  const info = document.getElementById("info");
+
+  function metric(label, value){
+    if(value === undefined || value === null || value === "") return "";
+    return `
+      <div class="mini-metric">
+        <span class="mk">${esc(label)}</span>
+        <span class="mv">${esc(fmt(value))}</span>
+      </div>`;
+  }
+
+  function heroBlock(type, title, subtitle, metricsHTML=""){
+    return `
+      <div class="selection-hero">
+        <div class="eyebrow">${esc(type)}</div>
+        <h2>${esc(title || "—")}</h2>
+        <div class="sub">${esc(subtitle || "")}</div>
+        ${metricsHTML ? `<div class="mini-metrics">${metricsHTML}</div>` : ``}
+      </div>`;
+  }
 
   function rowKV(code, value){
     const lbl = labelFor(code);
@@ -1200,26 +2096,28 @@
   }
 
   function details(title, meta, inner, open=false){
-    return `<details ${open?"open":""}>
+    return `<details ${open ? "open" : ""}>
       <summary>
         <div>
           <div class="sum-title">${esc(title)}</div>
-          <div class="sum-meta">${esc(meta||"")}</div>
+          <div class="sum-meta">${esc(meta || "")}</div>
         </div>
-        <span class="pill">${open?"—":"+"}</span>
+        <span class="sum-arrow">⌄</span>
       </summary>
       <div class="details-b">${inner}</div>
     </details>`;
   }
 
   function viviendaKeys(props){
-    const keys = Object.keys(props||{});
+    const keys = Object.keys(props || {});
     return keys.filter(k => /^(VIV|VPH|HOG)/i.test(k) || /^TOTHOG$/i.test(k) || /^TVIV/i.test(k) || /^VIVPAR/i.test(k) || /^OCUPVIV/i.test(k) || /^PROM_/i.test(k)).sort();
   }
+
   function idKeys(props){
     const prefer = ["ENTIDAD","NOM_ENT","MUN","NOM_MUN","LOC","NOM_LOC","AMBITO","ALTITUD","LONGITUD","LATITUD","lon_dd","lat_dd"];
     return prefer.filter(k => props?.[k] !== undefined);
   }
+
   function popKeys(props){
     const prefer = ["POBTOT","POBFEM","POBMAS","POBHOG","TAMLOC","REL_H_M","POB0_14","POB15_64","POB65_MAS"];
     return prefer.filter(k => props?.[k] !== undefined);
@@ -1228,13 +2126,13 @@
   function renderLocalidadCenso(locPointFeature){
     const p = locPointFeature?.properties || {};
     const idHtml = idKeys(p).map(k => rowKV(k, p[k])).join("");
-    const popHtml = popKeys(p).map(k => rowKV(k, p[k])).join("") || `<div class="muted">Sin variables de población esperadas.</div>`;
-    const vivHtml = viviendaKeys(p).slice(0,50).map(k => rowKV(k, p[k])).join("") || `<div class="muted">Sin variables VIV/VPH/HOG detectadas.</div>`;
+    const popHtml = popKeys(p).map(k => rowKV(k, p[k])).join("") || `<div class="empty-state">Sin variables de población esperadas.</div>`;
+    const vivHtml = viviendaKeys(p).slice(0,50).map(k => rowKV(k, p[k])).join("") || `<div class="empty-state">Sin variables VIV/VPH/HOG detectadas.</div>`;
 
     const allBtn = `
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-        <button id="btnAll">Ver todas las variables</button>
-        <button id="btnHideAll" style="display:none">Ocultar</button>
+        <button id="btnAll" class="scope-btn" type="button">Ver todas las variables</button>
+        <button id="btnHideAll" class="scope-btn" style="display:none" type="button">Ocultar</button>
       </div>
       <div id="allWrap" style="display:none;margin-top:10px"></div>
     `;
@@ -1246,24 +2144,25 @@
   }
 
   function hookAllVars(locPointFeature){
-    const btn=document.getElementById("btnAll");
-    const btnHide=document.getElementById("btnHideAll");
-    const wrap=document.getElementById("allWrap");
+    const btn = document.getElementById("btnAll");
+    const btnHide = document.getElementById("btnHideAll");
+    const wrap = document.getElementById("allWrap");
     if(!btn || !wrap) return;
 
     btn.onclick = () => {
       const p = locPointFeature?.properties || {};
       const keys = Object.keys(p).sort((a,b)=>a.localeCompare(b,"es"));
-      wrap.innerHTML = keys.map(k => rowKV(k, p[k])).join("") || `<div class="muted">Sin datos.</div>`;
-      wrap.style.display="block";
-      btn.style.display="none";
-      if(btnHide) btnHide.style.display="inline-block";
+      wrap.innerHTML = keys.map(k => rowKV(k, p[k])).join("") || `<div class="empty-state">Sin datos.</div>`;
+      wrap.style.display = "block";
+      btn.style.display = "none";
+      if(btnHide) btnHide.style.display = "inline-flex";
     };
+
     if(btnHide){
       btnHide.onclick = () => {
-        wrap.style.display="none";
-        btn.style.display="inline-block";
-        btnHide.style.display="none";
+        wrap.style.display = "none";
+        btn.style.display = "inline-flex";
+        btnHide.style.display = "none";
       };
     }
   }
@@ -1271,36 +2170,38 @@
   function renderIMU(props){
     const keys = ["IMU_GM_2020","IMU_IM_2020","IMU_IMN_2020","IMU_PSDSS","IMU_SBASC","IMU_P6A14NAE","IMU_OVSDE","IMU_OVSEE","IMU_OVSAE","IMU_OVPT","IMU_OVHAC","IMU_OVSREF","IMU_OVSINT","IMU_OSCEL","IMU_AGEB_N","IMU_POB_TOT"];
     const present = keys.filter(k => props?.[k] !== undefined && props?.[k] !== null && props?.[k] !== "");
-    if(!present.length) return `<div class="muted">Esta localidad/colonia no tiene IMU agregado.</div>`;
+    if(!present.length) return `<div class="empty-state">Esta localidad o colonia no tiene IMU agregado.</div>`;
     return present.map(k => rowKV(k, props[k])).join("");
   }
 
   function renderRentSection(props){
     const keys = ["rentabilidad","meta","zona","lista_nominal"];
     const present = keys.filter(k => props?.[k] !== undefined && props?.[k] !== null && String(props?.[k]).trim() !== "");
-    if(!present.length) return `<div class="muted">Esta sección no tiene datos de rentabilidad/meta/zona/LN.</div>`;
+    if(!present.length) return `<div class="empty-state">Esta sección no tiene datos de rentabilidad, meta, zona o lista nominal.</div>`;
+
     const cat = rentCategory(props?.rentabilidad);
     const chipColor = rentColors[cat] || rentColors["Sin dato"];
     const chip = `<span class="pill mono" style="margin-left:6px;border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.03)">
       <span style="display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;border:1px solid rgba(255,255,255,.22);background:${chipColor}"></span>
       ${esc(cat)}
     </span>`;
+
     return (
       rowKV("rentabilidad", props.rentabilidad) +
       rowKV("meta", props.meta) +
       rowKV("zona", props.zona) +
       rowKV("lista_nominal", props.lista_nominal) +
-      `<div class="muted" style="margin-top:8px">Clasificación: ${chip}</div>`
+      `<div class="muted" style="margin-top:8px">Clasificación actual: ${chip}</div>`
     );
   }
 
   function renderZona(props){
     const zoneKeys = ["zona","secciones_count","lista_nominal_sum","meta_sum","rentabilidad_dominante","rent_alta_count","rent_media_count","rent_baja_count","rent_sin_dato_count"];
-    const zoneHtml = zoneKeys.filter(k => props[k] !== undefined).map(k => rowKV(k, props[k])).join("") || `<div class="muted">Sin atributos esperados.</div>`;
+    const zoneHtml = zoneKeys.filter(k => props[k] !== undefined).map(k => rowKV(k, props[k])).join("") || `<div class="empty-state">Sin atributos esperados.</div>`;
     const secs = toSectionArray(props.secciones);
     const secHtml = secs.length
       ? `<div class="cols-list"><ul>${secs.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>`
-      : `<div class="muted">No hay listado de secciones.</div>`;
+      : `<div class="empty-state">No hay listado de secciones.</div>`;
 
     return details("Zona", `Zona ${fmt(props.zona)}`, zoneHtml, true) +
            details("Secciones de la zona", `${secs.length} secciones`, secHtml, false);
@@ -1309,35 +2210,37 @@
   function renderDenue(p){
     const keys = ["nom_estab","raz_social","codigo_act","nombre_act","per_ocu","tipo_vial","nom_vial","numero_ext","letra_ext","tipo_asent","nomb_asent","cod_postal","telefono","correoelec","www","tipoUniEco","fecha_alta","colonia_nombre","LOC","NOM_LOC"];
     const inner = keys.filter(k=>p[k]!==undefined && p[k]!==null && p[k]!=="").map(k=>rowKV(k,p[k])).join("");
-    return details("Unidad económica (DENUE)", p.nom_estab || "—", inner, true);
+    return details("Unidad económica (DENUE)", p.nom_estab || "—", inner || `<div class="empty-state">Sin datos visibles.</div>`, true);
   }
 
   function renderDenueSummaryForLoc(loc){
     const list = denueByLOC.get(Number(loc)) || [];
     const count = list.length;
-    const top = list.slice(0, 30).map(f=>f.properties?.nom_estab || "(sin nombre)");
+    const top = list.slice(0,30).map(f=>f.properties?.nom_estab || "(sin nombre)");
     const html = count
       ? `<div class="muted" style="margin-bottom:8px">Total: <b>${count}</b> (mostrando 30)</div><div class="cols-list"><ul>${top.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`
-      : `<div class="muted">No se encontraron unidades económicas DENUE para este LOC.</div>`;
+      : `<div class="empty-state">No se encontraron unidades económicas DENUE para este LOC.</div>`;
     return details("DENUE en esta localidad", `Unidades económicas: ${count}`, html, false);
   }
 
   function renderDenueSummaryForCol(colName){
     const list = denueByColonia.get(colName) || [];
     const count = list.length;
-    const top = list.slice(0, 30).map(f=>f.properties?.nom_estab || "(sin nombre)");
+    const top = list.slice(0,30).map(f=>f.properties?.nom_estab || "(sin nombre)");
     const html = count
       ? `<div class="muted" style="margin-bottom:8px">Total: <b>${count}</b> (mostrando 30)</div><div class="cols-list"><ul>${top.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`
-      : `<div class="muted">No se encontraron unidades económicas DENUE para esta colonia.</div>`;
+      : `<div class="empty-state">No se encontraron unidades económicas DENUE para esta colonia.</div>`;
     return details("DENUE en esta colonia", `Unidades económicas: ${count}`, html, false);
   }
 
   function renderCasillasSummaryForSeccion(sec){
     const list = casillasBySeccion.get(Number(sec)) || [];
     const count = list.length;
+
     if(!count){
-      return details("Casillas en esta sección", "Sin registros", `<div class="muted">No se encontraron casillas para esta sección.</div>`, false);
+      return details("Casillas en esta sección", "Sin registros", `<div class="empty-state">No se encontraron casillas para esta sección.</div>`, false);
     }
+
     const html = `
       <div class="muted" style="margin-bottom:8px">Total: <b>${count}</b></div>
       <div class="cols-list">
@@ -1367,60 +2270,71 @@
     const integKeys = Object.keys(integ);
     const integHtml = integKeys.length
       ? integKeys.map(k => rowKV(k, integ[k])).join("")
-      : `<div class="muted">Sin integración capturada.</div>`;
+      : `<div class="empty-state">Sin integración capturada.</div>`;
 
-    return details("Casilla seccional", p.casilla_id || "—", basicHtml, true) +
+    return details("Casilla seccional", p.casilla_id || "—", basicHtml || `<div class="empty-state">Sin datos.</div>`, true) +
            details("Ubicación", `Sección ${fmt(p.seccion)} · ${esc(p.localidad_nom || "—")}`, ubicHtml, true) +
            details("Integración", `${integKeys.length} cargos`, integHtml, false);
   }
 
   function select(type, feature, layer){
-    const p=feature.properties||{};
-    const loc=Number(p.LOC);
-
-    currentSelection = { type, feature, locPointFeature: null, coloniasList: [], denueListLoc: [], denueListCol: [], casillasSeccion: [] };
+    const p = feature.properties || {};
+    const loc = Number(p.LOC);
+    currentSelection = { type, feature, locPointFeature:null, coloniasList:[], denueListLoc:[], denueListCol:[], casillasSeccion:[] };
 
     if(layer && layer.setStyle){
-      if(type==="colonia") highlight(layer, "colonia");
-      else if(type==="localidad"){
-        const isPoint = (feature.geometry?.type === "Point");
-        highlight(layer, isPoint ? "punto" : "localidad");
-      }
-      else if(type==="zona"){
-        highlight(layer, "zona");
-      }
-      else if(type==="seccion"){
-        highlight(layer, "seccion");
-      }
-      else if(type==="casilla"){
-        highlight(layer, "casilla");
-      }
-      else {
-        highlight(layer, "denue");
-      }
+      highlight(layer, kindFromType(type, feature));
     } else {
       clearHighlight();
     }
 
-    if(type==="denue"){
+    if(type === "denue"){
       pill.textContent = "DENUE";
-      info.innerHTML = renderDenue(p);
+      info.innerHTML =
+        heroBlock(
+          "Unidad económica",
+          p.nom_estab || "(sin nombre)",
+          `${p.nombre_act || "Actividad sin etiqueta"} · ${p.colonia_nombre || "Sin colonia"}`,
+          metric("LOC", p.LOC) +
+          metric("Localidad", p.NOM_LOC) +
+          metric("Personal", p.per_ocu)
+        ) +
+        renderDenue(p);
       return;
     }
 
-    if(type==="casilla"){
+    if(type === "casilla"){
       pill.textContent = "Casilla";
-      info.innerHTML = renderCasilla(feature);
+      info.innerHTML =
+        heroBlock(
+          "Casilla",
+          p.casilla_id || "Casilla",
+          `${p.localidad_nom || "Sin localidad"} · Sección ${fmt(p.seccion)}`,
+          metric("Tipo", p.casilla_tipo) +
+          metric("DF", p.distrito_federal_num) +
+          metric("DL", p.distrito_local_num)
+        ) +
+        renderCasilla(feature);
       return;
     }
 
-    if(type==="zona"){
+    if(type === "zona"){
       pill.textContent = "Zona";
-      info.innerHTML = renderZona(p);
+      info.innerHTML =
+        heroBlock(
+          "Zona",
+          `Zona ${fmt(p.zona)}`,
+          "Agrupación disuelta de secciones electorales",
+          metric("Secciones", p.secciones_count) +
+          metric("LN total", p.lista_nominal_sum) +
+          metric("Meta total", p.meta_sum) +
+          metric("Dominante", p.rentabilidad_dominante)
+        ) +
+        renderZona(p);
       return;
     }
 
-    if(type==="seccion"){
+    if(type === "seccion"){
       pill.textContent = "Sección";
       currentSelection.casillasSeccion = (casillasBySeccion.get(Number(p.seccion)) || []).slice();
 
@@ -1428,14 +2342,23 @@
       const secHtml = secKeys.filter(k=>p[k]!==undefined).map(k=>rowKV(k,p[k])).join("");
 
       info.innerHTML =
-        details("Sección electoral", `Sección ${fmt(p.seccion)} · DF ${fmt(p.distrito_f)} · DL ${fmt(p.distrito_l)}`, secHtml, true) +
-        details("Estrategia", `Rentabilidad/Meta/Zona/LN`, renderRentSection(p), true) +
+        heroBlock(
+          "Sección electoral",
+          `Sección ${fmt(p.seccion)}`,
+          `DF ${fmt(p.distrito_f)} · DL ${fmt(p.distrito_l)} · Zona ${fmt(p.zona)}`,
+          metric("Rentabilidad", rentCategory(p.rentabilidad)) +
+          metric("Meta", p.meta) +
+          metric("Lista nominal", p.lista_nominal) +
+          metric("Casillas", currentSelection.casillasSeccion.length)
+        ) +
+        details("Identificación", `Sección ${fmt(p.seccion)}`, secHtml, true) +
+        details("Estrategia", "Rentabilidad, meta, zona y lista nominal", renderRentSection(p), true) +
         renderCasillasSummaryForSeccion(p.seccion);
 
       return;
     }
 
-    if(type==="colonia"){
+    if(type === "colonia"){
       pill.textContent = "Colonia";
       const locPoint = locPointByLOC.get(loc);
       const cols = coloniasDeLocalidad(loc);
@@ -1447,14 +2370,23 @@
 
       const colFields = ["Nombre","Caracter","Pres_Hab","AREA_APROX","LOC","NOM_LOC","dist_m_a_localidad"];
       const colHtml = colFields.filter(k=>p[k]!==undefined).map(k=>rowKV(k,p[k])).join("");
-      const censoHtml = locPoint ? renderLocalidadCenso(locPoint) : `<div class="muted">No se encontró el punto de localidad (para mostrar censo).</div>`;
-      const listHtml = cols.length ? `<div class="cols-list"><ul>${cols.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>` : `<div class="muted">Sin colonias asociadas.</div>`;
+      const censoHtml = locPoint ? renderLocalidadCenso(locPoint) : `<div class="empty-state">No se encontró el punto de localidad para mostrar censo.</div>`;
+      const listHtml = cols.length ? `<div class="cols-list"><ul>${cols.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>` : `<div class="empty-state">Sin colonias asociadas.</div>`;
       const imuHtml = renderIMU(p);
 
       info.innerHTML =
-        details("Colonia", p.Nombre || "—", colHtml, true) +
+        heroBlock(
+          "Colonia",
+          p.Nombre || "—",
+          `${p.NOM_LOC || "Sin localidad"} · LOC ${fmt(loc)}`,
+          metric("Habitantes", p.Pres_Hab) +
+          metric("Área aprox.", p.AREA_APROX) +
+          metric("Colonias en LOC", cols.length) +
+          metric("DENUE en colonia", currentSelection.denueListCol.length)
+        ) +
+        details("Datos de la colonia", "Identificación territorial", colHtml, true) +
         details("Marginación (IMU 2020)", `LOC ${fmt(loc)} · agregado por localidad`, imuHtml, true) +
-        details("Censo (localidad asociada)", `LOC ${fmt(loc)} · ${esc(p.NOM_LOC||"")}`, censoHtml, false) +
+        details("Censo (localidad asociada)", `LOC ${fmt(loc)} · ${esc(p.NOM_LOC || "")}`, censoHtml, false) +
         details("Colonias en esta localidad", `${cols.length} colonias`, listHtml, false) +
         renderDenueSummaryForCol(p.Nombre || "");
 
@@ -1472,13 +2404,22 @@
 
     const locFields = ["LOC","NOM_LOC","AMBITO","POBTOT","ALTITUD","colonias_count","metodo_poligono"];
     const locHtml = locFields.filter(k=>p[k]!==undefined).map(k=>rowKV(k,p[k])).join("");
-    const censoHtml = locPoint ? renderLocalidadCenso(locPoint) : `<div class="muted">No se encontró el punto de localidad (para mostrar censo).</div>`;
-    const listHtml = cols.length ? `<div class="cols-list"><ul>${cols.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>` : `<div class="muted">Esta localidad no tiene colonias en la capa (según asignación).</div>`;
+    const censoHtml = locPoint ? renderLocalidadCenso(locPoint) : `<div class="empty-state">No se encontró el punto de localidad para mostrar censo.</div>`;
+    const listHtml = cols.length ? `<div class="cols-list"><ul>${cols.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>` : `<div class="empty-state">Esta localidad no tiene colonias asociadas en la capa.</div>`;
     const imuHtml = renderIMU(p);
 
     info.innerHTML =
-      details("Localidad", p.NOM_LOC || "—", locHtml, true) +
-      details("Marginación (IMU 2020)", "Agregado por localidad (LOC) desde AGEB urbanas", imuHtml, true) +
+      heroBlock(
+        "Localidad",
+        p.NOM_LOC || `LOC ${fmt(loc)}`,
+        `Localidad vinculada con censo e IMU`,
+        metric("LOC", p.LOC) +
+        metric("Población", p.POBTOT) +
+        metric("Colonias", cols.length) +
+        metric("DENUE", currentSelection.denueListLoc.length)
+      ) +
+      details("Datos de la localidad", `LOC ${fmt(loc)}`, locHtml, true) +
+      details("Marginación (IMU 2020)", "Agregado por localidad desde AGEB urbanas", imuHtml, true) +
       details("Censo (localidad)", `LOC ${fmt(loc)}`, censoHtml, false) +
       details("Colonias en esta localidad", `${cols.length} colonias`, listHtml, false) +
       renderDenueSummaryForLoc(loc);
@@ -1489,73 +2430,142 @@
   const btnHome = document.getElementById("btnHome");
   const btnClear = document.getElementById("btnClear");
   const btnPrint = document.getElementById("btnPrint");
+  const btnClearSearch = document.getElementById("btnClearSearch");
+  const activeBasemapLabel = document.getElementById("activeBasemapLabel");
   let homeBounds = null;
 
   btnClear.onclick = () => {
     currentSelection = null;
     clearHighlight();
-    pill.textContent = "Nada";
-    info.innerHTML = `<div class="muted">Da click sobre el mapa o usa el buscador.</div>`;
+    pill.textContent = "Nada seleccionado";
+    info.innerHTML = `<div class="empty-state">Da click en el mapa o usa el buscador para ver una ficha detallada.</div>`;
   };
+
   btnHome.onclick = () => {
     if(homeBounds){
       map.fitBounds(homeBounds, {padding:[22,22]});
-    } else {
+    }else{
       map.setView([20.06,-98.74], 12);
     }
   };
+
   btnPrint.onclick = () => printCurrentSelection();
 
-  const q=document.getElementById("q");
-  const results=document.getElementById("results");
-  let searchIndex=[];
+  const q = document.getElementById("q");
+  const results = document.getElementById("results");
+  const pillSearch = document.getElementById("pillSearch");
+  let searchIndex = [];
+  let searchScope = "all";
+  let currentResults = [];
+  let resultCursor = -1;
+
+  function scopeClass(type){
+    const t = norm(type);
+    if(t.includes("colonia")) return "colonia";
+    if(t.includes("localidad")) return "localidad";
+    if(t.includes("zona")) return "zona";
+    if(t.includes("seccion")) return "seccion";
+    if(t.includes("casilla")) return "casilla";
+    return "denue";
+  }
+
+  function hideResults(){
+    results.style.display = "none";
+    results.innerHTML = "";
+    currentResults = [];
+    resultCursor = -1;
+    pillSearch.textContent = "0 resultados";
+  }
+
+  function renderResultsSelection(){
+    [...results.querySelectorAll(".item")].forEach((el, idx)=>{
+      el.classList.toggle("active", idx === resultCursor);
+    });
+  }
 
   function showResults(items){
-    if(!items.length){results.style.display="none";results.innerHTML="";return;}
-    results.style.display="block";
+    currentResults = items.slice();
+    resultCursor = items.length ? 0 : -1;
+    pillSearch.textContent = `${items.length} resultado${items.length===1 ? "" : "s"}`;
+
+    if(!items.length){
+      hideResults();
+      return;
+    }
+
+    results.style.display = "block";
     results.innerHTML = items.map((it,i)=>`
-      <div class="item" data-i="${i}">
-        <div class="k">${esc(it.type)}</div>
-        <div class="v">${esc(it.name)}</div>
-        <div class="k">${esc(it.meta||"")}</div>
-      </div>`).join("");
+      <div class="item ${i===0 ? "active" : ""}" data-i="${i}">
+        <div class="result-type ${scopeClass(it.type)}">${esc(it.type)}</div>
+        <div class="item-main">
+          <div class="v">${esc(it.name)}</div>
+          <div class="k">${esc(it.meta || "")}</div>
+        </div>
+      </div>
+    `).join("");
+
     [...results.querySelectorAll(".item")].forEach(el=>{
-      el.onclick=()=>{
-        const it=items[Number(el.dataset.i)];
+      el.onclick = ()=>{
+        const it = items[Number(el.dataset.i)];
         focus(it);
-        results.style.display="none";
+        hideResults();
+      };
+      el.onmouseenter = ()=>{
+        resultCursor = Number(el.dataset.i);
+        renderResultsSelection();
       };
     });
   }
 
   function focus(it){
-    if(it.type==="Localidad"){
-      let target=null;
-      layerLocPolys.eachLayer(l=>{ if(Number(l.feature?.properties?.LOC)===Number(it.loc)) target=l; });
-      if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("localidad", target.feature, target); return; }
-      layerLocPoints.eachLayer(l=>{ if(Number(l.feature?.properties?.LOC)===Number(it.loc)) target=l; });
-      if(target){ map.setView(target.getLatLng(),14); select("localidad", target.feature, target); }
+    if(it.type === "Localidad"){
+      let target = null;
+      layerLocPolys.eachLayer(l=>{ if(Number(l.feature?.properties?.LOC)===Number(it.loc)) target = l; });
+      if(target){
+        map.fitBounds(target.getBounds(), {padding:[30,30]});
+        select("localidad", target.feature, target);
+        return;
+      }
+
+      layerLocPoints.eachLayer(l=>{ if(Number(l.feature?.properties?.LOC)===Number(it.loc)) target = l; });
+      if(target){
+        map.setView(target.getLatLng(), 14);
+        select("localidad", target.feature, target);
+      }
       return;
     }
-    if(it.type==="Colonia"){
-      let target=null;
-      layerColonias.eachLayer(l=>{ if(l.feature?.properties?.col_id===it.col_id) target=l; });
-      if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("colonia", target.feature, target); }
+
+    if(it.type === "Colonia"){
+      let target = null;
+      layerColonias.eachLayer(l=>{ if(l.feature?.properties?.col_id===it.col_id) target = l; });
+      if(target){
+        map.fitBounds(target.getBounds(), {padding:[30,30]});
+        select("colonia", target.feature, target);
+      }
       return;
     }
-    if(it.type==="Zona"){
-      let target=null;
-      layerZonas.eachLayer(l=>{ if(String(l.feature?.properties?.zona)===String(it.zona)) target=l; });
-      if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("zona", target.feature, target); }
+
+    if(it.type === "Zona"){
+      let target = null;
+      layerZonas.eachLayer(l=>{ if(String(l.feature?.properties?.zona)===String(it.zona)) target = l; });
+      if(target){
+        map.fitBounds(target.getBounds(), {padding:[30,30]});
+        select("zona", target.feature, target);
+      }
       return;
     }
-    if(it.type==="Sección"){
-      let target=null;
-      layerSecciones.eachLayer(l=>{ if(Number(l.feature?.properties?.seccion)===Number(it.seccion)) target=l; });
-      if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("seccion", target.feature, target); }
+
+    if(it.type === "Sección"){
+      let target = null;
+      layerSecciones.eachLayer(l=>{ if(Number(l.feature?.properties?.seccion)===Number(it.seccion)) target = l; });
+      if(target){
+        map.fitBounds(target.getBounds(), {padding:[30,30]});
+        select("seccion", target.feature, target);
+      }
       return;
     }
-    if(it.type==="Casilla"){
+
+    if(it.type === "Casilla"){
       const cLayer = casillaById.get(String(it.casilla_id));
       if(cLayer){
         map.setView(cLayer.getLatLng(), 17);
@@ -1563,6 +2573,7 @@
       }
       return;
     }
+
     const denLayer = denueById.get(String(it.denue_id));
     if(denLayer){
       map.setView(denLayer.getLatLng(), 17);
@@ -1570,18 +2581,89 @@
     }
   }
 
-  q.addEventListener("input",()=>{
-    const s=norm(q.value);
-    if(s.length<3){showResults([]);return;}
-    const items = searchIndex.filter(it=>it.norm.includes(s)).slice(0, 25);
+  function filterSearchItems(raw){
+    if(searchScope === "all") return raw;
+    return raw.filter(it => it.scope === searchScope);
+  }
+
+  function runSearch(){
+    const s = norm(q.value);
+    btnClearSearch.classList.toggle("show", !!s);
+
+    if(s.length < 3){
+      hideResults();
+      return;
+    }
+
+    const items = filterSearchItems(searchIndex)
+      .filter(it => it.norm.includes(s))
+      .slice(0, 30);
+
     showResults(items);
+  }
+
+  q.addEventListener("input", runSearch);
+
+  q.addEventListener("keydown", (e)=>{
+    if(results.style.display !== "block" || !currentResults.length) return;
+
+    if(e.key === "ArrowDown"){
+      e.preventDefault();
+      resultCursor = Math.min(currentResults.length - 1, resultCursor + 1);
+      renderResultsSelection();
+      return;
+    }
+
+    if(e.key === "ArrowUp"){
+      e.preventDefault();
+      resultCursor = Math.max(0, resultCursor - 1);
+      renderResultsSelection();
+      return;
+    }
+
+    if(e.key === "Enter"){
+      if(resultCursor >= 0 && currentResults[resultCursor]){
+        e.preventDefault();
+        focus(currentResults[resultCursor]);
+        hideResults();
+      }
+      return;
+    }
+
+    if(e.key === "Escape"){
+      hideResults();
+      return;
+    }
+  });
+
+  document.addEventListener("click", (e)=>{
+    if(!results.contains(e.target) && e.target !== q){
+      hideResults();
+    }
+  });
+
+  btnClearSearch.onclick = ()=>{
+    q.value = "";
+    btnClearSearch.classList.remove("show");
+    hideResults();
+    q.focus();
+  };
+
+  const scopeButtons = [...document.querySelectorAll(".scope-btn[data-scope]")];
+  scopeButtons.forEach(btn=>{
+    btn.onclick = ()=>{
+      scopeButtons.forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      searchScope = btn.dataset.scope;
+      runSearch();
+    };
   });
 
   const chkColonias = document.getElementById("chkColonias");
   const chkLocPolys = document.getElementById("chkLocPolys");
   const chkZonas = document.getElementById("chkZonas");
   const chkSecciones = document.getElementById("chkSecciones");
-  const chkCasillas  = document.getElementById("chkCasillas");
+  const chkCasillas = document.getElementById("chkCasillas");
   const chkLocPoints = document.getElementById("chkLocPoints");
   const chkDenue = document.getElementById("chkDenue");
 
@@ -1616,17 +2698,31 @@
   const swLocPoints = document.getElementById("swLocPoints");
   const swDenue = document.getElementById("swDenue");
 
+  const pillLayers = document.getElementById("pillLayers");
+
   function refreshSwatches(){
-    swColonias.style.background = hexToRgba(colorState.coloniasFill, 0.25);
-    swLocPolys.style.background = hexToRgba(colorState.locPolysFill, 0.26);
-    swZonas.style.background = "linear-gradient(90deg, #c77dff, #4dabf7, #51cf66, #ffd43b, #ff6b6b)";
+    swColonias.style.background = hexToRgba(colorState.coloniasFill, 0.26);
+    swLocPolys.style.background = hexToRgba(colorState.locPolysFill, 0.28);
+    swZonas.style.background = "linear-gradient(90deg,#c77dff,#4dabf7,#51cf66,#ffd43b,#ff6b6b)";
     swSecciones.style.background = hexToRgba(colorState.seccionesStroke, 0.45);
-    swCasillas.style.background = hexToRgba(colorState.casillas, 0.65);
-    swLocPoints.style.background = hexToRgba(colorState.locPoints, 0.55);
-    swDenue.style.background = hexToRgba(colorState.denue, 0.55);
+    swCasillas.style.background = hexToRgba(colorState.casillas, 0.66);
+    swLocPoints.style.background = hexToRgba(colorState.locPoints, 0.56);
+    swDenue.style.background = hexToRgba(colorState.denue, 0.56);
   }
 
-  function setPct(el, v){ el.textContent = `${v}%`; }
+  function setPct(el, v){
+    el.textContent = `${v}%`;
+  }
+
+  function updateLayerPill(){
+    const visible = [
+      chkColonias.checked, chkLocPolys.checked, chkZonas.checked,
+      chkSecciones.checked, chkCasillas.checked, chkLocPoints.checked,
+      chkDenue.checked
+    ].filter(Boolean).length;
+
+    pillLayers.textContent = `${visible} capa${visible===1 ? "" : "s"} visible${visible===1 ? "" : "s"}`;
+  }
 
   chkColonias.onchange = () => setLayerVisible(layerColonias, chkColonias.checked);
   chkLocPolys.onchange = () => setLayerVisible(layerLocPolys, chkLocPolys.checked);
@@ -1659,16 +2755,21 @@
   const bmSatBtn = document.getElementById("bmSat");
 
   function setBasemap(which){
-    if(which==="osm"){
+    if(which === "osm"){
       if(map.hasLayer(bmSAT)) map.removeLayer(bmSAT);
       if(!map.hasLayer(bmOSM)) bmOSM.addTo(map);
-      bmOsmBtn.classList.add("active"); bmSatBtn.classList.remove("active");
-    } else {
+      bmOsmBtn.classList.add("active");
+      bmSatBtn.classList.remove("active");
+      activeBasemapLabel.textContent = "Mapa base";
+    }else{
       if(map.hasLayer(bmOSM)) map.removeLayer(bmOSM);
       if(!map.hasLayer(bmSAT)) bmSAT.addTo(map);
-      bmSatBtn.classList.add("active"); bmOsmBtn.classList.remove("active");
+      bmSatBtn.classList.add("active");
+      bmOsmBtn.classList.remove("active");
+      activeBasemapLabel.textContent = "Satelital";
     }
   }
+
   bmOsmBtn.onclick = () => setBasemap("osm");
   bmSatBtn.onclick = () => setBasemap("sat");
 
@@ -1677,10 +2778,10 @@
     imuMode = !!on;
     if(imuMode){
       btnIMU.classList.add("active");
-      legendIMU.style.display="block";
-    } else {
+      legendIMU.style.display = "block";
+    }else{
       btnIMU.classList.remove("active");
-      legendIMU.style.display="none";
+      legendIMU.style.display = "none";
     }
     layerLocPolys.setStyle((f)=>styleLocPolys(f));
     if(activeLayer && activeKind==="localidad") highlight(activeLayer, activeKind);
@@ -1693,20 +2794,97 @@
     if(rentMode){
       btnRent.classList.add("active");
       renderRentLegend();
-    } else {
+    }else{
       btnRent.classList.remove("active");
-      legendRent.style.display="none";
+      legendRent.style.display = "none";
     }
     layerSecciones.setStyle((f)=>styleSecciones(f));
     if(activeLayer && activeKind==="seccion") highlight(activeLayer, activeKind);
   }
   btnRent.onclick = () => setRentMode(!rentMode);
 
+  function setStat(id, value){
+    document.getElementById(id).textContent = fmt(value);
+  }
+
+  function buildSearchIndex(gjLP){
+    searchIndex = [
+      ...coloniasFeatures.map(f=>({
+        type:"Colonia",
+        scope:"colonia",
+        name:f.properties?.Nombre ?? "(sin nombre)",
+        norm:norm(`${f.properties?.Nombre || ""} ${f.properties?.NOM_LOC || ""}`),
+        meta:`LOC ${fmt(f.properties?.LOC)} · ${f.properties?.NOM_LOC || ""}`,
+        loc:f.properties?.LOC,
+        col_id:f.properties?.col_id
+      })),
+
+      ...(zonasFeatures || []).map(f=>({
+        type:"Zona",
+        scope:"zona",
+        name:`Zona ${f.properties?.zona ?? "—"}`,
+        norm:norm(`zona ${f.properties?.zona ?? ""} ${(toSectionArray(f.properties?.secciones)).join(" ")}`),
+        meta:`Secciones: ${fmt(f.properties?.secciones_count)} · Dominante: ${f.properties?.rentabilidad_dominante || "—"}`,
+        zona:f.properties?.zona
+      })),
+
+      ...(gjLP.features || []).map(f=>({
+        type:"Localidad",
+        scope:"localidad",
+        name:f.properties?.NOM_LOC ?? (`LOC ${f.properties?.LOC}`),
+        norm:norm(`${f.properties?.NOM_LOC || ""} ${f.properties?.LOC || ""}`),
+        meta:`LOC ${fmt(f.properties?.LOC)}${f.properties?.IMU_GM_2020 ? ` · IMU: ${f.properties?.IMU_GM_2020}` : ""}`,
+        loc:f.properties?.LOC
+      })),
+
+      ...(seccionesFeatures || []).map(f=>({
+        type:"Sección",
+        scope:"seccion",
+        name:`Sección ${f.properties?.seccion ?? "—"}`,
+        norm:norm(`seccion ${String(f.properties?.seccion ?? "")} ${String(f.properties?.zona ?? "")}`),
+        meta:`Zona: ${f.properties?.zona ?? "—"} · Rent: ${rentCategory(f.properties?.rentabilidad)}`,
+        seccion:f.properties?.seccion
+      })),
+
+      ...(casillasFeatures || []).map(f=>({
+        type:"Casilla",
+        scope:"casilla",
+        name:f.properties?.casilla_id ?? "Casilla",
+        norm:norm(
+          (f.properties?.casilla_id || "") + " " +
+          (f.properties?.ubicacion || "") + " " +
+          (f.properties?.localidad_nom || "") + " " +
+          (f.properties?.colonia_reportada_nombre || "")
+        ),
+        meta:`Sección ${fmt(f.properties?.seccion)} · ${f.properties?.localidad_nom || ""}`,
+        casilla_id:f.properties?.casilla_id
+      })),
+
+      ...(denueFeatures || []).slice(0,50000).map(f=>({
+        type:"DENUE",
+        scope:"denue",
+        name:f.properties?.nom_estab ?? "(sin nombre)",
+        norm:norm(
+          (f.properties?.nom_estab || "") + " " +
+          (f.properties?.raz_social || "") + " " +
+          (f.properties?.nombre_act || "") + " " +
+          (f.properties?.colonia_nombre || "")
+        ),
+        meta:`${f.properties?.nombre_act || ""} · ${f.properties?.colonia_nombre || ""}`,
+        denue_id:f.properties?.id
+      }))
+    ];
+  }
+
+  const loadingState = document.getElementById("loadingState");
+
   (async ()=>{
     let censoDict = {};
     try{ censoDict = await load(FILE_DICT_CENSO); }catch(e){ console.warn("No se pudo cargar diccionario.json:", e); }
+
     let denueDict = {};
     try{ denueDict = await load(FILE_DICT_DENUE); }catch(e){ console.warn("No se pudo cargar diccionario_denue.json:", e); }
+
     let imuDict = {};
     try{ imuDict = await load(FILE_DICT_IMU); }catch(e){ console.warn("No se pudo cargar diccionario_imu2020.json:", e); }
 
@@ -1748,7 +2926,7 @@
     const [gjC, gjLP, gjLPoly] = await Promise.all([
       load(FILE_COLONIAS),
       load(FILE_LOC_POINTS),
-      load(FILE_LOC_POLYS),
+      load(FILE_LOC_POLYS)
     ]);
 
     coloniasFeatures = gjC.features || [];
@@ -1756,7 +2934,7 @@
     layerLocPoints.addData(gjLP);
     layerLocPolys.addData(gjLPoly);
 
-    for(const f of (gjLP.features||[])){
+    for(const f of (gjLP.features || [])){
       const loc = Number(f.properties?.LOC);
       if(!Number.isNaN(loc)) locPointByLOC.set(loc, f);
     }
@@ -1772,56 +2950,12 @@
       setLayerVisible(layerDenue, false);
     }
 
-    searchIndex = [
-      ...coloniasFeatures.map(f=>({
-        type:"Colonia",
-        name:f.properties?.Nombre ?? "(sin nombre)",
-        norm:norm(f.properties?.Nombre),
-        meta:`LOC ${fmt(f.properties?.LOC)} · ${f.properties?.NOM_LOC||""}`,
-        loc:f.properties?.LOC,
-        col_id:f.properties?.col_id
-      })),
-      ...(zonasFeatures||[]).map(f=>({
-        type:"Zona",
-        name:`Zona ${f.properties?.zona ?? "—"}`,
-        norm:norm(`zona ${f.properties?.zona ?? ""} ${(toSectionArray(f.properties?.secciones)).join(" ")}`),
-        meta:`Secciones: ${fmt(f.properties?.secciones_count)} · Dominante: ${f.properties?.rentabilidad_dominante || "—"}`,
-        zona:f.properties?.zona
-      })),
-      ...(gjLP.features||[]).map(f=>({
-        type:"Localidad",
-        name:f.properties?.NOM_LOC ?? ("LOC "+f.properties?.LOC),
-        norm:norm(f.properties?.NOM_LOC),
-        meta:`LOC ${fmt(f.properties?.LOC)} · ${f.properties?.IMU_GM_2020 ? ("IMU: "+f.properties?.IMU_GM_2020) : ""}`,
-        loc:f.properties?.LOC
-      })),
-      ...(seccionesFeatures||[]).map(f=>({
-        type:"Sección",
-        name:`Sección ${f.properties?.seccion ?? "—"}`,
-        norm:norm(String(f.properties?.seccion ?? "")),
-        meta:`Zona: ${f.properties?.zona ?? "—"} · Rent: ${rentCategory(f.properties?.rentabilidad)}`,
-        seccion:f.properties?.seccion
-      })),
-      ...(casillasFeatures||[]).map(f=>({
-        type:"Casilla",
-        name:f.properties?.casilla_id ?? "Casilla",
-        norm:norm(
-          (f.properties?.casilla_id || "") + " " +
-          (f.properties?.ubicacion || "") + " " +
-          (f.properties?.localidad_nom || "") + " " +
-          (f.properties?.colonia_reportada_nombre || "")
-        ),
-        meta:`Sección ${fmt(f.properties?.seccion)} · ${f.properties?.localidad_nom || ""}`,
-        casilla_id:f.properties?.casilla_id
-      })),
-      ...(denueFeatures||[]).slice(0, 50000).map(f=>({
-        type:"DENUE",
-        name:f.properties?.nom_estab ?? "(sin nombre)",
-        norm:norm((f.properties?.nom_estab||"") + " " + (f.properties?.raz_social||"") + " " + (f.properties?.nombre_act||"")),
-        meta:`${f.properties?.nombre_act||""} · ${f.properties?.colonia_nombre||""}`,
-        denue_id:f.properties?.id
-      }))
-    ];
+    buildSearchIndex(gjLP);
+
+    setStat("statColonias", coloniasFeatures.length || 0);
+    setStat("statLocalidades", (gjLP.features || []).length || 0);
+    setStat("statSecciones", seccionesFeatures.length || 0);
+    setStat("statDenue", denueFeatures.length || 0);
 
     try{
       const b = layerColonias.getBounds();
@@ -1854,11 +2988,14 @@
     setPct(pctDenue, Number(opDenue.value));
 
     refreshSwatches();
+    updateLayerPill();
     setRentMode(true);
     applyOpacityAndColors();
 
+    loadingState.style.display = "none";
   })().catch(err=>{
-    alert("Error cargando GeoJSON. Abre con servidor local y revisa nombres de archivos.\n\n"+err.message);
+    loadingState.style.display = "none";
+    alert("Error cargando GeoJSON. Abre con servidor local y revisa nombres de archivos.\n\n" + err.message);
     console.error(err);
   });
 </script>

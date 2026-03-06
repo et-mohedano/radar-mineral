@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Visor · Colonias, Localidades, DENUE, IMU 2020 y Rentabilidad · Mineral de la Reforma</title>
+  <title>Visor · Colonias, Zonas, Localidades, Secciones, Casillas, DENUE e IMU · Mineral de la Reforma</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
@@ -153,7 +153,6 @@
     }
     .card-b{padding:12px}
 
-    /* Layers UI */
     .seg{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
     .seg button{
       cursor:pointer;
@@ -171,7 +170,6 @@
     }
     .seg button:hover{background: rgba(255,255,255,.10);}
 
-    /* 4 columnas: check | info | tag | color */
     .layer-row{
       display:grid;
       grid-template-columns: 22px 1fr auto auto;
@@ -193,7 +191,6 @@
     input[type="range"]{width:100%; accent-color: var(--accent2);}
     .pct{font-size:11px;color: rgba(232,236,255,.90);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px 8px;background: rgba(255,255,255,.03);min-width:52px;text-align:center;}
 
-    /* Color pickers */
     .clr{
       width:34px; height:34px;
       border-radius:12px;
@@ -206,7 +203,6 @@
     input[type="color"]::-webkit-color-swatch-wrapper{padding:0}
     input[type="color"]::-webkit-color-swatch{border:none;border-radius:9px}
 
-    /* Info rows */
     .row{
       padding:9px 10px;
       border:1px solid rgba(255,255,255,.10);
@@ -223,7 +219,7 @@
       font-size:11px;color: rgba(232,236,255,.75);
       display:flex; gap:8px; align-items:center; flex-wrap:wrap;
     }
-    .row .v{font-size:13px;font-weight:900;text-align:right;}
+    .row .v{font-size:13px;font-weight:900;text-align:right;white-space:pre-wrap;}
     .help{
       display:inline-flex;align-items:center;justify-content:center;
       width:16px;height:16px;border-radius:999px;background: rgba(255,255,255,.10);
@@ -259,7 +255,6 @@
     .cols-list::-webkit-scrollbar{width:8px}
     .cols-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px}
 
-    /* Legend */
     .legend{
       position:absolute;
       right:16px;
@@ -277,7 +272,6 @@
     .leg-row{display:flex; gap:10px; align-items:center; font-size:12px; color:rgba(232,236,255,.9); margin-top:6px;}
     .leg-sq{width:12px; height:12px; border-radius:4px; border:1px solid rgba(255,255,255,.20);}
 
-    /* Leaflet tweaks */
     .leaflet-control-zoom{
       border:1px solid rgba(255,255,255,.18)!important;
       box-shadow: 0 10px 20px rgba(0,0,0,.35)!important;
@@ -299,6 +293,8 @@
       padding:6px 10px!important;
     }
 
+    .leaflet-interactive{ cursor:pointer; }
+
     @media print{ .no-print{display:none!important;} }
   </style>
 </head>
@@ -308,8 +304,8 @@
     <div class="header">
       <div class="brand-pill">Mineral</div>
       <div>
-        <h1>Visor · DENUE + IMU 2020 + Rentabilidad (Secciones)</h1>
-        <div class="muted">IMU por <b class="mono">LOC</b> · Rentabilidad por <b class="mono">SECCIÓN</b>.</div>
+        <h1>Visor · DENUE + IMU + Zonas + Rentabilidad + Casillas</h1>
+        <div class="muted">IMU por <b class="mono">LOC</b> · Rentabilidad por <b class="mono">SECCIÓN</b> · Zonas disueltas · Casillas seccionales.</div>
       </div>
       <div class="header-actions">
         <button id="btnHome" class="icon-btn" title="Centrar mapa">⌂</button>
@@ -319,7 +315,7 @@
     </div>
 
     <div class="sticky">
-      <input id="q" type="text" placeholder="Buscar colonia, localidad, sección o DENUE (3+ letras)…">
+      <input id="q" type="text" placeholder="Buscar colonia, zona, localidad, sección, casilla o DENUE (3+ letras)…">
       <div id="results" class="results"></div>
       <div class="muted" style="margin-top:8px">
         Servidor local: <span class="mono">python -m http.server 8000</span><br/>
@@ -337,7 +333,7 @@
           Activa/desactiva capas, ajusta transparencia, cambia a satelital.
           <br/>• <b>Modo IMU</b>: colorea localidades por marginación.
           <br/>• <b>Modo Rentabilidad</b>: colorea secciones por <b>ALTA / MEDIA / BAJA</b>.
-          <br/>• Cambia el <b>color base</b> de cada capa con el selector.
+          <br/>• Las <b>zonas</b> se colorean automáticamente por su atributo <b>zona</b>.
         </div>
 
         <div class="seg" style="margin-bottom:10px">
@@ -376,6 +372,20 @@
         </div>
 
         <div class="layer-row">
+          <input class="chk" id="chkZonas" type="checkbox" checked>
+          <div class="layer-name">
+            <b><span class="swatch" id="swZonas"></span>Zonas</b>
+            <span>Polígonos disueltos por zona</span>
+            <div class="slider-wrap">
+              <input id="opZonas" type="range" min="0" max="100" value="20">
+              <span class="pct" id="pctZonas">20%</span>
+            </div>
+          </div>
+          <span class="pill mono">auto</span>
+          <div class="pill mono" title="Color automático por zona">auto</div>
+        </div>
+
+        <div class="layer-row">
           <input class="chk" id="chkSecciones" type="checkbox" checked>
           <div class="layer-name">
             <b><span class="swatch" id="swSecciones"></span>Secciones</b>
@@ -386,7 +396,21 @@
             </div>
           </div>
           <span class="pill mono">fill</span>
-          <input id="clrSecciones" class="clr" type="color" value="#58a0ff" title="Color de borde secciones (y relleno si Rentabilidad está apagado)">
+          <input id="clrSecciones" class="clr" type="color" value="#58a0ff" title="Color borde secciones">
+        </div>
+
+        <div class="layer-row">
+          <input class="chk" id="chkCasillas" type="checkbox" checked>
+          <div class="layer-name">
+            <b><span class="swatch" id="swCasillas"></span>Casillas</b>
+            <span>Casillas seccionales (puntos clickeables)</span>
+            <div class="slider-wrap">
+              <input id="opCasillas" type="range" min="0" max="100" value="90">
+              <span class="pct" id="pctCasillas">90%</span>
+            </div>
+          </div>
+          <span class="pill mono">pt</span>
+          <input id="clrCasillas" class="clr" type="color" value="#ffd166" title="Color casillas">
         </div>
 
         <div class="layer-row">
@@ -453,19 +477,18 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-  // Archivos esperados en la misma carpeta:
   const FILE_COLONIAS    = "colonias_con_imu2020.geojson";
   const FILE_LOC_POINTS  = "localidades_puntos_con_imu2020.geojson";
   const FILE_LOC_POLYS   = "localidades_poligonos_con_imu2020.geojson";
-  // Importante: tu archivo se sigue llamando así (ya reemplazado con rentabilidad/meta/zona/LN)
+  const FILE_ZONAS       = "zonas_mr.geojson";
   const FILE_SECCIONES   = "secciones_mr.geojson";
+  const FILE_CASILLAS    = "casillas_mineral_de_la_reforma.geojson";
 
   const FILE_DICT_CENSO  = "diccionario.json";
   const FILE_DENUE       = "denue.geojson";
   const FILE_DICT_DENUE  = "diccionario_denue.json";
   const FILE_DICT_IMU    = "diccionario_imu2020.json";
 
-  // Basemaps
   const bmOSM = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{ maxZoom: 20, attribution:"© OpenStreetMap" });
   const bmSAT = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{ maxZoom: 20, attribution:"Tiles © Esri" });
 
@@ -483,6 +506,7 @@
   function fmt(v){
     if(v===null||v===undefined||v==="") return "—";
     if(typeof v==="number") return Number.isInteger(v)? String(v) : v.toFixed(4);
+    if(typeof v==="object") return JSON.stringify(v, null, 0);
     return String(v);
   }
   function esc(s){return (s??"").toString().replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
@@ -501,16 +525,56 @@
     return await r.json();
   }
 
-  // Diccionario unificado
   let DICT = {};
-  const DICT_SECCIONES = {
+  const DICT_EXTRA = {
     seccion: { indicador:"Sección", descripcion:"Sección electoral (INE)." },
     distrito_f: { indicador:"Distrito federal", descripcion:"Distrito electoral federal." },
     distrito_l: { indicador:"Distrito local", descripcion:"Distrito electoral local." },
-    zona: { indicador:"Zona", descripcion:"Zona operativa/estratégica asociada a la sección." },
+    zona: { indicador:"Zona", descripcion:"Zona operativa/estratégica asociada a la sección o polígono disuelto." },
     lista_nominal: { indicador:"Lista nominal", descripcion:"LN de la sección (lista nominal)." },
     meta: { indicador:"Meta", descripcion:"Meta asignada para la sección." },
-    rentabilidad: { indicador:"Rentabilidad", descripcion:"Clasificación de rentabilidad de la sección (ALTA/MEDIA/BAJA)." }
+    rentabilidad: { indicador:"Rentabilidad", descripcion:"Clasificación de rentabilidad de la sección (ALTA/MEDIA/BAJA)." },
+
+    secciones_count: { indicador:"Número de secciones", descripcion:"Cantidad de secciones agrupadas en la zona." },
+    secciones: { indicador:"Secciones", descripcion:"Listado de secciones que forman la zona." },
+    lista_nominal_sum: { indicador:"Lista nominal total", descripcion:"Suma de lista nominal de las secciones agrupadas." },
+    meta_sum: { indicador:"Meta total", descripcion:"Suma de metas de las secciones agrupadas." },
+    rentabilidad_dominante: { indicador:"Rentabilidad dominante", descripcion:"Rentabilidad predominante en la zona." },
+    rent_alta_count: { indicador:"Secciones ALTA", descripcion:"Cantidad de secciones con rentabilidad ALTA." },
+    rent_media_count: { indicador:"Secciones MEDIA", descripcion:"Cantidad de secciones con rentabilidad MEDIA." },
+    rent_baja_count: { indicador:"Secciones BAJA", descripcion:"Cantidad de secciones con rentabilidad BAJA." },
+    rent_sin_dato_count: { indicador:"Secciones sin dato", descripcion:"Cantidad de secciones sin clasificación de rentabilidad." },
+
+    casilla_id: { indicador:"ID de casilla", descripcion:"Identificador único de casilla." },
+    casilla_tipo: { indicador:"Tipo de casilla", descripcion:"Tipo principal de casilla." },
+    casilla_num: { indicador:"Número de casilla", descripcion:"Número de casilla dentro del tipo." },
+    casilla_subtipo: { indicador:"Subtipo", descripcion:"Subtipo de casilla, si existe." },
+    casilla_subnum: { indicador:"Subnúmero", descripcion:"Subnúmero de casilla, si existe." },
+    ubicacion: { indicador:"Ubicación", descripcion:"Dirección o referencia oficial de ubicación de la casilla." },
+    localidad_nom: { indicador:"Localidad", descripcion:"Localidad asociada a la casilla." },
+    municipio_nom: { indicador:"Municipio", descripcion:"Municipio asociado." },
+    colonia_reportada_nombre: { indicador:"Colonia reportada", descripcion:"Colonia extraída/reportada para la casilla." },
+    colonia_shapefile_nombre: { indicador:"Colonia/Lugar ligado", descripcion:"Colonia o localidad vinculada geográficamente." },
+    distrito_federal_num: { indicador:"Distrito federal #", descripcion:"Número de distrito federal." },
+    distrito_federal_nom: { indicador:"Distrito federal", descripcion:"Nombre del distrito federal." },
+    distrito_local_num: { indicador:"Distrito local #", descripcion:"Número de distrito local." },
+    distrito_local_nom: { indicador:"Distrito local", descripcion:"Nombre del distrito local." },
+    localidad_contexto: { indicador:"Localidad contexto", descripcion:"Localidad usada como contexto para georreferenciación." },
+    pdf_page: { indicador:"Página PDF", descripcion:"Página origen de la fuente." },
+    punto_lon: { indicador:"Longitud", descripcion:"Longitud geográfica del punto." },
+    punto_lat: { indicador:"Latitud", descripcion:"Latitud geográfica del punto." },
+
+    presidenta_e: { indicador:"Presidencia", descripcion:"Persona en presidencia de casilla." },
+    secretario_1: { indicador:"Secretaría 1", descripcion:"Primer secretario." },
+    secretaria_1: { indicador:"Secretaría 1", descripcion:"Primera secretaria." },
+    secretario_2: { indicador:"Secretaría 2", descripcion:"Segundo secretario." },
+    secretaria_2: { indicador:"Secretaría 2", descripcion:"Segunda secretaria." },
+    escrutador_1: { indicador:"Escrutador 1", descripcion:"Primer escrutador." },
+    escrutador_2: { indicador:"Escrutador 2", descripcion:"Segundo escrutador." },
+    escrutador_3: { indicador:"Escrutador 3", descripcion:"Tercer escrutador." },
+    suplente_1: { indicador:"Suplente 1", descripcion:"Primer suplente." },
+    suplente_2: { indicador:"Suplente 2", descripcion:"Segundo suplente." },
+    suplente_3: { indicador:"Suplente 3", descripcion:"Tercer suplente." }
   };
 
   function labelFor(code){
@@ -523,9 +587,6 @@
     return m?.descripcion || "";
   }
 
-  // -----------------------------
-  // Estado de selección (para imprimir)
-  // -----------------------------
   let currentSelection = null;
 
   function nowMX(){
@@ -545,6 +606,12 @@
       arr.push({ key:k, label: labelFor(k), desc: descFor(k), value: v });
     }
     return arr;
+  }
+
+  function toSectionArray(v){
+    if(Array.isArray(v)) return v.map(x => String(x)).filter(Boolean);
+    if(v === null || v === undefined || v === "") return [];
+    return String(v).split(",").map(s => s.trim()).filter(Boolean);
   }
 
   function tableHTML(title, rows){
@@ -572,48 +639,84 @@
       </section>`;
   }
 
+  function listHTML(title, items, subtitle=""){
+    if(!items || !items.length) return `
+      <section class="sec">
+        <h2>${esc(title)}</h2>
+        ${subtitle ? `<div class="sub">${esc(subtitle)}</div>` : ``}
+        <div class="empty">Sin registros.</div>
+      </section>`;
+    const lis = items.map(x=>`<li>${esc(x)}</li>`).join("");
+    return `
+      <section class="sec">
+        <h2>${esc(title)}</h2>
+        ${subtitle ? `<div class="sub">${esc(subtitle)}</div>` : ``}
+        <ol class="list">${lis}</ol>
+      </section>`;
+  }
+
   function buildReportDocument(sel){
     const type = sel?.type;
     const f = sel?.feature;
     const p = f?.properties || {};
     const locPoint = sel?.locPointFeature;
     const lp = locPoint?.properties || {};
+    const casillasSeccion = sel?.casillasSeccion || [];
 
     const title = (type === "colonia")
       ? `Ficha de Colonia · ${p.Nombre || "—"}`
       : (type === "localidad")
         ? `Ficha de Localidad · ${p.NOM_LOC || "—"}`
-        : (type === "seccion")
-          ? `Ficha de Sección · ${p.seccion || "—"}`
-          : `Ficha DENUE · ${p.nom_estab || "—"}`;
+        : (type === "zona")
+          ? `Ficha de Zona · ${p.zona || "—"}`
+          : (type === "seccion")
+            ? `Ficha de Sección · ${p.seccion || "—"}`
+            : (type === "casilla")
+              ? `Ficha de Casilla · ${p.casilla_id || "—"}`
+              : `Ficha DENUE · ${p.nom_estab || "—"}`;
 
     const subtitle = `Municipio: Mineral de la Reforma · Generado: ${nowMX()}`;
-
     let sections = "";
+
+    if(type === "zona"){
+      const zoneKeys = ["zona","secciones_count","lista_nominal_sum","meta_sum","rentabilidad_dominante","rent_alta_count","rent_media_count","rent_baja_count","rent_sin_dato_count"];
+      sections += tableHTML("Datos de la zona", buildRows(p, zoneKeys));
+      sections += listHTML("Secciones de la zona", toSectionArray(p.secciones), `Zona ${fmt(p.zona)}`);
+    }
 
     if(type === "seccion"){
       const secKeys = ["seccion","distrito_f","distrito_l","zona","lista_nominal","meta","rentabilidad","id","tipo","control","entidad","municipio"];
       sections += tableHTML("Datos de la sección", buildRows(p, secKeys));
+      sections += listHTML("Casillas en esta sección", casillasSeccion.map(c => `${c.properties?.casilla_id || "—"} · ${c.properties?.casilla_tipo || ""}`), `Total: ${casillasSeccion.length}`);
+    }
+
+    if(type === "casilla"){
+      const casKeys = [
+        "casilla_id","seccion","casilla_tipo","casilla_num","casilla_subtipo","casilla_subnum",
+        "municipio_nom","localidad_nom","colonia_reportada_nombre","colonia_shapefile_nombre",
+        "distrito_federal_num","distrito_federal_nom","distrito_local_num","distrito_local_nom",
+        "pdf_page","punto_lon","punto_lat"
+      ];
+      sections += tableHTML("Datos de la casilla", buildRows(p, casKeys));
+      sections += tableHTML("Ubicación", buildRows(p, ["ubicacion","localidad_contexto"]));
+      sections += tableHTML("Integración", buildRows(p.integracion || {}, Object.keys(p.integracion || {})));
     }
 
     if(type === "colonia"){
       const coloniaKeys = ["Nombre","Caracter","Pres_Hab","AREA_APROX","LOC","NOM_LOC","dist_m_a_localidad"];
       sections += tableHTML("Datos de la colonia", buildRows(p, coloniaKeys));
-
       const imuKeys = sortKeysForReport(p).filter(k => k.startsWith("IMU_"));
-      sections += tableHTML("Marginación (IMU 2020) · agregado por LOC", buildRows(p, imuKeys));
-
+      sections += tableHTML("Marginación (IMU 2020)", buildRows(p, imuKeys));
       if(Object.keys(lp).length){
-        sections += tableHTML("Censo · Localidad asociada (todas las variables)", buildRows(lp, null));
+        sections += tableHTML("Censo · Localidad asociada", buildRows(lp, null));
       }
     }
 
     if(type === "localidad"){
       const locKeys = ["LOC","NOM_LOC","AMBITO","POBTOT","ALTITUD","colonias_count","metodo_poligono"];
       sections += tableHTML("Datos de la localidad", buildRows(p, locKeys));
-
       const imuKeys = sortKeysForReport(p).filter(k => k.startsWith("IMU_"));
-      sections += tableHTML("Marginación (IMU 2020) · agregado por LOC", buildRows(p, imuKeys));
+      sections += tableHTML("Marginación (IMU 2020)", buildRows(p, imuKeys));
     }
 
     if(type === "denue"){
@@ -628,23 +731,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>${esc(title)}</title>
   <style>
-    :root{
-      --text:#111827; --muted:#6b7280; --border:#e5e7eb; --accent:#7A1436; --accent2:#B38E5D;
-    }
+    :root{ --text:#111827; --muted:#6b7280; --border:#e5e7eb; --accent:#7A1436; --accent2:#B38E5D; }
     @page { size: A4; margin: 14mm; }
-    body{ font-family: Arial, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--text); }
-    .top{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; border-bottom:3px solid var(--accent); padding-bottom:10px; margin-bottom:14px; }
+    body{ font-family: Arial, system-ui, sans-serif; color:var(--text); }
+    .top{ display:flex; justify-content:space-between; gap:16px; border-bottom:3px solid var(--accent); padding-bottom:10px; margin-bottom:14px; }
     .brand .t{ font-weight:900; font-size:16px; color:var(--accent); }
     .brand .s{ font-size:12px; color:var(--muted); margin-top:4px; }
     .meta{ text-align:right; font-size:12px; color:var(--muted); }
     .sec{ margin-top:14px; }
-    .sec h2{ margin:0 0 8px 0; font-size:13px; letter-spacing:.2px; text-transform:uppercase; color:#111827; border-left:5px solid var(--accent2); padding-left:10px; }
+    .sec h2{ margin:0 0 8px 0; font-size:13px; text-transform:uppercase; border-left:5px solid var(--accent2); padding-left:10px; }
+    .sub{ font-size:12px; color:var(--muted); margin:-2px 0 8px 0; }
+    .empty{ font-size:12px; color:var(--muted); border:1px dashed var(--border); padding:10px; border-radius:8px; }
     table.kv{ width:100%; border-collapse:collapse; }
     table.kv td{ vertical-align:top; padding:8px 10px; border:1px solid var(--border); font-size:12px; }
     td.k{ width:72%; }
-    td.v{ width:28%; text-align:right; font-weight:700; }
+    td.v{ width:28%; text-align:right; font-weight:700; white-space:pre-wrap; }
     .lbl{ font-weight:700; }
     .desc{ color:var(--muted); margin-top:3px; line-height:1.25; }
+    ol.list{ margin:0; padding-left:18px; font-size:12px; }
+    ol.list li{ margin:4px 0; }
     .actions{ margin-top:10px; display:flex; gap:8px; }
     .btn{ border:1px solid var(--border); background:#fff; padding:8px 10px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px; }
     .btn.primary{ border-color: var(--accent); }
@@ -671,7 +776,7 @@
   ${sections}
 
   <div style="margin-top:16px;border-top:1px solid #e5e7eb;padding-top:10px;font-size:11px;color:#6b7280;">
-    Fuente: Censo/INEGI (Localidades), IMU 2020 (CONAPO), DENUE (INEGI), Secciones INE + metas/rentabilidad (integración local).
+    Fuente: Censo/INEGI (Localidades), IMU 2020 (CONAPO), Zonas disueltas por agrupación de secciones, Secciones INE + metas/rentabilidad, Casillas seccionales (integración local), DENUE (INEGI).
   </div>
 </body>
 </html>`;
@@ -679,7 +784,7 @@
 
   function printCurrentSelection(){
     if(!currentSelection || !currentSelection.feature){
-      alert("Primero selecciona una colonia, localidad, sección o punto DENUE en el mapa.");
+      alert("Primero selecciona una colonia, zona, localidad, sección, casilla o punto DENUE en el mapa.");
       return;
     }
     const html = buildReportDocument(currentSelection);
@@ -694,10 +799,15 @@
     setTimeout(()=>{ w.focus(); w.print(); }, 250);
   }
 
-  // -----------------------------
-  // Estado visual (opacidad + color)
-  // -----------------------------
-  const opacityState = { colonias:0.35, locPolys:0.18, secciones:0.35, locPoints:0.80, denue:0.65 };
+  const opacityState = {
+    colonias:0.35,
+    locPolys:0.18,
+    zonas:0.20,
+    secciones:0.35,
+    casillas:0.90,
+    locPoints:0.80,
+    denue:0.65
+  };
 
   const colorState = {
     coloniasFill: "#ffffff",
@@ -706,12 +816,10 @@
     locPoints: "#7A1436",
     denue: "#50c878",
     seccionesStroke: "#58a0ff",
-    seccionesFill: "#58a0ff"
+    seccionesFill: "#58a0ff",
+    casillas: "#ffd166"
   };
 
-  // -----------------------------
-  // Modos (IMU / Rentabilidad)
-  // -----------------------------
   let imuMode = false;
   let rentMode = true;
 
@@ -719,7 +827,6 @@
   const legendRent = document.getElementById("legendRent");
   const legendRentRows = document.getElementById("legendRentRows");
 
-  // IMU colors
   function gmColor(gm){
     const g = (gm||"").toString().toLowerCase();
     if(g.includes("muy bajo")) return "#2A9D8F";
@@ -730,7 +837,6 @@
     return "#8D99AE";
   }
 
-  // Rentabilidad: SOLO ALTA/MEDIA/BAJA (más "Sin dato")
   const rentCats = ["BAJA","MEDIA","ALTA","Sin dato"];
   const rentColors = {
     "BAJA": "#E76F51",
@@ -739,13 +845,39 @@
     "Sin dato": "#8D99AE"
   };
 
+  const zonePalette = [
+    "#c77dff",
+    "#ff6b6b",
+    "#4dabf7",
+    "#51cf66",
+    "#ffd43b",
+    "#ff922b",
+    "#20c997",
+    "#f06595",
+    "#94d82d",
+    "#74c0fc",
+    "#845ef7",
+    "#ffa94d"
+  ];
+
+  function zoneColor(zona){
+    const z = String(zona ?? "").trim();
+    if(!z) return "#8D99AE";
+    let hash = 0;
+    for(let i = 0; i < z.length; i++){
+      hash = ((hash << 5) - hash) + z.charCodeAt(i);
+      hash |= 0;
+    }
+    const idx = Math.abs(hash) % zonePalette.length;
+    return zonePalette[idx];
+  }
+
   function rentCategory(v){
     if(v === null || v === undefined || String(v).trim()==="") return "Sin dato";
     const s = String(v).trim().toUpperCase();
     if(s.includes("ALTA")) return "ALTA";
     if(s.includes("MEDIA")) return "MEDIA";
     if(s.includes("BAJA")) return "BAJA";
-    // por si viene como A/M/B
     if(s === "A") return "ALTA";
     if(s === "M") return "MEDIA";
     if(s === "B") return "BAJA";
@@ -753,8 +885,7 @@
   }
 
   function rentColorForFeature(feature){
-    const v = feature?.properties?.rentabilidad;
-    const cat = rentCategory(v);
+    const cat = rentCategory(feature?.properties?.rentabilidad);
     return rentColors[cat] || rentColors["Sin dato"];
   }
 
@@ -769,9 +900,20 @@
     `).join("");
   }
 
-  // -----------------------------
-  // Estilos por capa
-  // -----------------------------
+  let coloniasFeatures=[];
+  let zonasFeatures=[];
+  let seccionesFeatures=[];
+  let casillasFeatures=[];
+  let denueFeatures=[];
+
+  const locPointByLOC = new Map();
+  const denueById = new Map();
+  const casillaById = new Map();
+
+  const denueByLOC = new Map();
+  const denueByColonia = new Map();
+  const casillasBySeccion = new Map();
+
   function styleColonias(){
     return {
       weight: 1,
@@ -791,6 +933,29 @@
     };
     base.fillColor = imuMode ? gmColor(feature?.properties?.IMU_GM_2020) : colorState.locPolysFill;
     return base;
+  }
+
+  function styleZonas(feature){
+    const c = zoneColor(feature?.properties?.zona);
+    return {
+      weight: 3,
+      color: hexToRgba(c, 0.98),
+      opacity: Math.min(0.95, opacityState.zonas + 0.30),
+      fillOpacity: opacityState.zonas,
+      fillColor: c,
+      dashArray: "8 6"
+    };
+  }
+
+  function styleSecciones(feature){
+    const fill = rentMode ? rentColorForFeature(feature) : colorState.seccionesFill;
+    return {
+      weight: 2,
+      color: hexToRgba(colorState.seccionesStroke, 0.95),
+      opacity: Math.min(0.95, opacityState.secciones + 0.25),
+      fillOpacity: opacityState.secciones,
+      fillColor: fill
+    };
   }
 
   function styleLocPoints(){
@@ -815,27 +980,31 @@
     };
   }
 
-  function styleSecciones(feature){
-    const fill = rentMode ? rentColorForFeature(feature) : colorState.seccionesFill;
+  function styleCasillas(){
     return {
-      weight: 2,
-      color: hexToRgba(colorState.seccionesStroke, 0.95),
-      opacity: Math.min(0.95, opacityState.secciones + 0.25),
-      fillOpacity: opacityState.secciones,
-      fillColor: fill
+      radius: 8,
+      color: hexToRgba(colorState.casillas, 1),
+      weight: 2.6,
+      opacity: Math.min(1, opacityState.casillas + 0.08),
+      fillColor: colorState.casillas,
+      fillOpacity: opacityState.casillas
     };
   }
 
-  // Stores
-  let coloniasFeatures=[];
-  let seccionesFeatures=[];
-  const locPointByLOC = new Map();
-  const denueById = new Map();
-  let denueFeatures=[];
-  const denueByLOC = new Map();
-  const denueByColonia = new Map();
+  map.createPane("paneZonas");
+  map.getPane("paneZonas").style.zIndex = 610;
+  map.getPane("paneZonas").style.pointerEvents = "auto";
 
-  // Layers
+  map.createPane("paneSecciones");
+  map.getPane("paneSecciones").style.zIndex = 620;
+  map.getPane("paneSecciones").style.pointerEvents = "auto";
+
+  map.createPane("paneCasillas");
+  map.getPane("paneCasillas").style.zIndex = 760;
+  map.getPane("paneCasillas").style.pointerEvents = "auto";
+
+  const casillasRenderer = L.svg({ pane: "paneCasillas" });
+
   const layerColonias = L.geoJSON(null,{
     style:()=>styleColonias(),
     onEachFeature:(f,l)=>l.on("click",()=>select("colonia",f,l))
@@ -846,27 +1015,19 @@
     onEachFeature:(f,l)=>l.on("click",()=>select("localidad",f,l))
   });
 
-  const layerLocPoints = L.geoJSON(null,{
-    pointToLayer:(f,latlng)=>L.circleMarker(latlng, styleLocPoints()),
-    onEachFeature:(f,l)=>l.on("click",()=>select("localidad",f,l))
-  });
-
-  const canvas = L.canvas({ padding: 0.5 });
-  const layerDenue = L.geoJSON(null,{
-    pointToLayer:(f,latlng)=>L.circleMarker(latlng, { ...styleDenue(), renderer: canvas }),
+  const layerZonas = L.geoJSON(null,{
+    pane: "paneZonas",
+    interactive: true,
+    style: (f)=>styleZonas(f),
     onEachFeature:(f,l)=>{
-      const id = f.properties?.id;
-      if(id !== undefined && id !== null) denueById.set(String(id), l);
-      l.on("click", ()=>select("denue", f, l));
+      l.on("click", ()=>select("zona", f, l));
+      l.on("mouseover", ()=>{ try{ l.bringToFront(); }catch(e){} });
     }
   });
 
-  // Pane: secciones arriba
-  map.createPane("paneSecciones");
-  map.getPane("paneSecciones").style.zIndex = 650;
-
   const layerSecciones = L.geoJSON(null, {
     pane: "paneSecciones",
+    interactive: true,
     style: (f) => styleSecciones(f),
     onEachFeature: (f, l) => {
       l.on("click", () => select("seccion", f, l));
@@ -874,13 +1035,52 @@
     }
   });
 
+  const layerLocPoints = L.geoJSON(null,{
+    pointToLayer:(f,latlng)=>L.circleMarker(latlng, styleLocPoints()),
+    onEachFeature:(f,l)=>l.on("click",()=>select("localidad",f,l))
+  });
+
+  const canvasDenue = L.canvas({ padding: 0.5 });
+  const layerDenue = L.geoJSON(null,{
+    pointToLayer:(f,latlng)=>L.circleMarker(latlng, { ...styleDenue(), renderer: canvasDenue }),
+    onEachFeature:(f,l)=>{
+      const id = f.properties?.id;
+      if(id !== undefined && id !== null) denueById.set(String(id), l);
+      l.on("click", ()=>select("denue", f, l));
+    }
+  });
+
+  const layerCasillas = L.geoJSON(null,{
+    pane:"paneCasillas",
+    interactive:true,
+    pointToLayer:(f,latlng)=>L.circleMarker(latlng, {
+      ...styleCasillas(),
+      renderer: casillasRenderer,
+      bubblingMouseEvents: false,
+      interactive: true
+    }),
+    onEachFeature:(f,l)=>{
+      const id = f.properties?.casilla_id;
+      if(id !== undefined && id !== null) casillaById.set(String(id), l);
+
+      l.on("mousedown", (e)=>L.DomEvent.stopPropagation(e));
+      l.on("dblclick", (e)=>L.DomEvent.stopPropagation(e));
+      l.on("click", (e)=>{
+        L.DomEvent.stopPropagation(e);
+        select("casilla", f, l);
+      });
+      l.on("mouseover", ()=>{ if(l.bringToFront) l.bringToFront(); });
+    }
+  });
+
   layerColonias.addTo(map);
   layerLocPolys.addTo(map);
+  layerZonas.addTo(map);
   layerSecciones.addTo(map);
   layerLocPoints.addTo(map);
+  layerCasillas.addTo(map);
   layerDenue.addTo(map);
 
-  // Highlight logic (BUG FIX: fillOpacity por capa, no usar secciones para todo)
   let activeLayer=null;
   let activeKind=null;
 
@@ -888,8 +1088,10 @@
     if(activeLayer && activeLayer.setStyle){
       if(activeKind==="colonia") activeLayer.setStyle(styleColonias());
       else if(activeKind==="localidad") activeLayer.setStyle(styleLocPolys(activeLayer.feature));
-      else if(activeKind==="punto") activeLayer.setStyle(styleLocPoints());
+      else if(activeKind==="zona") activeLayer.setStyle(styleZonas(activeLayer.feature));
       else if(activeKind==="seccion") activeLayer.setStyle(styleSecciones(activeLayer.feature));
+      else if(activeKind==="punto") activeLayer.setStyle(styleLocPoints());
+      else if(activeKind==="casilla") activeLayer.setStyle(styleCasillas());
       else if(activeKind==="denue") activeLayer.setStyle(styleDenue());
     }
     activeLayer=null;
@@ -901,24 +1103,33 @@
 
     if(kind==="colonia") layer.setStyle(styleColonias());
     else if(kind==="localidad") layer.setStyle(styleLocPolys(layer.feature));
-    else if(kind==="punto") layer.setStyle(styleLocPoints());
+    else if(kind==="zona") layer.setStyle(styleZonas(layer.feature));
     else if(kind==="seccion") layer.setStyle(styleSecciones(layer.feature));
+    else if(kind==="punto") layer.setStyle(styleLocPoints());
+    else if(kind==="casilla") layer.setStyle(styleCasillas());
     else layer.setStyle(styleDenue());
 
     let hiFill = 0.55;
     if(kind==="colonia") hiFill = Math.max(0.55, opacityState.colonias);
     if(kind==="localidad") hiFill = Math.max(0.55, opacityState.locPolys);
+    if(kind==="zona") hiFill = Math.max(0.40, opacityState.zonas);
     if(kind==="seccion") hiFill = Math.max(0.55, opacityState.secciones);
     if(kind==="punto") hiFill = Math.max(0.75, opacityState.locPoints);
+    if(kind==="casilla") hiFill = Math.max(0.95, opacityState.casillas);
     if(kind==="denue") hiFill = Math.max(0.75, opacityState.denue);
 
-    layer.setStyle({ weight: 5, opacity: 1, fillOpacity: hiFill });
+    const extra = { weight: 5, opacity: 1, fillOpacity: hiFill };
+    if(kind==="zona") extra.dashArray = null;
+    if(kind==="casilla") extra.radius = 11;
+    if(kind==="denue") extra.radius = 7;
+    if(kind==="punto") extra.radius = 8;
+
+    layer.setStyle(extra);
     if(layer.bringToFront) layer.bringToFront();
     activeLayer=layer;
     activeKind=kind;
   }
 
-  // Layer helpers
   function setLayerVisible(layer, visible){
     const has = map.hasLayer(layer);
     if(visible && !has) layer.addTo(map);
@@ -928,14 +1139,15 @@
   function applyOpacityAndColors(){
     layerColonias.setStyle(styleColonias());
     layerLocPolys.setStyle((f)=>styleLocPolys(f));
+    layerZonas.setStyle((f)=>styleZonas(f));
     layerSecciones.setStyle((f)=>styleSecciones(f));
     layerLocPoints.eachLayer(l=>l.setStyle && l.setStyle(styleLocPoints()));
+    layerCasillas.eachLayer(l=>l.setStyle && l.setStyle(styleCasillas()));
     layerDenue.eachLayer(l=>l.setStyle && l.setStyle(styleDenue()));
     if(activeLayer) highlight(activeLayer, activeKind);
     refreshSwatches();
   }
 
-  // List helpers
   function coloniasDeLocalidad(loc){
     const L=Number(loc);
     return coloniasFeatures
@@ -962,7 +1174,17 @@
     }
   }
 
-  // UI elements
+  function indexCasillas(){
+    casillasBySeccion.clear();
+    for(const f of casillasFeatures){
+      const sec = Number(f.properties?.seccion);
+      if(!Number.isNaN(sec)){
+        if(!casillasBySeccion.has(sec)) casillasBySeccion.set(sec, []);
+        casillasBySeccion.get(sec).push(f);
+      }
+    }
+  }
+
   const pill=document.getElementById("pill");
   const info=document.getElementById("info");
 
@@ -990,7 +1212,6 @@
     </details>`;
   }
 
-  // Censo blocks
   function viviendaKeys(props){
     const keys = Object.keys(props||{});
     return keys.filter(k => /^(VIV|VPH|HOG)/i.test(k) || /^TOTHOG$/i.test(k) || /^TVIV/i.test(k) || /^VIVPAR/i.test(k) || /^OCUPVIV/i.test(k) || /^PROM_/i.test(k)).sort();
@@ -1006,13 +1227,9 @@
 
   function renderLocalidadCenso(locPointFeature){
     const p = locPointFeature?.properties || {};
-    const idk = idKeys(p);
-    const popk = popKeys(p);
-    const vivk = viviendaKeys(p).slice(0, 50);
-
-    const idHtml = idk.map(k => rowKV(k, p[k])).join("");
-    const popHtml = popk.length ? popk.map(k => rowKV(k, p[k])).join("") : `<div class="muted">Sin variables de población esperadas.</div>`;
-    const vivHtml = vivk.length ? vivk.map(k => rowKV(k, p[k])).join("") : `<div class="muted">Sin variables VIV/VPH/HOG detectadas.</div>`;
+    const idHtml = idKeys(p).map(k => rowKV(k, p[k])).join("");
+    const popHtml = popKeys(p).map(k => rowKV(k, p[k])).join("") || `<div class="muted">Sin variables de población esperadas.</div>`;
+    const vivHtml = viviendaKeys(p).slice(0,50).map(k => rowKV(k, p[k])).join("") || `<div class="muted">Sin variables VIV/VPH/HOG detectadas.</div>`;
 
     const allBtn = `
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
@@ -1051,7 +1268,6 @@
     }
   }
 
-  // IMU block
   function renderIMU(props){
     const keys = ["IMU_GM_2020","IMU_IM_2020","IMU_IMN_2020","IMU_PSDSS","IMU_SBASC","IMU_P6A14NAE","IMU_OVSDE","IMU_OVSEE","IMU_OVSAE","IMU_OVPT","IMU_OVHAC","IMU_OVSREF","IMU_OVSINT","IMU_OSCEL","IMU_AGEB_N","IMU_POB_TOT"];
     const present = keys.filter(k => props?.[k] !== undefined && props?.[k] !== null && props?.[k] !== "");
@@ -1059,7 +1275,6 @@
     return present.map(k => rowKV(k, props[k])).join("");
   }
 
-  // Rent block (sección)
   function renderRentSection(props){
     const keys = ["rentabilidad","meta","zona","lista_nominal"];
     const present = keys.filter(k => props?.[k] !== undefined && props?.[k] !== null && String(props?.[k]).trim() !== "");
@@ -1079,7 +1294,18 @@
     );
   }
 
-  // DENUE render
+  function renderZona(props){
+    const zoneKeys = ["zona","secciones_count","lista_nominal_sum","meta_sum","rentabilidad_dominante","rent_alta_count","rent_media_count","rent_baja_count","rent_sin_dato_count"];
+    const zoneHtml = zoneKeys.filter(k => props[k] !== undefined).map(k => rowKV(k, props[k])).join("") || `<div class="muted">Sin atributos esperados.</div>`;
+    const secs = toSectionArray(props.secciones);
+    const secHtml = secs.length
+      ? `<div class="cols-list"><ul>${secs.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>`
+      : `<div class="muted">No hay listado de secciones.</div>`;
+
+    return details("Zona", `Zona ${fmt(props.zona)}`, zoneHtml, true) +
+           details("Secciones de la zona", `${secs.length} secciones`, secHtml, false);
+  }
+
   function renderDenue(p){
     const keys = ["nom_estab","raz_social","codigo_act","nombre_act","per_ocu","tipo_vial","nom_vial","numero_ext","letra_ext","tipo_asent","nomb_asent","cod_postal","telefono","correoelec","www","tipoUniEco","fecha_alta","colonia_nombre","LOC","NOM_LOC"];
     const inner = keys.filter(k=>p[k]!==undefined && p[k]!==null && p[k]!=="").map(k=>rowKV(k,p[k])).join("");
@@ -1106,12 +1332,53 @@
     return details("DENUE en esta colonia", `Unidades económicas: ${count}`, html, false);
   }
 
-  // Selection
+  function renderCasillasSummaryForSeccion(sec){
+    const list = casillasBySeccion.get(Number(sec)) || [];
+    const count = list.length;
+    if(!count){
+      return details("Casillas en esta sección", "Sin registros", `<div class="muted">No se encontraron casillas para esta sección.</div>`, false);
+    }
+    const html = `
+      <div class="muted" style="margin-bottom:8px">Total: <b>${count}</b></div>
+      <div class="cols-list">
+        <ul>
+          ${list.slice(0,80).map(f => {
+            const p = f.properties || {};
+            return `<li><b>${esc(p.casilla_id || "—")}</b> · ${esc(p.casilla_tipo || "—")} · ${esc(p.localidad_nom || "—")}</li>`;
+          }).join("")}
+        </ul>
+      </div>
+    `;
+    return details("Casillas en esta sección", `${count} casillas`, html, false);
+  }
+
+  function renderCasilla(feature){
+    const p = feature?.properties || {};
+    const topKeys = [
+      "casilla_id","seccion","casilla_tipo","casilla_num","casilla_subtipo","casilla_subnum",
+      "municipio_nom","localidad_nom","colonia_reportada_nombre","colonia_shapefile_nombre",
+      "distrito_federal_num","distrito_federal_nom","distrito_local_num","distrito_local_nom",
+      "pdf_page","punto_lon","punto_lat"
+    ];
+    const basicHtml = topKeys.filter(k => p[k]!==undefined && p[k]!==null && p[k]!=="").map(k => rowKV(k, p[k])).join("");
+    const ubicHtml = rowKV("ubicacion", p.ubicacion) + rowKV("localidad_contexto", p.localidad_contexto || "—");
+
+    const integ = p.integracion || {};
+    const integKeys = Object.keys(integ);
+    const integHtml = integKeys.length
+      ? integKeys.map(k => rowKV(k, integ[k])).join("")
+      : `<div class="muted">Sin integración capturada.</div>`;
+
+    return details("Casilla seccional", p.casilla_id || "—", basicHtml, true) +
+           details("Ubicación", `Sección ${fmt(p.seccion)} · ${esc(p.localidad_nom || "—")}`, ubicHtml, true) +
+           details("Integración", `${integKeys.length} cargos`, integHtml, false);
+  }
+
   function select(type, feature, layer){
     const p=feature.properties||{};
     const loc=Number(p.LOC);
 
-    currentSelection = { type, feature, locPointFeature: null, coloniasList: [], denueListLoc: [], denueListCol: [] };
+    currentSelection = { type, feature, locPointFeature: null, coloniasList: [], denueListLoc: [], denueListCol: [], casillasSeccion: [] };
 
     if(layer && layer.setStyle){
       if(type==="colonia") highlight(layer, "colonia");
@@ -1119,8 +1386,14 @@
         const isPoint = (feature.geometry?.type === "Point");
         highlight(layer, isPoint ? "punto" : "localidad");
       }
+      else if(type==="zona"){
+        highlight(layer, "zona");
+      }
       else if(type==="seccion"){
         highlight(layer, "seccion");
+      }
+      else if(type==="casilla"){
+        highlight(layer, "casilla");
       }
       else {
         highlight(layer, "denue");
@@ -1135,14 +1408,29 @@
       return;
     }
 
+    if(type==="casilla"){
+      pill.textContent = "Casilla";
+      info.innerHTML = renderCasilla(feature);
+      return;
+    }
+
+    if(type==="zona"){
+      pill.textContent = "Zona";
+      info.innerHTML = renderZona(p);
+      return;
+    }
+
     if(type==="seccion"){
       pill.textContent = "Sección";
+      currentSelection.casillasSeccion = (casillasBySeccion.get(Number(p.seccion)) || []).slice();
+
       const secKeys = ["seccion","distrito_f","distrito_l","entidad","municipio","id","tipo","control"];
       const secHtml = secKeys.filter(k=>p[k]!==undefined).map(k=>rowKV(k,p[k])).join("");
 
       info.innerHTML =
         details("Sección electoral", `Sección ${fmt(p.seccion)} · DF ${fmt(p.distrito_f)} · DL ${fmt(p.distrito_l)}`, secHtml, true) +
-        details("Estrategia", `Rentabilidad/Meta/Zona/LN`, renderRentSection(p), true);
+        details("Estrategia", `Rentabilidad/Meta/Zona/LN`, renderRentSection(p), true) +
+        renderCasillasSummaryForSeccion(p.seccion);
 
       return;
     }
@@ -1174,7 +1462,6 @@
       return;
     }
 
-    // Localidad
     pill.textContent = "Localidad";
     const locPoint = locPointByLOC.get(loc) || feature;
     const cols = coloniasDeLocalidad(loc);
@@ -1199,7 +1486,6 @@
     if(locPoint) hookAllVars(locPoint);
   }
 
-  // Buttons
   const btnHome = document.getElementById("btnHome");
   const btnClear = document.getElementById("btnClear");
   const btnPrint = document.getElementById("btnPrint");
@@ -1220,7 +1506,6 @@
   };
   btnPrint.onclick = () => printCurrentSelection();
 
-  // Search
   const q=document.getElementById("q");
   const results=document.getElementById("results");
   let searchIndex=[];
@@ -1258,10 +1543,24 @@
       if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("colonia", target.feature, target); }
       return;
     }
+    if(it.type==="Zona"){
+      let target=null;
+      layerZonas.eachLayer(l=>{ if(String(l.feature?.properties?.zona)===String(it.zona)) target=l; });
+      if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("zona", target.feature, target); }
+      return;
+    }
     if(it.type==="Sección"){
       let target=null;
       layerSecciones.eachLayer(l=>{ if(Number(l.feature?.properties?.seccion)===Number(it.seccion)) target=l; });
       if(target){ map.fitBounds(target.getBounds(),{padding:[30,30]}); select("seccion", target.feature, target); }
+      return;
+    }
+    if(it.type==="Casilla"){
+      const cLayer = casillaById.get(String(it.casilla_id));
+      if(cLayer){
+        map.setView(cLayer.getLatLng(), 17);
+        select("casilla", cLayer.feature, cLayer);
+      }
       return;
     }
     const denLayer = denueById.get(String(it.denue_id));
@@ -1278,41 +1577,51 @@
     showResults(items);
   });
 
-  // Layer UI
   const chkColonias = document.getElementById("chkColonias");
   const chkLocPolys = document.getElementById("chkLocPolys");
+  const chkZonas = document.getElementById("chkZonas");
   const chkSecciones = document.getElementById("chkSecciones");
+  const chkCasillas  = document.getElementById("chkCasillas");
   const chkLocPoints = document.getElementById("chkLocPoints");
   const chkDenue = document.getElementById("chkDenue");
 
   const opColonias = document.getElementById("opColonias");
   const opLocPolys = document.getElementById("opLocPolys");
+  const opZonas = document.getElementById("opZonas");
   const opSecciones = document.getElementById("opSecciones");
+  const opCasillas = document.getElementById("opCasillas");
   const opLocPoints = document.getElementById("opLocPoints");
   const opDenue = document.getElementById("opDenue");
 
   const pctColonias = document.getElementById("pctColonias");
   const pctLocPolys = document.getElementById("pctLocPolys");
+  const pctZonas = document.getElementById("pctZonas");
   const pctSecciones = document.getElementById("pctSecciones");
+  const pctCasillas = document.getElementById("pctCasillas");
   const pctLocPoints = document.getElementById("pctLocPoints");
   const pctDenue = document.getElementById("pctDenue");
 
   const clrColonias = document.getElementById("clrColonias");
   const clrLocPolys = document.getElementById("clrLocPolys");
   const clrSecciones = document.getElementById("clrSecciones");
+  const clrCasillas = document.getElementById("clrCasillas");
   const clrLocPoints = document.getElementById("clrLocPoints");
   const clrDenue = document.getElementById("clrDenue");
 
   const swColonias = document.getElementById("swColonias");
   const swLocPolys = document.getElementById("swLocPolys");
+  const swZonas = document.getElementById("swZonas");
   const swSecciones = document.getElementById("swSecciones");
+  const swCasillas = document.getElementById("swCasillas");
   const swLocPoints = document.getElementById("swLocPoints");
   const swDenue = document.getElementById("swDenue");
 
   function refreshSwatches(){
     swColonias.style.background = hexToRgba(colorState.coloniasFill, 0.25);
     swLocPolys.style.background = hexToRgba(colorState.locPolysFill, 0.26);
+    swZonas.style.background = "linear-gradient(90deg, #c77dff, #4dabf7, #51cf66, #ffd43b, #ff6b6b)";
     swSecciones.style.background = hexToRgba(colorState.seccionesStroke, 0.45);
+    swCasillas.style.background = hexToRgba(colorState.casillas, 0.65);
     swLocPoints.style.background = hexToRgba(colorState.locPoints, 0.55);
     swDenue.style.background = hexToRgba(colorState.denue, 0.55);
   }
@@ -1321,28 +1630,31 @@
 
   chkColonias.onchange = () => setLayerVisible(layerColonias, chkColonias.checked);
   chkLocPolys.onchange = () => setLayerVisible(layerLocPolys, chkLocPolys.checked);
+  chkZonas.onchange = () => setLayerVisible(layerZonas, chkZonas.checked);
   chkSecciones.onchange = () => setLayerVisible(layerSecciones, chkSecciones.checked);
+  chkCasillas.onchange = () => setLayerVisible(layerCasillas, chkCasillas.checked);
   chkLocPoints.onchange = () => setLayerVisible(layerLocPoints, chkLocPoints.checked);
   chkDenue.onchange = () => setLayerVisible(layerDenue, chkDenue.checked);
 
   opColonias.oninput = () => { const v=Number(opColonias.value); setPct(pctColonias,v); opacityState.colonias=v/100; applyOpacityAndColors(); };
   opLocPolys.oninput = () => { const v=Number(opLocPolys.value); setPct(pctLocPolys,v); opacityState.locPolys=v/100; applyOpacityAndColors(); };
+  opZonas.oninput = () => { const v=Number(opZonas.value); setPct(pctZonas,v); opacityState.zonas=v/100; applyOpacityAndColors(); };
   opSecciones.oninput = () => { const v=Number(opSecciones.value); setPct(pctSecciones,v); opacityState.secciones=v/100; applyOpacityAndColors(); };
+  opCasillas.oninput = () => { const v=Number(opCasillas.value); setPct(pctCasillas,v); opacityState.casillas=v/100; applyOpacityAndColors(); };
   opLocPoints.oninput = () => { const v=Number(opLocPoints.value); setPct(pctLocPoints,v); opacityState.locPoints=v/100; applyOpacityAndColors(); };
   opDenue.oninput = () => { const v=Number(opDenue.value); setPct(pctDenue,v); opacityState.denue=v/100; applyOpacityAndColors(); };
 
-  // Color pickers
   clrColonias.oninput = () => {
     colorState.coloniasFill = clrColonias.value;
-    colorState.coloniasStroke = clrColonias.value; // bordes también, para coherencia
+    colorState.coloniasStroke = clrColonias.value;
     applyOpacityAndColors();
   };
   clrLocPolys.oninput = () => { colorState.locPolysFill = clrLocPolys.value; applyOpacityAndColors(); };
   clrSecciones.oninput = () => { colorState.seccionesStroke = clrSecciones.value; colorState.seccionesFill = clrSecciones.value; applyOpacityAndColors(); };
+  clrCasillas.oninput = () => { colorState.casillas = clrCasillas.value; applyOpacityAndColors(); };
   clrLocPoints.oninput = () => { colorState.locPoints = clrLocPoints.value; applyOpacityAndColors(); };
   clrDenue.oninput = () => { colorState.denue = clrDenue.value; applyOpacityAndColors(); };
 
-  // Basemap
   const bmOsmBtn = document.getElementById("bmOsm");
   const bmSatBtn = document.getElementById("bmSat");
 
@@ -1360,7 +1672,6 @@
   bmOsmBtn.onclick = () => setBasemap("osm");
   bmSatBtn.onclick = () => setBasemap("sat");
 
-  // IMU mode
   const btnIMU = document.getElementById("btnIMU");
   function setImuMode(on){
     imuMode = !!on;
@@ -1376,7 +1687,6 @@
   }
   btnIMU.onclick = () => setImuMode(!imuMode);
 
-  // Rent mode
   const btnRent = document.getElementById("btnRent");
   function setRentMode(on){
     rentMode = !!on;
@@ -1392,9 +1702,7 @@
   }
   btnRent.onclick = () => setRentMode(!rentMode);
 
-  // Init
   (async ()=>{
-    // Diccionarios
     let censoDict = {};
     try{ censoDict = await load(FILE_DICT_CENSO); }catch(e){ console.warn("No se pudo cargar diccionario.json:", e); }
     let denueDict = {};
@@ -1402,14 +1710,23 @@
     let imuDict = {};
     try{ imuDict = await load(FILE_DICT_IMU); }catch(e){ console.warn("No se pudo cargar diccionario_imu2020.json:", e); }
 
-    DICT = { ...censoDict, ...denueDict, ...imuDict, ...DICT_SECCIONES };
+    DICT = { ...censoDict, ...denueDict, ...imuDict, ...DICT_EXTRA };
 
-    // Secciones (INE + rentabilidad/meta/zona/LN)
+    try{
+      const gjZ = await load(FILE_ZONAS);
+      zonasFeatures = gjZ.features || [];
+      layerZonas.addData(gjZ);
+    }catch(e){
+      console.warn("No se pudo cargar zonas:", e);
+      chkZonas.checked = false;
+      setLayerVisible(layerZonas, false);
+    }
+
     try{
       const gjS = await load(FILE_SECCIONES);
       seccionesFeatures = gjS.features || [];
       layerSecciones.addData(gjS);
-      renderRentLegend(); // fijo a ALTA/MEDIA/BAJA
+      renderRentLegend();
     }catch(e){
       console.warn("No se pudo cargar secciones:", e);
       chkSecciones.checked = false;
@@ -1417,7 +1734,17 @@
       setRentMode(false);
     }
 
-    // Capas base (ya incluyen IMU)
+    try{
+      const gjCa = await load(FILE_CASILLAS);
+      casillasFeatures = gjCa.features || [];
+      layerCasillas.addData(gjCa);
+      indexCasillas();
+    }catch(e){
+      console.warn("No se pudo cargar casillas:", e);
+      chkCasillas.checked = false;
+      setLayerVisible(layerCasillas, false);
+    }
+
     const [gjC, gjLP, gjLPoly] = await Promise.all([
       load(FILE_COLONIAS),
       load(FILE_LOC_POINTS),
@@ -1434,7 +1761,6 @@
       if(!Number.isNaN(loc)) locPointByLOC.set(loc, f);
     }
 
-    // DENUE (opcional)
     try{
       const gjD = await load(FILE_DENUE);
       denueFeatures = gjD.features || [];
@@ -1446,7 +1772,6 @@
       setLayerVisible(layerDenue, false);
     }
 
-    // Search index (Colonia + Localidad + Sección + DENUE)
     searchIndex = [
       ...coloniasFeatures.map(f=>({
         type:"Colonia",
@@ -1455,6 +1780,13 @@
         meta:`LOC ${fmt(f.properties?.LOC)} · ${f.properties?.NOM_LOC||""}`,
         loc:f.properties?.LOC,
         col_id:f.properties?.col_id
+      })),
+      ...(zonasFeatures||[]).map(f=>({
+        type:"Zona",
+        name:`Zona ${f.properties?.zona ?? "—"}`,
+        norm:norm(`zona ${f.properties?.zona ?? ""} ${(toSectionArray(f.properties?.secciones)).join(" ")}`),
+        meta:`Secciones: ${fmt(f.properties?.secciones_count)} · Dominante: ${f.properties?.rentabilidad_dominante || "—"}`,
+        zona:f.properties?.zona
       })),
       ...(gjLP.features||[]).map(f=>({
         type:"Localidad",
@@ -1470,6 +1802,18 @@
         meta:`Zona: ${f.properties?.zona ?? "—"} · Rent: ${rentCategory(f.properties?.rentabilidad)}`,
         seccion:f.properties?.seccion
       })),
+      ...(casillasFeatures||[]).map(f=>({
+        type:"Casilla",
+        name:f.properties?.casilla_id ?? "Casilla",
+        norm:norm(
+          (f.properties?.casilla_id || "") + " " +
+          (f.properties?.ubicacion || "") + " " +
+          (f.properties?.localidad_nom || "") + " " +
+          (f.properties?.colonia_reportada_nombre || "")
+        ),
+        meta:`Sección ${fmt(f.properties?.seccion)} · ${f.properties?.localidad_nom || ""}`,
+        casilla_id:f.properties?.casilla_id
+      })),
       ...(denueFeatures||[]).slice(0, 50000).map(f=>({
         type:"DENUE",
         name:f.properties?.nom_estab ?? "(sin nombre)",
@@ -1479,23 +1823,33 @@
       }))
     ];
 
-    // Fit bounds
     try{
       const b = layerColonias.getBounds();
       homeBounds = b;
-      if(layerSecciones.getLayers().length){
-        try{
-          const bs = layerSecciones.getBounds();
-          if(bs.isValid()) homeBounds = homeBounds.extend(bs);
-        }catch(e){}
-      }
+
+      try{
+        const bz = layerZonas.getBounds();
+        if(bz.isValid()) homeBounds = homeBounds.extend(bz);
+      }catch(e){}
+
+      try{
+        const bs = layerSecciones.getBounds();
+        if(bs.isValid()) homeBounds = homeBounds.extend(bs);
+      }catch(e){}
+
+      try{
+        const bc = layerCasillas.getBounds();
+        if(bc.isValid()) homeBounds = homeBounds.extend(bc);
+      }catch(e){}
+
       map.fitBounds(homeBounds, {padding:[22,22]});
     }catch(e){}
 
-    // Init UI
     setPct(pctColonias, Number(opColonias.value));
     setPct(pctLocPolys, Number(opLocPolys.value));
+    setPct(pctZonas, Number(opZonas.value));
     setPct(pctSecciones, Number(opSecciones.value));
+    setPct(pctCasillas, Number(opCasillas.value));
     setPct(pctLocPoints, Number(opLocPoints.value));
     setPct(pctDenue, Number(opDenue.value));
 

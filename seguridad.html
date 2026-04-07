@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguridad y percepción de seguridad | Mineral de la Reforma</title>
+  <style>
+    :root {
+      --bg: #f5f6fb;
+      --card: #ffffff;
+      --text: #182033;
+      --muted: #5f6c86;
+      --line: #e5eaf2;
+      --wine: #7a1436;
+      --wine-2: #a92b55;
+      --gold: #bb935c;
+      --teal: #0d6b63;
+      --blue: #315c9b;
+      --danger: #c43d4f;
+      --soft: #f7eff2;
+      --soft-2: #f8f4ec;
+      --soft-3: #eef7f5;
+      --shadow: 0 18px 42px rgba(18, 28, 50, 0.08);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(187,147,92,0.18), transparent 28%),
+        radial-gradient(circle at top left, rgba(122,20,54,0.10), transparent 26%),
+        var(--bg);
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1.72;
+    }
+
+    a { color: var(--wine); }
+    .container {
+      width: min(1480px, calc(100% - 34px));
+      margin: 0 auto;
+      padding: 30px 0 58px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(122,20,54,0.98), rgba(57,18,65,0.96) 55%, rgba(13,107,99,0.92));
+      color: #fff;
+      box-shadow: var(--shadow);
+      padding: 42px 42px 38px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: auto auto -20% -8%;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 64%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -12% -34% auto;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(255,255,255,0.14), transparent 62%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 15px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 16px;
+      letter-spacing: .02em;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(40px, 4.8vw, 66px);
+      line-height: 1.03;
+      margin: 18px 0 16px;
+      max-width: 1040px;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 1120px;
+      color: rgba(255,255,255,0.94);
+      font-size: 24px;
+      line-height: 1.78;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .hero-meta .item {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 18px 18px;
+    }
+
+    .hero-meta .label {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      opacity: .78;
+      margin-bottom: 8px;
+    }
+
+    .hero-meta .value {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .notice {
+      margin-top: 20px;
+      background: #fff8ef;
+      border: 1px solid #f0dcc1;
+      color: #5b4b2c;
+      padding: 22px 24px;
+      border-radius: 18px;
+      line-height: 1.7;
+      box-shadow: var(--shadow);
+      font-size: 18px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 22px 0 10px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      background: rgba(255,255,255,0.88);
+      border: 1px solid var(--line);
+      padding: 13px 18px;
+      border-radius: 999px;
+      font-size: 17px;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(18, 28, 50, 0.04);
+    }
+
+    .section { margin-top: 34px; }
+
+    .section-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: clamp(30px, 3.4vw, 44px);
+      line-height: 1.08;
+    }
+
+    .section-header p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 860px;
+      line-height: 1.7;
+      font-size: 18px;
+    }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 18px;
+    }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 27px;
+      line-height: 1.2;
+    }
+
+    .card p.lead {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    .src-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .src {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 8px 11px;
+      border-radius: 999px;
+      line-height: 1;
+    }
+
+    .src.federal { background: #f4ebee; color: var(--wine); border: 1px solid #ecd7df; }
+    .src.state { background: #fbf5eb; color: #8a5a1f; border: 1px solid #ecd9bc; }
+    .src.local { background: #ecf7f5; color: var(--teal); border: 1px solid #cde7e2; }
+    .src.file { background: #eef2fb; color: var(--blue); border: 1px solid #d8e2f5; }
+
+    .state-card {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff, #fbfcff);
+    }
+
+    .state-card .big {
+      font-size: clamp(42px, 5vw, 64px);
+      font-weight: 900;
+      line-height: 1;
+      margin: 6px 0 10px;
+      color: var(--wine);
+    }
+
+    .state-card .context {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text);
+      margin: 0 0 12px;
+    }
+
+    .state-card .mini {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .chart {
+      width: 100%;
+      min-height: 380px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fcfcfe, #fafbff);
+      border: 1px solid #eef1f6;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .chart-note {
+      margin-top: 12px;
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 12px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .kpi {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      min-height: 190px;
+    }
+
+    .kpi .kpi-label {
+      font-size: 14px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      min-height: 34px;
+      font-weight: 800;
+    }
+
+    .kpi .kpi-value {
+      font-size: clamp(34px, 3.8vw, 52px);
+      font-weight: 900;
+      line-height: 1;
+      margin: 12px 0 8px;
+      color: var(--wine);
+    }
+
+    .kpi .kpi-sub {
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 17px;
+    }
+
+    .kpi .source {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .bullets {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .bullet {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .bullet h4 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .bullet ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 17px;
+    }
+
+    .bullet li + li { margin-top: 8px; }
+
+    .subtle-panel {
+      padding: 22px 24px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #fbfcff);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--wine);
+      border: 1px solid #ead5db;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .chip.green {
+      background: #ebf7f4;
+      color: var(--teal);
+      border-color: #cfe8e1;
+    }
+
+    .chip.gold {
+      background: #faf4ea;
+      color: #8a5a1f;
+      border-color: #ead9bf;
+    }
+
+    .metric-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .metric-list li + li { margin-top: 8px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #ebeff6;
+      padding: 13px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 14px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: #f8faff;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    details {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+    }
+
+    details + details { margin-top: 10px; }
+
+    summary {
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    .sources-list {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      line-height: 1.85;
+      font-size: 17px;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .two-col-note {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+
+
+    .municipal-wrap {
+      display: grid;
+      gap: 20px;
+    }
+
+    .municipal-dashboard {
+      background: linear-gradient(135deg, rgba(122,20,54,.08), rgba(179,142,93,.10));
+      border: 1px solid #eadde0;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 16px 40px rgba(30, 41, 59, 0.08);
+    }
+
+    .municipal-overview {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(340px, .8fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .municipal-cover {
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.84));
+      border: 1px solid rgba(122,20,54,.12);
+      border-radius: 24px;
+      padding: 26px;
+    }
+
+    .municipal-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(122,20,54,.10);
+      color: var(--wine);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .municipal-cover h3 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 3vw, 40px);
+      line-height: 1.08;
+    }
+
+    .municipal-cover p {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.72;
+      color: var(--text);
+    }
+
+    .municipal-figures {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .figure-box {
+      background: rgba(255,255,255,.95);
+      border: 1px solid rgba(122,20,54,.10);
+      border-radius: 22px;
+      padding: 18px 18px 16px;
+      box-shadow: 0 10px 24px rgba(30, 41, 59, 0.05);
+      min-height: 162px;
+    }
+
+    .figure-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: rgba(122,20,54,.10);
+      margin-bottom: 12px;
+    }
+
+    .figure-box .label {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .figure-box .value {
+      font-size: clamp(34px, 3.5vw, 50px);
+      font-weight: 900;
+      line-height: 1;
+      color: var(--wine);
+      margin: 0 0 8px;
+    }
+
+    .figure-box .desc {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .municipal-ribbon {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .ribbon-card {
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(49,92,155,.12);
+      border-radius: 20px;
+      padding: 16px 18px;
+    }
+
+    .ribbon-card strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .ribbon-card span {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .ops-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .ops-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ops-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -24px -24px auto;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(122,20,54,.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    .ops-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .ops-title {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .ops-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: linear-gradient(135deg, rgba(122,20,54,.12), rgba(179,142,93,.16));
+      flex: 0 0 58px;
+    }
+
+    .ops-card h3 {
+      margin: 2px 0 6px;
+      font-size: 25px;
+      line-height: 1.16;
+    }
+
+    .ops-index {
+      min-width: 54px;
+      height: 54px;
+      padding: 0 10px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(122,20,54,.08);
+      color: var(--wine);
+      font-weight: 900;
+      font-size: 20px;
+    }
+
+    .ops-blurb {
+      margin: 0 0 14px;
+      font-size: 18px;
+      line-height: 1.68;
+      color: var(--text);
+    }
+
+    .ops-highlights {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .mini-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: #fafbff;
+      border: 1px solid #edf1f6;
+      font-size: 16px;
+      line-height: 1.45;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .mini-pill .tiny {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(49,92,155,.10);
+      flex: 0 0 30px;
+      font-size: 15px;
+    }
+
+    .ops-card ul.metric-list {
+      margin-top: 0;
+      font-size: 17px;
+    }
+
+    .municipal-trends {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+    }
+
+    .trend-panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .trend-panel h3 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+
+    .trend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .trend-box {
+      border-radius: 20px;
+      padding: 16px 16px 14px;
+      border: 1px solid #eceff5;
+      background: #fbfcff;
+    }
+
+    .trend-box.warn {
+      background: linear-gradient(180deg, #fff7f8, #fffdfd);
+      border-color: #f3d6dc;
+    }
+
+    .trend-box.good {
+      background: linear-gradient(180deg, #f1fbf7, #fbfffd);
+      border-color: #d3ebe2;
+    }
+
+    .trend-box .name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .trend-box .jump {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .trend-box .meta {
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .annex-highlights {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .annex-tile {
+      border-radius: 18px;
+      background: #fafbff;
+      border: 1px solid #edf1f6;
+      padding: 14px 16px;
+    }
+
+    .annex-tile strong {
+      display: block;
+      font-size: 28px;
+      color: var(--wine);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .annex-tile span {
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1280px) {
+      .hero-meta, .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2, .bullets, .two-col-note, .municipal-overview, .municipal-trends, .ops-grid { grid-template-columns: 1fr; }
+      .municipal-ribbon, .municipal-figures, .trend-grid, .annex-highlights { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      body { font-size: 18px; }
+      .container { width: min(100% - 18px, 1460px); padding-top: 12px; }
+      .hero { padding: 24px 18px 20px; border-radius: 24px; }
+      .hero-meta, .kpis, .grid-4, .municipal-ribbon, .municipal-figures, .trend-grid, .annex-highlights, .ops-highlights { grid-template-columns: 1fr; }
+      .card, .kpi, .bullet, .state-card, .ops-card, .trend-panel, .municipal-dashboard { padding: 20px; }
+      .nav a { width: 100%; text-align: center; }
+      h1 { font-size: clamp(34px, 10vw, 48px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="eyebrow">Tablero ejecutivo ampliado · Seguridad y percepción</div>
+      <h1>Mineral de la Reforma, Hidalgo: panorama concentrado de seguridad pública, percepción de inseguridad y acciones institucionales</h1>
+      <p>
+        Este tablero integra dos capas de información: <strong>fuentes oficiales externas</strong> —INEGI, PGJEH, SIGEH y Ayuntamiento— y el <strong>documento municipal directo</strong> que compartiste sobre buenas prácticas e incidencia interna. El resultado permite distinguir con claridad qué dato viene de una fuente estadística oficial y qué dato proviene del reporte operativo del propio municipio.
+      </p>
+      <div class="hero-meta">
+        <div class="item">
+          <div class="label">Cobertura</div>
+          <div class="value">Municipio + referencia metropolitana compatible para percepción</div>
+        </div>
+        <div class="item">
+          <div class="label">Escalas visibles</div>
+          <div class="value">Federal, Hidalgo y Mineral de la Reforma</div>
+        </div>
+        <div class="item">
+          <div class="label">Ventana base</div>
+          <div class="value">2023, 2024, 2025 y anexo interno 2026</div>
+        </div>
+        <div class="item">
+          <div class="label">Enfoque</div>
+          <div class="value">Incidencia, percepción, capacidad institucional y buenas prácticas</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="notice">
+      <strong>Nota metodológica clave.</strong> No se identificó una encuesta pública con percepción estrictamente municipal para Mineral de la Reforma. Por eso, el tablero usa la <strong>ENSU de Pachuca / Zona Metropolitana de Pachuca</strong> como referencia compatible para el municipio. Además, el propio Ayuntamiento usa la ENSU como base de su indicador programático de percepción de seguridad. En el documento municipal recibido también aparece una matriz interna 2024-2026; se incorporó como <strong>anexo operativo</strong>, pero el corte temporal de 2026 no está especificado en ese PDF, así que no se usa como serie estadística central.
+    </div>
+
+    <nav class="nav">
+      <a href="#estado-arte">Estado del arte</a>
+      <a href="#indicadores">Indicadores clave</a>
+      <a href="#graficas">Gráficas</a>
+      <a href="#documento-municipal">Documento municipal</a>
+      <a href="#hallazgos">Hallazgos</a>
+      <a href="#fuentes">Fuentes</a>
+    </nav>
+
+    <section class="section" id="estado-arte">
+      <div class="section-header">
+        <div>
+          <h2>Estado del arte visual: tres escalas de referencia</h2>
+          <p>Esta franja reúne un dato federal, uno estatal y uno municipal-compatible para que la lectura arranque con una comparación muy concreta. No son universos idénticos, pero sí son referencias oficiales y útiles para ubicar a Mineral de la Reforma dentro de un contexto más amplio.</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <article class="card state-card">
+          <div class="src-badges"><span class="src federal">Federal · INEGI ENSU</span></div>
+          <h3>Percepción urbana nacional</h3>
+          <div class="big">63.8%</div>
+          <p class="context">En diciembre de 2025, ese fue el porcentaje de población de 18 años y más que consideró inseguro vivir en su ciudad en las áreas urbanas de interés del país.</p>
+          <div class="mini">Fuente: ENSU 4T 2025.</div>
+        </article>
+
+        <article class="card state-card">
+          <div class="src-badges"><span class="src state">Hidalgo · INEGI ENVIPE</span></div>
+          <h3>Percepción de inseguridad en la entidad</h3>
+          <div class="big">62.1%</div>
+          <p class="context">En Hidalgo, ENVIPE 2024 estima que 62.1% de la población adulta percibe insegura la entidad; además, 40.0% considera inseguro su entorno cercano.</p>
+          <div class="mini">Fuente: ENVIPE Hidalgo 2024.</div>
+        </article>
+
+        <article class="card state-card">
+          <div class="src-badges"><span class="src local">Mineral compatible · ENSU</span></div>
+          <h3>Percepción para Mineral de la Reforma</h3>
+          <div class="big">59.9%</div>
+          <p class="context">Se usa la referencia de Pachuca / Zona Metropolitana de Pachuca, compatible con Mineral de la Reforma por el diseño territorial de la ENSU y por el propio uso municipal del indicador.</p>
+          <div class="mini">Fuente: ENSU 4T 2025.</div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="src-badges">
+          <span class="src federal">Federal</span>
+          <span class="src state">Hidalgo</span>
+          <span class="src local">Mineral compatible</span>
+        </div>
+        <h3>Comparativo rápido de escala</h3>
+        <p class="lead">Las tres referencias se agrupan en una sola lectura visual. La brecha entre la percepción urbana nacional y la referencia compatible para Mineral es relativamente pequeña, lo que sugiere que el municipio se mueve dentro del mismo clima general de inseguridad urbana, aunque con una dinámica local propia.</p>
+        <div id="chart-escalas" class="chart"></div>
+        <div class="chart-note">Federal: ENSU nacional urbano 4T 2025. Hidalgo: ENVIPE 2024, percepción de inseguridad a nivel entidad. Mineral: Pachuca / Z. M. de Pachuca como referencia compatible para el municipio.</div>
+      </div>
+    </section>
+
+    <section class="section" id="indicadores">
+      <div class="section-header">
+        <div>
+          <h2>Indicadores clave</h2>
+          <p>Lectura rápida de los datos que más ayudan a entender volumen del problema, presión institucional y señales de cambio entre los distintos documentos revisados.</p>
+        </div>
+      </div>
+      <div class="kpis">
+        <article class="kpi">
+          <div class="kpi-label">Total municipal interno 2025</div>
+          <div class="kpi-value">4,041</div>
+          <div class="kpi-sub">Total reportado en el documento municipal recibido, en la lámina de incidencia 2024-2025.</div>
+          <span class="source">Fuente: documento municipal directo, p. 6.</span>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Variación interna 2024 → 2025</div>
+          <div class="kpi-value">+27.8%</div>
+          <div class="kpi-sub">El propio documento municipal reporta un incremento de 2,917 a 4,041 incidencias.</div>
+          <span class="source">Fuente: documento municipal directo, p. 6.</span>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Violencia familiar 2025</div>
+          <div class="kpi-value">773</div>
+          <div class="kpi-sub">Sigue siendo uno de los núcleos del problema en la estadística municipal y en el PMD.</div>
+          <span class="source">Fuentes: documento municipal p. 6 y PMD 2024-2027.</span>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Lesiones dolosas 2025</div>
+          <div class="kpi-value">311</div>
+          <div class="kpi-sub">Es uno de los rubros que más crece en el comparativo interno 2024-2025.</div>
+          <span class="source">Fuente: documento municipal directo, p. 6.</span>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Policías por cada mil habitantes</div>
+          <div class="kpi-value">1.14</div>
+          <div class="kpi-sub">Debajo del estándar nacional de 1.8; el PMD estima un faltante cercano a 131 policías.</div>
+          <span class="source">Fuente: Plan Municipal de Desarrollo 2024-2027.</span>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Cifra negra en Hidalgo</div>
+          <div class="kpi-value">89%</div>
+          <div class="kpi-sub">Alta no denuncia o no apertura de carpeta; condiciona la lectura de cualquier cifra local.</div>
+          <span class="source">Fuente: ENVIPE Hidalgo 2024.</span>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Percepción compatible dic. 2025</div>
+          <div class="kpi-value">59.9%</div>
+          <div class="kpi-sub">Referencia Pachuca / Z. M. de Pachuca utilizada como aproximación oficial para Mineral.</div>
+          <span class="source">Fuente: ENSU 4T 2025.</span>
+        </article>
+        <article class="kpi">
+          <div class="kpi-label">Accidentes de tránsito ene-ago 2024</div>
+          <div class="kpi-value">956</div>
+          <div class="kpi-sub">Hasta agosto de 2024, con 80 accidentes con lesionados y 3 con fallecimientos.</div>
+          <span class="source">Fuente: PMD 2024-2027, con datos del C2/C4 municipal.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="graficas">
+      <div class="section-header">
+        <div>
+          <h2>Gráficas</h2>
+          <p>Comparativos sencillos para ver tendencia, percepción y qué rubros presionan más la seguridad en Mineral de la Reforma.</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <div class="src-badges">
+            <span class="src local">Ayuntamiento / PGJEH / SIGEH</span>
+          </div>
+          <h3>Serie ejecutiva de delitos totales</h3>
+          <p class="lead">Se cruzan tres publicaciones oficiales compatibles para construir una lectura ejecutiva de 2023 a 2025. La serie ayuda a ver magnitud, no a sustituir la microestadística original.</p>
+          <div id="chart-total-delitos" class="chart"></div>
+          <div class="chart-note">2023: 3,795 (PMD, con referencia SESNSP). 2024: 2,916 (PGJEH). 2025: 4,039 (SIGEH). El documento municipal directo reporta 2,917 y 4,041 para 2024 y 2025, una diferencia mínima frente a la serie oficial externa.</div>
+        </article>
+
+        <article class="card">
+          <div class="src-badges">
+            <span class="src file">Documento municipal recibido</span>
+          </div>
+          <h3>Rubros internos 2024 vs 2025</h3>
+          <p class="lead">El comparativo del documento municipal muestra dónde está la presión reciente. Destacan amenazas, violencia familiar y lesiones dolosas; narcomenudeo baja en ese mismo corte interno.</p>
+          <div id="chart-documento-municipal" class="chart"></div>
+          <div class="legend">
+            <span><i class="dot" style="background:#7a1436"></i> 2024</span>
+            <span><i class="dot" style="background:#0d6b63"></i> 2025</span>
+          </div>
+          <div class="chart-note">Categorías visibles del documento municipal: amenazas, violencia familiar, lesiones dolosas, robo a casa habitación, robo a negocio y narcomenudeo.</div>
+        </article>
+
+        <article class="card">
+          <div class="src-badges">
+            <span class="src federal">ENSU</span>
+            <span class="src local">Referencia compatible para Mineral</span>
+          </div>
+          <h3>Percepción de inseguridad</h3>
+          <p class="lead">La ENSU se presenta con dos líneas: total urbano nacional y Pachuca / Z. M. de Pachuca, que funciona como referencia compatible para Mineral de la Reforma.</p>
+          <div id="chart-percepcion" class="chart"></div>
+          <div class="legend">
+            <span><i class="dot" style="background:#7a1436"></i> Pachuca / Z. M. de Pachuca</span>
+            <span><i class="dot" style="background:#315c9b"></i> Total urbano nacional</span>
+          </div>
+          <div class="chart-note">Pachuca/Z.M.: 47.5% en dic. 2024, 46.9% en sep. 2025 y 59.9% en dic. 2025. Nacional urbano: 61.7%, 63.0% y 63.8%.</div>
+        </article>
+
+        <article class="card">
+          <div class="src-badges">
+            <span class="src state">Hidalgo · ENVIPE</span>
+          </div>
+          <h3>Contexto estatal de seguridad</h3>
+          <p class="lead">Aunque no sustituye el dato municipal, ENVIPE permite leer el clima de denuncia, miedo y percepción que rodea al municipio dentro del estado de Hidalgo.</p>
+          <div id="chart-contexto-hidalgo" class="chart"></div>
+          <div class="chart-note">Indicadores: cifra negra, percepción de inseguridad en la entidad, inseguridad como principal problema y sensación de seguridad al caminar sola(o) por la noche.</div>
+        </article>
+      </div>
+    </section>
+
+    
+    <section class="section" id="documento-municipal">
+      <div class="section-header">
+        <div>
+          <h2>Documento municipal incorporado</h2>
+          <p>Esta sección se separa visualmente del resto porque concentra el insumo directo del municipio. Aquí se ve, de forma rápida, <strong>qué acciones reporta la Secretaría</strong>, <strong>qué números internos resalta</strong> y <strong>qué focos operativos aparecen en sus láminas</strong>.</p>
+        </div>
+      </div>
+
+      <div class="municipal-wrap">
+        <div class="municipal-dashboard">
+          <div class="municipal-overview">
+            <div class="municipal-cover">
+              <span class="municipal-kicker">📄 Fuente directa del municipio · pp. 1–8</span>
+              <h3>Así se integra el documento municipal al tablero</h3>
+              <p>El PDF no sólo describe acciones. También aporta una lectura operativa muy útil: muestra <strong>cinco áreas de intervención</strong>, una <strong>lámina interna de incidencia 2024–2025</strong> y un <strong>anexo 2024–2026 con 48 rubros</strong>. Por eso aquí se presenta como un módulo propio, con números resaltados y capas visuales fáciles de recorrer.</p>
+            </div>
+
+            <div class="municipal-figures">
+              <div class="figure-box">
+                <div class="figure-icon">🏛️</div>
+                <div class="label">Áreas visibles</div>
+                <div class="value">5</div>
+                <div class="desc">Prevención, Tránsito, K9, C4 y Policía Preventiva aparecen claramente desglosadas.</div>
+              </div>
+              <div class="figure-box">
+                <div class="figure-icon">📈</div>
+                <div class="label">Total interno 2025</div>
+                <div class="value">4,041</div>
+                <div class="desc">Dato de la lámina de incidencia interna del propio documento municipal.</div>
+              </div>
+              <div class="figure-box">
+                <div class="figure-icon">↗️</div>
+                <div class="label">Variación mostrada</div>
+                <div class="value">27.81%</div>
+                <div class="desc">Porcentaje que acompaña el comparativo 2024 → 2025 en la lámina interna.</div>
+              </div>
+              <div class="figure-box">
+                <div class="figure-icon">🧾</div>
+                <div class="label">Anexo adicional</div>
+                <div class="value">48</div>
+                <div class="desc">Rubros delictivos listados en la matriz 2024–2026 de las páginas 7 y 8.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="municipal-ribbon">
+            <div class="ribbon-card"><strong>2,917 → 4,041</strong><span>Comparativo interno reportado por el municipio entre 2024 y 2025.</span></div>
+            <div class="ribbon-card"><strong>150</strong><span>Violencia familiar en el anexo 2026, el valor más alto entre los rubros visibles.</span></div>
+            <div class="ribbon-card"><strong>64</strong><span>Amenazas en el anexo 2026, uno de los focos más notorios del corte interno.</span></div>
+            <div class="ribbon-card"><strong>61</strong><span>Daño a la propiedad en el anexo 2026, con peso propio dentro de la matriz.</span></div>
+          </div>
+        </div>
+
+        <div class="ops-grid">
+          <article class="ops-card">
+            <div class="ops-head">
+              <div class="ops-title">
+                <div class="ops-icon">🛡️</div>
+                <div>
+                  <div class="src-badges"><span class="src file">Documento municipal · pp. 1-2</span></div>
+                  <h3>Prevención del delito</h3>
+                </div>
+              </div>
+              <span class="ops-index">01</span>
+            </div>
+            <p class="ops-blurb">La parte preventiva del PDF se enfoca en intervención temprana, protección a víctimas y presencia comunitaria continua.</p>
+            <div class="ops-highlights">
+              <div class="mini-pill"><span class="tiny">💜</span><span>Policía Violeta</span></div>
+              <div class="mini-pill"><span class="tiny">📚</span><span>Trabajo escolar preventivo</span></div>
+              <div class="mini-pill"><span class="tiny">🤝</span><span>Proximidad social</span></div>
+              <div class="mini-pill"><span class="tiny">🧠</span><span>Psicología policial</span></div>
+            </div>
+            <ul class="metric-list">
+              <li>Seguimiento a personas en situación de vulnerabilidad y víctimas de violencia.</li>
+              <li>Gestión de medidas de protección y medidas cautelares con seguimiento formal.</li>
+              <li>Intervenciones en escuelas con crianza positiva, emociones, abuso sexual infantil y adicciones.</li>
+            </ul>
+          </article>
+
+          <article class="ops-card">
+            <div class="ops-head">
+              <div class="ops-title">
+                <div class="ops-icon">🚓</div>
+                <div>
+                  <div class="src-badges"><span class="src file">Documento municipal · p. 2</span></div>
+                  <h3>Tránsito y vialidad</h3>
+                </div>
+              </div>
+              <span class="ops-index">02</span>
+            </div>
+            <p class="ops-blurb">El documento lo presenta como un frente mixto de prevención vial, ordenamiento y asistencia a usuarios en puntos estratégicos.</p>
+            <div class="ops-highlights">
+              <div class="mini-pill"><span class="tiny">🅿️</span><span>2 paraderos seguros visibles</span></div>
+              <div class="mini-pill"><span class="tiny">🛣️</span><span>Operativos viales</span></div>
+              <div class="mini-pill"><span class="tiny">🎓</span><span>Presencia en UAEH</span></div>
+              <div class="mini-pill"><span class="tiny">🔧</span><span>Caballero del Camino</span></div>
+            </div>
+            <ul class="metric-list">
+              <li>Presencia en Plaza Universidad y Paradero 11 de julio.</li>
+              <li>Atención por fallas mecánicas y traslado a lugares seguros.</li>
+              <li>Recorridos para inhibir delito y prevenir hechos de tránsito.</li>
+            </ul>
+          </article>
+
+          <article class="ops-card">
+            <div class="ops-head">
+              <div class="ops-title">
+                <div class="ops-icon">🐕</div>
+                <div>
+                  <div class="src-badges"><span class="src file">Documento municipal · p. 3</span></div>
+                  <h3>Dirección Canina K9</h3>
+                </div>
+              </div>
+              <span class="ops-index">03</span>
+            </div>
+            <p class="ops-blurb">El componente K9 aparece como capacidad especializada para reducir riesgo operativo y fortalecer detección y proximidad social.</p>
+            <div class="ops-highlights">
+              <div class="mini-pill"><span class="tiny">🦺</span><span>Primer filtro de riesgo</span></div>
+              <div class="mini-pill"><span class="tiny">🎯</span><span>Detección y protección</span></div>
+              <div class="mini-pill"><span class="tiny">📜</span><span>Certificación continua</span></div>
+              <div class="mini-pill"><span class="tiny">🐾</span><span>Bienestar animal</span></div>
+            </div>
+            <ul class="metric-list">
+              <li>Participación en cateos, actos de investigación y atención a maltrato animal.</li>
+              <li>Clubes caninos, exhibiciones y campañas antirrábicas.</li>
+              <li>Apoyos interinstitucionales y colaboración con programas comunitarios.</li>
+            </ul>
+          </article>
+
+          <article class="ops-card">
+            <div class="ops-head">
+              <div class="ops-title">
+                <div class="ops-icon">🖥️</div>
+                <div>
+                  <div class="src-badges"><span class="src file">Documento municipal · p. 4</span></div>
+                  <h3>C4 y atención de emergencias</h3>
+                </div>
+              </div>
+              <span class="ops-index">04</span>
+            </div>
+            <p class="ops-blurb">La narrativa del C4 resalta una combinación de servicio al usuario, gestión del talento y modernización tecnológica.</p>
+            <div class="ops-highlights">
+              <div class="mini-pill"><span class="tiny">📞</span><span>Atención centrada en el usuario</span></div>
+              <div class="mini-pill"><span class="tiny">🎓</span><span>Capacitación continua</span></div>
+              <div class="mini-pill"><span class="tiny">🤖</span><span>IA y automatización</span></div>
+              <div class="mini-pill"><span class="tiny">📘</span><span>Manualización de procesos</span></div>
+            </div>
+            <ul class="metric-list">
+              <li>Transformación a C4 y modernización de monitoreo móvil.</li>
+              <li>Mejora de calidad, sensibilidad y respeto a derechos humanos en la atención.</li>
+              <li>Planificación estratégica para reducir errores y optimizar recursos.</li>
+            </ul>
+          </article>
+
+          <article class="ops-card">
+            <div class="ops-head">
+              <div class="ops-title">
+                <div class="ops-icon">👮</div>
+                <div>
+                  <div class="src-badges"><span class="src file">Documento municipal · p. 5</span></div>
+                  <h3>Policía preventiva</h3>
+                </div>
+              </div>
+              <span class="ops-index">05</span>
+            </div>
+            <p class="ops-blurb">El énfasis está en presencia territorial, recorridos focalizados y recuperación de confianza en espacios comerciales y barriales.</p>
+            <div class="ops-highlights">
+              <div class="mini-pill"><span class="tiny">🛒</span><span>Tianguis</span></div>
+              <div class="mini-pill"><span class="tiny">🏬</span><span>Plazas comerciales</span></div>
+              <div class="mini-pill"><span class="tiny">🏫</span><span>Escuelas y comercios</span></div>
+              <div class="mini-pill"><span class="tiny">📝</span><span>Bitácoras de campo</span></div>
+            </div>
+            <ul class="metric-list">
+              <li>Operativos Mineral Seguro en horarios con mayor índice delictivo.</li>
+              <li>Mercado Seguro y proximidad para fomentar la denuncia.</li>
+              <li>Mayor presencia en plazas para inhibir asaltos y robo de mercancía.</li>
+            </ul>
+          </article>
+
+          <article class="ops-card">
+            <div class="ops-head">
+              <div class="ops-title">
+                <div class="ops-icon">📊</div>
+                <div>
+                  <div class="src-badges"><span class="src file">Documento municipal · pp. 6-8</span></div>
+                  <h3>Componente estadístico interno</h3>
+                </div>
+              </div>
+              <span class="ops-index">06</span>
+            </div>
+            <p class="ops-blurb">Esta parte del PDF es especialmente valiosa porque transforma el documento en un insumo operativo y no sólo narrativo.</p>
+            <div class="ops-highlights">
+              <div class="mini-pill"><span class="tiny">📅</span><span>2024 → 2025</span></div>
+              <div class="mini-pill"><span class="tiny">➕</span><span>+27.81% reportado</span></div>
+              <div class="mini-pill"><span class="tiny">🗂️</span><span>48 rubros en anexo</span></div>
+              <div class="mini-pill"><span class="tiny">🔍</span><span>Lectura de focos puntuales</span></div>
+            </div>
+            <ul class="metric-list">
+              <li>Permite identificar alzas, bajas y presiones cotidianas en la operación local.</li>
+              <li>Ayuda a resaltar amenazas, lesiones dolosas, robo a negocio y violencia familiar.</li>
+              <li>Se integra como anexo operativo porque el corte temporal de 2026 no está especificado.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="municipal-trends">
+          <div class="trend-panel">
+            <div class="src-badges"><span class="src file">Lámina interna de incidencia · p. 6</span></div>
+            <h3>Movimientos más visibles del comparativo 2024 → 2025</h3>
+            <p class="lead">Aquí se separan con cajas las principales alzas y bajas para que la lectura sea inmediata y no quede escondida dentro del texto.</p>
+            <div class="trend-grid">
+              <div class="trend-box warn">
+                <div class="name">Amenazas</div>
+                <div class="jump">200 → 386</div>
+                <div class="meta">Es el incremento absoluto más fuerte del comparativo interno.</div>
+              </div>
+              <div class="trend-box warn">
+                <div class="name">Lesiones dolosas</div>
+                <div class="jump">155 → 311</div>
+                <div class="meta">Sube con claridad y confirma presión en hechos de mayor violencia.</div>
+              </div>
+              <div class="trend-box warn">
+                <div class="name">Violencia familiar</div>
+                <div class="jump">694 → 773</div>
+                <div class="meta">Sigue siendo uno de los núcleos más pesados del problema local.</div>
+              </div>
+              <div class="trend-box warn">
+                <div class="name">Robo a negocio</div>
+                <div class="jump">46 → 87</div>
+                <div class="meta">Se vuelve una alerta relevante en el frente comercial.</div>
+              </div>
+              <div class="trend-box good">
+                <div class="name">Narcomenudeo</div>
+                <div class="jump">65 → 49</div>
+                <div class="meta">El comparativo muestra una reducción en este rubro.</div>
+              </div>
+              <div class="trend-box good">
+                <div class="name">Robo de motocicleta</div>
+                <div class="jump">108 → 59</div>
+                <div class="meta">Es una de las bajas más notorias del mismo corte.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="trend-panel">
+            <div class="src-badges"><span class="src file">Anexo operativo · pp. 7-8</span></div>
+            <h3>Lo más visible del anexo 2026</h3>
+            <p class="lead">Se resume como fotografía operativa adicional, sin sustituir las fuentes oficiales externas.</p>
+            <div class="annex-highlights">
+              <div class="annex-tile"><strong>150</strong><span>Violencia familiar, el valor más alto entre los rubros visibles del anexo.</span></div>
+              <div class="annex-tile"><strong>64</strong><span>Amenazas, todavía con carga importante dentro del corte interno.</span></div>
+              <div class="annex-tile"><strong>61</strong><span>Daño a la propiedad, con presencia fuerte en la matriz.</span></div>
+              <div class="annex-tile"><strong>39</strong><span>Lesiones dolosas, todavía con incidencia relevante.</span></div>
+              <div class="annex-tile"><strong>37</strong><span>Fraude, uno de los rubros con mayor peso en el anexo.</span></div>
+              <div class="annex-tile"><strong>34</strong><span>Robo a casa habitación, visible entre los delitos patrimoniales.</span></div>
+            </div>
+            <p class="small" style="margin-top:14px;">Este anexo ayuda a ver que el documento municipal no es sólo un texto descriptivo: también contiene señales cuantitativas aprovechables para una lectura de operación local.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+<section class="section" id="hallazgos">
+      <div class="section-header">
+        <div>
+          <h2>Hallazgos generales</h2>
+          <p>Lectura ejecutiva de lo que muestran, en conjunto, las fuentes oficiales y el documento municipal recibido.</p>
+        </div>
+      </div>
+
+      <div class="bullets">
+        <article class="bullet">
+          <h4>1) Hay un problema delictivo persistente, con violencia familiar al centro</h4>
+          <ul>
+            <li>El PMD reporta 3,795 delitos en 2023 y señala a la <strong>violencia familiar</strong> como el delito más recurrente.</li>
+            <li>La PGJEH reporta <strong>2,916</strong> delitos para 2024 y SIGEH <strong>4,039</strong> para 2025.</li>
+            <li>El documento municipal interno es prácticamente consistente con esa trayectoria: <strong>2,917</strong> en 2024 y <strong>4,041</strong> en 2025.</li>
+          </ul>
+        </article>
+
+        <article class="bullet">
+          <h4>2) La percepción compatible con Mineral repuntó al cierre de 2025</h4>
+          <ul>
+            <li>La referencia ENSU para Pachuca / Zona Metropolitana de Pachuca sube a <strong>59.9%</strong> en diciembre de 2025.</li>
+            <li>Eso la coloca cerca de la referencia federal urbana de <strong>63.8%</strong>.</li>
+            <li>El propio municipio usa ENSU como medio de verificación de su indicador programático de percepción, lo que fortalece su uso como referencia local compatible.</li>
+          </ul>
+        </article>
+
+        <article class="bullet">
+          <h4>3) La capacidad institucional sigue siendo un punto sensible</h4>
+          <ul>
+            <li>El municipio reporta <strong>1.14 policías por cada mil habitantes</strong>, por debajo del estándar de 1.8.</li>
+            <li>El PMD estima un faltante aproximado de <strong>131 policías</strong>.</li>
+            <li>Ese mismo documento reporta <strong>233 elementos</strong>, 25% mujeres y 59% con CUP; el perfil SIGEH 2025 usa otro corte y reporta <strong>164</strong> personas de seguridad, lo que sugiere diferencias de universo o fecha de captura.</li>
+          </ul>
+        </article>
+
+        <article class="bullet">
+          <h4>4) El documento municipal sí aporta valor operativo, no sólo narrativo</h4>
+          <ul>
+            <li>No se limita a describir acciones: también aporta una <strong>lámina de incidencia</strong> con corte 2024-2025 y una matriz 2024-2026.</li>
+            <li>Permite ver de inmediato rubros de presión como <strong>amenazas, lesiones dolosas, robo a negocio y violencia familiar</strong>.</li>
+            <li>Además, documenta una arquitectura de intervención municipal: <strong>Policía Violeta, proximidad social, C4, K9, paraderos seguros y operativos Mineral Seguro</strong>.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="src-badges">
+          <span class="src state">Contexto Hidalgo</span>
+          <span class="src local">Diagnóstico municipal</span>
+        </div>
+        <h3>Zonas y clima de atención prioritaria</h3>
+        <p class="lead">El diagnóstico municipal 2025 señala como puntos rojos a <strong>Paseos de Chavarría, Rinconada de los Ángeles, El Saucillo, Campestre, Los Tuzos y la colonia La Militar</strong>. A esto se suma un contexto estatal complejo: 56.3% de la población adulta en Hidalgo identifica la inseguridad como el principal problema de la entidad y 89% de los delitos permanece en cifra negra.</p>
+        <div class="chips">
+          <span class="chip">Paseos de Chavarría</span>
+          <span class="chip">Rinconada de los Ángeles</span>
+          <span class="chip">El Saucillo</span>
+          <span class="chip">Campestre</span>
+          <span class="chip">Los Tuzos</span>
+          <span class="chip">La Militar</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="fuentes">
+      <div class="section-header">
+        <div>
+          <h2>Fuentes y vínculos</h2>
+          <p>Enlaces directos a los documentos utilizados para construir el tablero. Se separan las fuentes oficiales externas del documento municipal recibido.</p>
+        </div>
+      </div>
+
+      <details open>
+        <summary>Fuentes oficiales externas</summary>
+        <ol class="sources-list">
+          <li><a href="https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/ensu/ENSU2026_01_RR.pdf" target="_blank" rel="noopener">INEGI · ENSU 4T 2025, reporte de resultados</a></li>
+          <li><a href="https://www.inegi.org.mx/contenidos/programas/ensu/doc/889463922926.pdf" target="_blank" rel="noopener">INEGI · ENSU, diseño muestral e información complementaria</a></li>
+          <li><a href="https://www.inegi.org.mx/contenidos/programas/envipe/2024/doc/envipe2024_hgo.pdf" target="_blank" rel="noopener">INEGI · ENVIPE 2024, principales resultados Hidalgo</a></li>
+          <li><a href="https://mineraldelareforma.gob.mx/planeacion/PDF/2025/Plan_Municipal_2024-2027.pdf" target="_blank" rel="noopener">Ayuntamiento de Mineral de la Reforma · Plan Municipal de Desarrollo 2024-2027</a></li>
+          <li><a href="https://mineraldelareforma.gob.mx/planeacion/PDF/2024/Evidencias_Fortamun/Fortamun_Accion_2_5_8/Diagnostico_Pp_Seguridadciudadanayculturadepaz_2025.pdf" target="_blank" rel="noopener">Ayuntamiento de Mineral de la Reforma · Diagnóstico Seguridad Ciudadana y Cultura de Paz 2025</a></li>
+          <li><a href="https://mineraldelareforma.gob.mx/transparencia/articulo69/fraccion04/2025/01/15_%20Seguridad_Ciudadana_Y_Cultura_De_Paz.pdf" target="_blank" rel="noopener">Ayuntamiento de Mineral de la Reforma · Ficha técnica del indicador de percepción</a></li>
+          <li><a href="https://procuraduria.hidalgo.gob.mx/assets/descargables/Estadistica/2024/Diciembre%202024.pdf" target="_blank" rel="noopener">PGJEH · Estadísticas generales enero-diciembre 2024</a></li>
+          <li><a href="https://sigeh.hidalgo.gob.mx/pags/info_mun/municipal/13051%20-%20Mineral%20de%20la%20Reforma.pdf" target="_blank" rel="noopener">SIGEH · Perfil municipal de Mineral de la Reforma</a></li>
+        </ol>
+      </details>
+
+      <details open>
+        <summary>Documento municipal integrado</summary>
+        <ol class="sources-list">
+          <li><a href="./buenas_practicas_mineral_reforma.pdf" target="_blank" rel="noopener">Secretaría de Seguridad Ciudadana de Mineral de la Reforma · Buenas prácticas implementadas e incidencia interna</a></li>
+        </ol>
+        <div class="footer-note">
+          Este documento se incorporó visualmente separado para que el lector identifique con claridad qué información proviene de un corte operativo interno del municipio y qué información proviene de sistemas estadísticos oficiales externos.
+        </div>
+      </details>
+
+      <details>
+        <summary>Cómo leer este tablero</summary>
+        <div class="footer-note">
+          <strong>1.</strong> Los datos de percepción no tienen desagregación estrictamente municipal pública para Mineral de la Reforma; por ello se usa la ENSU de Pachuca / Zona Metropolitana de Pachuca como mejor referencia compatible.<br>
+          <strong>2.</strong> Los datos de incidencia combinan publicaciones oficiales distintas: PMD, PGJEH, SIGEH y documento municipal interno. En el HTML se dejó visible el origen de cada bloque.<br>
+          <strong>3.</strong> La matriz 2024-2026 del documento municipal se presenta como anexo operativo porque el PDF no especifica el corte temporal de 2026.<br>
+          <strong>4.</strong> Las diferencias mínimas entre 2,916 vs 2,917 y 4,039 vs 4,041 probablemente responden a fecha de corte, depuración o edición de la publicación, no a una contradicción de fondo en el orden de magnitud.
+        </div>
+      </details>
+    </section>
+  </div>
+
+  <script>
+    const fmt = (n) => Number(n).toLocaleString('es-MX');
+
+    function svgEl(name, attrs = {}) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', name);
+      for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+      return el;
+    }
+
+    function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+    function drawBarChart(targetId, data, opts = {}) {
+      const target = document.getElementById(targetId);
+      clear(target);
+      const w = 780, h = 350;
+      const m = { top: 20, right: 24, bottom: 64, left: 62 };
+      const chartW = w - m.left - m.right;
+      const chartH = h - m.top - m.bottom;
+      const max = opts.max || Math.max(...data.map(d => d.value)) * 1.15;
+      const suffix = opts.suffix || '';
+      const svg = svgEl('svg', { viewBox: `0 0 ${w} ${h}`, width: '100%', height: '100%' });
+
+      for (let i = 0; i <= 4; i++) {
+        const y = m.top + (chartH / 4) * i;
+        svg.appendChild(svgEl('line', { x1: m.left, y1: y, x2: w - m.right, y2: y, stroke: '#e8ecf4', 'stroke-width': 1 }));
+        const val = max - (max / 4) * i;
+        const label = svgEl('text', { x: m.left - 10, y: y + 5, 'text-anchor': 'end', fill: '#6b748a', 'font-size': 13 });
+        label.textContent = `${Number.isInteger(val) ? fmt(Math.round(val)) : val.toFixed(1)}${suffix}`;
+        svg.appendChild(label);
+      }
+
+      const band = chartW / data.length;
+      const barW = Math.min(92, band * 0.56);
+
+      data.forEach((d, i) => {
+        const x = m.left + band * i + (band - barW) / 2;
+        const bh = (d.value / max) * chartH;
+        const y = m.top + chartH - bh;
+        svg.appendChild(svgEl('rect', { x, y, width: barW, height: bh, rx: 14, fill: d.color || '#7a1436' }));
+        const val = svgEl('text', { x: x + barW / 2, y: y - 10, 'text-anchor': 'middle', fill: '#1d2433', 'font-size': 15, 'font-weight': 800 });
+        val.textContent = `${d.value}${suffix}`;
+        svg.appendChild(val);
+        const lab = svgEl('text', { x: x + barW / 2, y: h - 24, 'text-anchor': 'middle', fill: '#556075', 'font-size': 13, 'font-weight': 700 });
+        lab.textContent = d.label;
+        svg.appendChild(lab);
+      });
+
+      target.appendChild(svg);
+    }
+
+    function drawMultiBarChart(targetId, categories, series, opts = {}) {
+      const target = document.getElementById(targetId);
+      clear(target);
+      const w = 800, h = 390;
+      const m = { top: 22, right: 24, bottom: 68, left: 158 };
+      const chartW = w - m.left - m.right;
+      const chartH = h - m.top - m.bottom;
+      const max = opts.max || Math.max(...series.flatMap(s => s.values)) * 1.18;
+      const suffix = opts.suffix || '';
+      const svg = svgEl('svg', { viewBox: `0 0 ${w} ${h}`, width: '100%', height: '100%' });
+
+      const groupH = chartH / categories.length;
+      const inner = groupH * 0.7;
+      const barH = inner / series.length - 6;
+
+      for (let i = 0; i <= 4; i++) {
+        const x = m.left + (chartW / 4) * i;
+        svg.appendChild(svgEl('line', { x1: x, y1: m.top, x2: x, y2: h - m.bottom, stroke: '#e8ecf4', 'stroke-width': 1 }));
+        const val = Math.round((max / 4) * i);
+        const lab = svgEl('text', { x, y: h - 34, 'text-anchor': 'middle', fill: '#6b748a', 'font-size': 12 });
+        lab.textContent = `${fmt(val)}${suffix}`;
+        svg.appendChild(lab);
+      }
+
+      categories.forEach((cat, row) => {
+        const baseY = m.top + groupH * row + (groupH - inner) / 2;
+        const label = svgEl('text', { x: m.left - 12, y: baseY + inner / 2 + 5, 'text-anchor': 'end', fill: '#1d2433', 'font-size': 14, 'font-weight': 700 });
+        label.textContent = cat;
+        svg.appendChild(label);
+
+        series.forEach((s, idx) => {
+          const y = baseY + idx * (barH + 6);
+          const bw = (s.values[row] / max) * chartW;
+          svg.appendChild(svgEl('rect', { x: m.left, y, width: bw, height: barH, rx: 9, fill: s.color }));
+          const t = svgEl('text', { x: m.left + bw + 8, y: y + barH - 3, fill: '#4d5870', 'font-size': 12, 'font-weight': 800 });
+          t.textContent = `${fmt(s.values[row])}${suffix}`;
+          svg.appendChild(t);
+        });
+      });
+
+      target.appendChild(svg);
+    }
+
+    function drawLineChart(targetId, labels, series, opts = {}) {
+      const target = document.getElementById(targetId);
+      clear(target);
+      const w = 800, h = 360;
+      const m = { top: 26, right: 22, bottom: 62, left: 54 };
+      const chartW = w - m.left - m.right;
+      const chartH = h - m.top - m.bottom;
+      const allValues = series.flatMap(s => s.values);
+      const min = opts.min ?? Math.min(...allValues) - 5;
+      const max = opts.max ?? Math.max(...allValues) + 5;
+      const svg = svgEl('svg', { viewBox: `0 0 ${w} ${h}`, width: '100%', height: '100%' });
+
+      for (let i = 0; i <= 4; i++) {
+        const y = m.top + (chartH / 4) * i;
+        svg.appendChild(svgEl('line', { x1: m.left, y1: y, x2: w - m.right, y2: y, stroke: '#e8ecf4', 'stroke-width': 1 }));
+        const val = (max - ((max - min) / 4) * i).toFixed(0);
+        const lab = svgEl('text', { x: m.left - 8, y: y + 4, 'text-anchor': 'end', fill: '#6b748a', 'font-size': 12 });
+        lab.textContent = `${val}%`;
+        svg.appendChild(lab);
+      }
+
+      const pointsX = labels.map((_, i) => m.left + (chartW / (labels.length - 1)) * i);
+      pointsX.forEach((x, i) => {
+        svg.appendChild(svgEl('line', { x1: x, y1: m.top, x2: x, y2: h - m.bottom, stroke: '#f0f2f7', 'stroke-width': 1 }));
+        const lab = svgEl('text', { x, y: h - 24, 'text-anchor': 'middle', fill: '#556075', 'font-size': 13, 'font-weight': 700 });
+        lab.textContent = labels[i];
+        svg.appendChild(lab);
+      });
+
+      series.forEach(s => {
+        const pts = s.values.map((v, i) => {
+          const x = pointsX[i];
+          const y = m.top + chartH - ((v - min) / (max - min)) * chartH;
+          return { x, y, v };
+        });
+
+        svg.appendChild(svgEl('polyline', {
+          points: pts.map(p => `${p.x},${p.y}`).join(' '),
+          fill: 'none',
+          stroke: s.color,
+          'stroke-width': 4,
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round'
+        }));
+
+        pts.forEach(p => {
+          svg.appendChild(svgEl('circle', { cx: p.x, cy: p.y, r: 5.5, fill: s.color }));
+          svg.appendChild(svgEl('circle', { cx: p.x, cy: p.y, r: 10, fill: s.color, opacity: 0.14 }));
+        });
+      });
+
+      series.forEach(s => {
+        s.values.forEach((v, i) => {
+          const x = pointsX[i];
+          const y = m.top + chartH - ((v - min) / (max - min)) * chartH;
+          const dx = s.labelOffsetX || 0;
+          const dy = s.labelOffsetY || 0;
+          const lab = svgEl('text', { x: x + dx, y: y - 12 + dy, 'text-anchor': 'middle', fill: s.color, 'font-size': 13, 'font-weight': 800 });
+          lab.textContent = `${v}%`;
+          svg.appendChild(lab);
+        });
+      });
+
+      target.appendChild(svg);
+    }
+
+    const escalas = [
+      { label: 'Federal', value: 63.8, color: '#7a1436' },
+      { label: 'Hidalgo', value: 62.1, color: '#bb935c' },
+      { label: 'Mineral compatible', value: 59.9, color: '#0d6b63' }
+    ];
+
+    const totalDelitos = [
+      { label: '2023', value: 3795, color: '#7a1436' },
+      { label: '2024', value: 2916, color: '#bb935c' },
+      { label: '2025', value: 4039, color: '#0d6b63' }
+    ];
+
+    const categoriasDoc = ['Amenazas', 'Violencia familiar', 'Lesiones dolosas', 'Robo a casa', 'Robo a negocio', 'Narcomenudeo'];
+    const seriesDoc = [
+      { name: '2024', color: '#7a1436', values: [200, 694, 155, 110, 46, 65] },
+      { name: '2025', color: '#0d6b63', values: [386, 773, 311, 151, 87, 49] }
+    ];
+
+    const labelsPercepcion = ['Dic 2024', 'Sep 2025', 'Dic 2025'];
+    const percepcionSeries = [
+      { name: 'Pachuca / ZM', color: '#7a1436', values: [47.5, 46.9, 59.9], labelOffsetX: 0, labelOffsetY: 0 },
+      { name: 'Nacional urbano', color: '#315c9b', values: [61.7, 63.0, 63.8], labelOffsetX: 0, labelOffsetY: 14 }
+    ];
+
+    const contextoHidalgo = [
+      { label: 'Cifra negra', value: 89.0, color: '#7a1436' },
+      { label: 'Entidad insegura', value: 62.1, color: '#bb935c' },
+      { label: 'Inseguridad = principal problema', value: 56.3, color: '#0d6b63' },
+      { label: 'Se siente segura al caminar de noche', value: 44.5, color: '#315c9b' }
+    ];
+
+    drawBarChart('chart-escalas', escalas, { max: 70, suffix: '%' });
+    drawBarChart('chart-total-delitos', totalDelitos, { max: 4500 });
+    drawMultiBarChart('chart-documento-municipal', categoriasDoc, seriesDoc, { max: 850 });
+    drawLineChart('chart-percepcion', labelsPercepcion, percepcionSeries, { min: 40, max: 70 });
+    drawBarChart('chart-contexto-hidalgo', contextoHidalgo, { max: 100, suffix: '%' });
+  </script>
+</body>
+</html>

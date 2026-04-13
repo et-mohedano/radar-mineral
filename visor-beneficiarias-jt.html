@@ -82,7 +82,11 @@
     .empty{padding:16px;border-radius:16px;border:1px dashed var(--line);background:#fcfbfa;color:var(--muted);font-size:.9rem;line-height:1.65}
     .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:var(--ink)}
     .leaflet-tooltip.section-tip{background:rgba(17,24,39,.92);color:#fff;border:none;border-radius:10px;padding:8px 10px;font-weight:700}
-    @media (max-width:1320px){.layout{grid-template-columns:1fr}.sidebar{position:static}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}
+    .chart-flex{display:grid;grid-template-columns:minmax(280px,340px) minmax(0,1fr);gap:18px;align-items:center}
+    .chart-wrap{position:relative;min-height:300px}
+    .chart-note{margin-top:8px;font-size:.82rem;color:var(--muted);line-height:1.6}
+    .zone-badge-marker{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;background:var(--vino);color:#fff;border:2px solid #fff;box-shadow:0 10px 22px rgba(31,41,55,.18);font-size:.84rem;font-weight:900}
+    @media (max-width:1320px){.layout{grid-template-columns:1fr}.sidebar{position:static}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:1fr}.chart-flex{grid-template-columns:1fr}}
     @media (max-width:760px){.page{padding:12px}.hero-grid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}#map{height:540px}.bar-row{grid-template-columns:1fr;gap:6px}}
   </style>
 </head>
@@ -222,7 +226,13 @@
             <p class="card-sub">Así se reparte el total de beneficiarias entre las nueve zonas.</p>
           </div>
           <div class="card-body">
-            <div class="bars" id="zoneBars"></div>
+            <div class="chart-flex">
+              <div>
+                <div class="chart-wrap"><canvas id="zonePieChart"></canvas></div>
+                <div class="chart-note" id="zonePieNote">Cada porción representa el peso de beneficiarias por zona sobre el total visible.</div>
+              </div>
+              <div class="bars" id="zoneBars"></div>
+            </div>
           </div>
         </article>
       </section>
@@ -269,6 +279,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const MUNICIPAL_STATS = {"total_benef": 300, "with_section": 295, "with_zone": 293, "with_geometry": 223, "without_geometry": 77, "no_section": 5, "missing_geo_with_section": 72, "municipal_ln": 156548, "municipal_meta": 59385, "municipal_pct_meta": 0.5052, "municipal_pct_ln": 0.1916, "top_zone": {"zona": "8", "beneficiarias": 51, "beneficiarias_mapeadas": 13, "beneficiarias_sin_poligono": 38, "lista_nominal": 12463, "meta": 4609, "pct_meta": 1.1065, "pct_ln": 0.4092, "rentabilidad": "ALTA", "secretario": "Cristopher Martínez Ozumbilla/ Juan Carlos Zarco Cruz", "enlaces": "Miguel Ángel Grajeda Arana; Guillermo Ramírez Cerón", "telefono": "7711656678; 7713526415", "colonias_total": 17, "top_secciones": "740 (38), 1848 (5), 1852 (4), 1854 (3), 1855 (1)", "secciones_con_benef": 5}, "top_section_geo": {"seccion": "726", "zona": "1", "beneficiarias": 19, "lista_nominal": 5574, "meta": 2000, "pct_meta": 0.95, "pct_ln": 0.3409, "rentabilidad": "ALTA", "has_geometry": true, "status_geometria": "Disponible", "status_electoral": "Disponible"}, "top_section_all": {"seccion": "740", "zona": "8", "beneficiarias": 38, "lista_nominal": null, "meta": null, "pct_meta": null, "pct_ln": null, "rentabilidad": "SIN DATO", "has_geometry": false, "status_geometria": "No disponible en geojson", "status_electoral": "No disponible"}};
@@ -281,13 +292,15 @@ const MISSING_GEOM = [{"seccion": "740", "zona": "8", "beneficiarias": 38}, {"se
 const fmtNum = (n) => n == null || Number.isNaN(n) ? '—' : new Intl.NumberFormat('es-MX').format(n);
 const fmtPct = (n) => n == null || Number.isNaN(n) ? '—' : `${Number(n).toFixed(2)}%`;
 const fmtTxt = (v) => v == null || v === '' ? '—' : String(v);
+const ZONE_COLOR_MAP = {'1':'#7a1436','2':'#9f2f60','3':'#c76a91','4':'#d97706','5':'#b38e5d','6':'#2563eb','7':'#0f766e','8':'#16a34a','9':'#6b7280'};
+const zoneColor = (z) => ZONE_COLOR_MAP[String(z)] || '#7a1436';
 const zoneRowsSorted = [...ZONE_ROWS].sort((a,b)=>b.beneficiarias-a.beneficiarias || Number(a.zona)-Number(b.zona));
 const sectionByKey = new Map(SECTION_ROWS.map(r => [String(r.seccion), r]));
 
 let currentMode = 'beneficiarias';
 let currentZone = 'all';
 let selectedSection = null;
-let sectionLayer, zoneLayer, currentBase = 0;
+let sectionLayer, zoneLayer, zoneMarkerLayer, zonePieChart, currentBase = 0;
 
 const map = L.map('map', { zoomControl:true });
 const baseLayers = [
@@ -323,6 +336,7 @@ document.getElementById('zoneFilter').addEventListener('change', (e)=>{
   currentZone = e.target.value;
   updateMap();
   renderZoneBars();
+  renderZoneChart();
   renderZoneTable();
   renderSectionTable();
   renderExecutiveSummary();
@@ -389,17 +403,37 @@ function styleSection(feature) {
 function styleZone(feature) {
   const p = feature.properties;
   const filteredOut = currentZone !== 'all' && String(p.zona) !== String(currentZone);
-  return { color: filteredOut ? '#d7cdc6' : '#3f334b', weight: filteredOut ? 1 : 2.2, opacity: .9, fillOpacity: 0 };
+  return { color: filteredOut ? '#d7cdc6' : '#3f334b', weight: filteredOut ? 1 : 2.2, opacity: .9, fillColor: filteredOut ? '#d7cdc6' : zoneColor(p.zona), fillOpacity: filteredOut ? .02 : .04 };
+}
+function popupHtmlZone(z) {
+  if (!z) return '<div style="min-width:220px"><b>Zona</b><div style="margin-top:6px;color:#667085">Sin información consolidada.</div></div>';
+  return `
+    <div style="min-width:270px">
+      <div style="font-weight:900;color:#7a1436;font-size:1rem">Zona ${fmtTxt(z.zona)}</div>
+      <div style="margin-top:6px;color:#667085;line-height:1.55">${fmtTxt(z.secretario)}</div>
+      <div style="margin-top:10px;display:grid;gap:6px;font-size:.9rem">
+        <div><b>Beneficiarias:</b> ${fmtNum(z.beneficiarias)}${z.beneficiarias_mapeadas !== undefined ? ` · <b>mapeadas:</b> ${fmtNum(z.beneficiarias_mapeadas)}` : ''}</div>
+        <div><b>Meta:</b> ${fmtNum(z.meta)} · <b>% meta:</b> ${fmtPct(z.pct_meta)}</div>
+        <div><b>Lista nominal:</b> ${fmtNum(z.lista_nominal)} · <b>% LN:</b> ${fmtPct(z.pct_ln)}</div>
+        <div><b>Rentabilidad dominante:</b> ${fmtTxt(z.rentabilidad)}</div>
+        <div><b>Enlaces:</b> ${fmtTxt(z.enlaces)}</div>
+        <div><b>Top secciones:</b> ${fmtTxt(z.top_secciones)}</div>
+      </div>
+    </div>`;
 }
 function popupHtmlSection(p) {
+  const z = ZONE_ROWS.find(row => String(row.zona) === String(p.zona));
   return `
-    <div style="min-width:240px">
+    <div style="min-width:265px">
       <div style="font-weight:900;color:#7a1436;font-size:1rem">Sección ${fmtTxt(p.seccion)}</div>
       <div style="margin-top:6px;color:#667085;line-height:1.55">Zona ${fmtTxt(p.zona)} · Rentabilidad ${fmtTxt(p.rentabilidad)}</div>
       <div style="margin-top:10px;display:grid;gap:6px;font-size:.9rem">
         <div><b>Beneficiarias:</b> ${fmtNum(p.beneficiarias)}</div>
         <div><b>Meta:</b> ${fmtNum(p.meta_num)} · <b>% meta:</b> ${fmtPct(p.pct_meta)}</div>
         <div><b>Lista nominal:</b> ${fmtNum(p.lista_nominal_num)} · <b>% LN:</b> ${fmtPct(p.pct_ln)}</div>
+        <div style="margin-top:4px;padding-top:8px;border-top:1px solid #efe3db"><b>Secretario de zona:</b> ${fmtTxt(z?.secretario)}</div>
+        <div><b>Enlaces:</b> ${fmtTxt(z?.enlaces)}</div>
+        <div><b>Total de la zona:</b> ${fmtNum(z?.beneficiarias)} beneficiarias</div>
       </div>
     </div>`;
 }
@@ -432,6 +466,17 @@ function updateSubtitle() {
 function updateMap() {
   if (sectionLayer) map.removeLayer(sectionLayer);
   if (zoneLayer) map.removeLayer(zoneLayer);
+  if (zoneMarkerLayer) map.removeLayer(zoneMarkerLayer);
+
+  zoneLayer = L.geoJSON(ZONES_GEO, {
+    style: styleZone,
+    onEachFeature: (feature, layer) => {
+      const z = ZONE_ROWS.find(row => String(row.zona) === String(feature.properties.zona));
+      layer.bindPopup(popupHtmlZone(z));
+      layer.bindTooltip(`Zona ${feature.properties.zona}`, { className:'section-tip', sticky:true });
+    }
+  }).addTo(map);
+
   sectionLayer = L.geoJSON(SECTIONS_GEO, {
     style: styleSection,
     onEachFeature: (feature, layer) => {
@@ -444,7 +489,28 @@ function updateMap() {
       });
     }
   }).addTo(map);
-  zoneLayer = L.geoJSON(ZONES_GEO, { style: styleZone }).addTo(map);
+
+  const visibleZoneFeatures = ZONES_GEO.features.filter(f => currentZone === 'all' || String(f.properties.zona) === String(currentZone));
+  zoneMarkerLayer = L.layerGroup(
+    visibleZoneFeatures.map(f => {
+      const z = String(f.properties.zona);
+      const row = ZONE_ROWS.find(r => String(r.zona) === z);
+      const center = L.geoJSON(f).getBounds().getCenter();
+      const marker = L.marker(center, {
+        icon: L.divIcon({
+          className: '',
+          html: `<div class="zone-badge-marker">Z${z}</div>`,
+          iconSize: [34, 34],
+          iconAnchor: [17, 17]
+        })
+      });
+      marker.bindPopup(popupHtmlZone(row));
+      marker.bindTooltip(`Zona ${z}`, { className:'section-tip', direction:'top' });
+      return marker;
+    })
+  ).addTo(map);
+
+  zoneLayer.bringToBack();
   updateLegend();
   updateSubtitle();
 }
@@ -481,6 +547,59 @@ function renderZoneBars() {
       <div class="bar-track"><div class="bar-fill" style="width:${(r.beneficiarias/max)*100}%"></div></div>
       <div style="text-align:right">${((r.beneficiarias/total)*100).toFixed(1)}%</div>
     </div>`).join('');
+}
+function renderZoneChart() {
+  const rows = filteredZoneRows();
+  let chartRows = rows;
+  let labels = rows.map(r => `Zona ${r.zona}`);
+  let data = rows.map(r => Number(r.beneficiarias || 0));
+  let colors = rows.map(r => zoneColor(r.zona));
+
+  if (currentZone !== 'all' && rows.length === 1) {
+    const selected = rows[0];
+    const rest = Math.max(MUNICIPAL_STATS.total_benef - Number(selected.beneficiarias || 0), 0);
+    chartRows = rest > 0 ? [selected, {zona:'Resto municipal', beneficiarias:rest}] : [selected];
+    labels = rest > 0 ? [`Zona ${selected.zona}`, 'Resto municipal'] : [`Zona ${selected.zona}`];
+    data = chartRows.map(r => Number(r.beneficiarias || 0));
+    colors = rest > 0 ? [zoneColor(selected.zona), '#eadfd7'] : [zoneColor(selected.zona)];
+    document.getElementById('zonePieNote').textContent = 'Con una zona filtrada, la gráfica compara esa zona contra el resto municipal.';
+  } else {
+    document.getElementById('zonePieNote').textContent = 'Cada porción representa el peso de beneficiarias por zona sobre el total visible.';
+  }
+
+  const ctx = document.getElementById('zonePieChart');
+  if (zonePieChart) zonePieChart.destroy();
+  zonePieChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: colors,
+        borderColor: '#ffffff',
+        borderWidth: 2,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '58%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 14, usePointStyle: true, pointStyle: 'circle' } },
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const total = context.dataset.data.reduce((a,b)=>a+b,0) || 1;
+              const value = Number(context.raw || 0);
+              const pct = ((value/total)*100).toFixed(1);
+              return `${context.label}: ${fmtNum(value)} (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
 }
 function renderZoneTable() {
   const body = document.getElementById('zoneTableBody');
@@ -553,6 +672,7 @@ function renderDetail() {
 renderMissingGeom();
 renderExecutiveSummary();
 renderZoneBars();
+renderZoneChart();
 renderZoneTable();
 renderSectionTable();
 renderDetail();

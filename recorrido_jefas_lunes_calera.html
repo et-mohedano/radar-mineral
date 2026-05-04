@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jefas Transformadoras — Recorrido Lunes 4 de Mayo · Calera</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --grosella:    #9b2247;
+  --malbec:      #691c32;
+  --brocado:     #a57f2c;
+  --risco:       #e6d194;
+  --verde-nac:   #235b4e;
+  --arena:       #ddc9a3;
+  --arena-light: #f8f4eb;
+  --blanco:      #ffffff;
+  --negro:       #1c1c1c;
+  --gris-texto:  #4a4040;
+  --borde:       #d8cfc0;
+  --borde-dark:  #c4b099;
+  --pendiente:   #92400e;
+  --pendiente-bg:#fef3c7;
+  --pendiente-bd:#fcd34d;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--arena-light);
+  color: var(--negro);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ═══════ HEADER ═══════ */
+header {
+  background: linear-gradient(135deg, var(--malbec) 0%, var(--grosella) 65%, #b52a55 100%);
+  color: white;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  box-shadow: 0 3px 14px rgba(105,28,50,0.45);
+  position: relative;
+  z-index: 10;
+}
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--brocado), var(--risco) 50%, var(--brocado));
+}
+.header-brand { display: flex; align-items: center; gap: 12px; }
+.header-icon {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.13);
+  border-radius: 50%;
+  border: 1.5px solid rgba(230,209,148,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.header-titles h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800; font-size: 16px;
+  letter-spacing: 0.03em; color: var(--risco); line-height: 1.2;
+}
+.header-titles span {
+  display: block; font-size: 11px; font-weight: 500;
+  color: rgba(255,255,255,0.82); letter-spacing: 0.05em; margin-top: 1px;
+}
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700;
+  padding: 7px 14px; border-radius: 5px; border: none;
+  cursor: pointer; transition: all 0.14s;
+  letter-spacing: 0.03em;
+  display: flex; align-items: center; gap: 5px;
+  white-space: nowrap;
+}
+.btn-gmaps  { background: #2563eb; color: white; }
+.btn-gmaps:hover { background: #1d4ed8; }
+.btn-import { background: rgba(255,255,255,0.13); color: var(--risco); border: 1px solid rgba(230,209,148,0.35); }
+.btn-import:hover { background: rgba(255,255,255,0.22); }
+.btn-export { background: var(--brocado); color: white; }
+.btn-export:hover { background: #8f6c22; }
+
+/* ═══════ LAYOUT DESKTOP ═══════ */
+.main { display: flex; flex: 1; overflow: hidden; }
+
+/* ═══════ SIDEBAR ═══════ */
+.sidebar {
+  width: 370px; min-width: 320px;
+  background: var(--blanco);
+  border-right: 1px solid var(--borde);
+  display: flex; flex-direction: column;
+  overflow: hidden; flex-shrink: 0;
+}
+.sidebar-header {
+  padding: 14px 18px;
+  background: var(--malbec);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0;
+}
+.sidebar-header h2 {
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--risco);
+}
+.badge {
+  background: var(--brocado); color: white;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 11px; border-radius: 100px;
+}
+.stats-bar {
+  display: flex; background: var(--arena-light);
+  border-bottom: 1px solid var(--borde); flex-shrink: 0;
+}
+.stat { flex: 1; padding: 10px 6px; text-align: center; border-right: 1px solid var(--borde); }
+.stat:last-child { border-right: none; }
+.stat strong {
+  display: block; font-family: 'Lora', serif;
+  font-size: 22px; font-weight: 600; color: var(--grosella); line-height: 1;
+}
+.stat .stlabel {
+  font-size: 10px; font-weight: 600; color: var(--gris-texto);
+  letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px;
+}
+.paradas-list {
+  flex: 1; overflow-y: auto;
+  padding: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.paradas-list::-webkit-scrollbar { width: 5px; }
+.paradas-list::-webkit-scrollbar-track { background: var(--arena-light); }
+.paradas-list::-webkit-scrollbar-thumb { background: var(--borde-dark); border-radius: 3px; }
+
+/* ═══════ MAPA ═══════ */
+#map { flex: 1; z-index: 1; }
+
+/* ═══════ TARJETA BASE ═══════ */
+.parada-card {
+  background: white;
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--borde-dark);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.18s, border-color 0.18s;
+}
+.parada-card:hover {
+  box-shadow: 0 4px 18px rgba(105,28,50,0.13);
+  border-color: var(--grosella); border-left-color: var(--grosella);
+}
+.parada-card.activa {
+  border-color: var(--grosella); border-left-color: var(--grosella);
+  box-shadow: 0 0 0 3px rgba(155,34,71,0.1);
+}
+.parada-card .card-head    { border-radius: 8px 8px 0 0; }
+.parada-card .card-actions { border-radius: 0 0 8px 8px; }
+
+/* ═══════ TARJETA PENDIENTE ═══════ */
+.parada-card.pendiente {
+  border-left-color: var(--pendiente-bd);
+  background: var(--pendiente-bg);
+  cursor: default;
+}
+.parada-card.pendiente:hover {
+  box-shadow: 0 4px 18px rgba(146,64,14,0.12);
+  border-color: var(--pendiente-bd);
+  border-left-color: var(--pendiente-bd);
+}
+.parada-card.pendiente .card-head { background: var(--pendiente-bg); }
+.parada-card.pendiente .card-actions { background: var(--pendiente-bg); border-top-color: var(--pendiente-bd); }
+.parada-card.pendiente .card-info { background: #fffbeb; border-top-color: var(--pendiente-bd); }
+
+.num-badge-pendiente {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, #92400e, #b45309);
+  color: #fef3c7;
+  border-radius: 50%;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 7px rgba(146,64,14,0.3);
+}
+
+.pendiente-banner {
+  display: flex; align-items: center; gap: 8px;
+  background: #fcd34d;
+  padding: 7px 16px;
+  font-size: 11px; font-weight: 700;
+  color: var(--pendiente);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-top: 1px solid #fbbf24;
+  border-bottom: 1px solid #fbbf24;
+}
+
+/* ═══════ ELEMENTOS COMUNES TARJETA ═══════ */
+.card-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 14px 8px 16px; background: white;
+}
+.num-badge {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--malbec), var(--grosella));
+  color: var(--risco); border-radius: 50%;
+  font-family: 'Lora', serif; font-weight: 600; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: 0 2px 7px rgba(105,28,50,0.3);
+}
+.card-nombre {
+  font-size: 14px; font-weight: 700;
+  color: var(--malbec); flex: 1; line-height: 1.3;
+}
+.parada-card.pendiente .card-nombre { color: var(--pendiente); }
+.drag-handle { cursor: grab; color: var(--borde-dark); font-size: 17px; user-select: none; }
+.parada-card.pendiente .drag-handle { cursor: default; opacity: 0.4; }
+
+.card-negocio {
+  display: flex; align-items: center; gap: 8px;
+  padding: 2px 14px 8px 16px; flex-wrap: wrap;
+}
+.negocio-nombre { font-size: 13px; font-weight: 600; color: var(--negro); flex: 1; }
+.tag-tipo {
+  font-size: 10px; font-weight: 700;
+  background: rgba(165,127,44,0.1); color: #7a5c18;
+  padding: 3px 9px; border-radius: 100px;
+  border: 1px solid rgba(165,127,44,0.28);
+  white-space: nowrap; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.parada-card.pendiente .tag-tipo {
+  background: rgba(146,64,14,0.1); color: var(--pendiente);
+  border-color: rgba(146,64,14,0.3);
+}
+
+.card-info {
+  background: var(--arena-light);
+  border-top: 1px solid var(--borde);
+  padding: 10px 14px 10px 16px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px;
+}
+.info-item { display: flex; flex-direction: column; gap: 2px; }
+.info-item.full { grid-column: 1 / -1; }
+.info-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--grosella); opacity: 0.75;
+}
+.parada-card.pendiente .info-label { color: var(--pendiente); }
+.info-val { font-size: 13px; color: var(--gris-texto); font-weight: 500; line-height: 1.4; }
+.info-val a { color: var(--verde-nac); font-weight: 600; text-decoration: none; }
+.info-val a:hover { text-decoration: underline; }
+.info-val.vacio { color: #b45309; font-style: italic; font-weight: 600; }
+
+.card-actions {
+  display: flex; gap: 7px;
+  padding: 10px 14px 10px 16px;
+  border-top: 1px solid var(--borde);
+  background: white; flex-wrap: wrap;
+}
+.btn-sm {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 600;
+  padding: 7px 13px; border-radius: 6px;
+  border: 1.5px solid var(--borde);
+  cursor: pointer; background: white;
+  transition: all 0.13s; color: var(--gris-texto); letter-spacing: 0.02em;
+}
+.btn-sm:hover { background: var(--arena-light); border-color: var(--borde-dark); }
+.btn-sm.ver { background: var(--malbec); color: var(--risco); border-color: var(--malbec); }
+.btn-sm.ver:hover { background: var(--grosella); border-color: var(--grosella); }
+.btn-sm.borrar { color: #b91c1c; border-color: #fca5a5; }
+.btn-sm.borrar:hover { background: #fef2f2; border-color: #f87171; }
+.btn-sm.mover-up, .btn-sm.mover-down { padding: 7px 10px; }
+
+/* ═══════ MODAL ═══════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(60,15,25,0.52);
+  z-index: 1000;
+  display: none; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.visible { display: flex; }
+.modal {
+  background: white; border-radius: 14px;
+  width: 100%; max-width: 500px;
+  max-height: calc(100vh - 32px);
+  display: flex; flex-direction: column;
+  box-shadow: 0 28px 70px rgba(60,15,25,0.38);
+  overflow: hidden;
+  animation: popIn 0.22s cubic-bezier(.34,1.35,.64,1);
+}
+@keyframes popIn {
+  from { transform: translateY(18px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+.modal-header {
+  background: linear-gradient(135deg, var(--malbec), var(--grosella));
+  padding: 18px 20px 16px;
+  display: flex; align-items: flex-start; gap: 12px;
+  flex-shrink: 0; position: relative;
+}
+.modal-header.pendiente-header {
+  background: linear-gradient(135deg, #92400e, #b45309);
+}
+.modal-header::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--brocado), var(--risco) 50%, var(--brocado));
+}
+.modal-header.pendiente-header::after {
+  background: linear-gradient(90deg, #fbbf24, #fef08a 50%, #fbbf24);
+}
+.modal-header-text { flex: 1; min-width: 0; }
+.modal-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--risco); opacity: 0.8; margin-bottom: 4px;
+}
+.modal-title {
+  font-family: 'Lora', serif;
+  font-size: 17px; font-weight: 600; color: white;
+  line-height: 1.3; word-break: break-word;
+}
+.modal-close {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  color: white; cursor: pointer;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0; margin-top: 2px;
+  transition: background 0.13s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.28); }
+.modal-body { overflow-y: auto; flex: 1; }
+.modal-body::-webkit-scrollbar { width: 5px; }
+.modal-body::-webkit-scrollbar-thumb { background: var(--borde-dark); border-radius: 3px; }
+
+/* Banner pendiente dentro del modal */
+.modal-pendiente-notice {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--pendiente-bg);
+  border-bottom: 2px solid var(--pendiente-bd);
+  padding: 12px 20px;
+  font-size: 12px; font-weight: 600; color: var(--pendiente);
+  flex-shrink: 0;
+}
+.modal-pendiente-notice .notice-icon { font-size: 20px; flex-shrink: 0; }
+
+.modal-section { padding: 16px 20px; border-bottom: 1px solid var(--borde); }
+.modal-section:last-child { border-bottom: none; }
+.msec-title {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.09em; color: var(--brocado);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 7px;
+}
+.msec-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--borde-dark), transparent);
+}
+.mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mfield { display: flex; flex-direction: column; gap: 3px; }
+.mfield.full { grid-column: 1 / -1; }
+.mfield label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.07em; color: var(--grosella); display: block;
+}
+.mfield .val {
+  font-size: 14px; color: var(--negro); font-weight: 500;
+  padding: 8px 11px; background: var(--arena-light);
+  border: 1px solid var(--borde); border-radius: 7px;
+  min-height: 38px; line-height: 1.4; word-break: break-word;
+}
+.mfield .val.negocio { font-family: 'Lora', serif; font-size: 15px; font-weight: 600; color: var(--malbec); background: rgba(105,28,50,0.04); border-color: rgba(105,28,50,0.2); }
+.mfield .val.pendiente-val { background: var(--pendiente-bg); border-color: var(--pendiente-bd); color: var(--pendiente); font-style: italic; }
+.mfield .val a { color: var(--verde-nac); font-weight: 600; text-decoration: none; }
+.mfield .val a:hover { text-decoration: underline; }
+.modal-footer {
+  padding: 14px 20px; background: var(--arena-light);
+  border-top: 2px solid var(--borde);
+  display: flex; justify-content: flex-end; flex-shrink: 0;
+}
+.btn-cerrar {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; font-weight: 700;
+  padding: 10px 30px; border-radius: 7px; border: none;
+  cursor: pointer; background: var(--malbec); color: var(--risco);
+  letter-spacing: 0.04em; transition: background 0.13s;
+}
+.btn-cerrar:hover { background: var(--grosella); }
+
+/* MAPA STATUS */
+#ruta-status {
+  position: absolute; bottom: 28px; right: 10px; z-index: 999;
+  background: white; padding: 7px 15px; border-radius: 20px;
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  color: var(--malbec); border: 1px solid var(--borde); pointer-events: none;
+}
+
+/* Leaflet popup */
+.leaflet-popup-content-wrapper {
+  border-radius: 9px !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 13px !important;
+  box-shadow: 0 6px 22px rgba(105,28,50,0.2) !important;
+  border: 1px solid var(--borde) !important;
+}
+.popup-num {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--malbec), var(--grosella));
+  color: var(--risco); padding: 2px 10px; border-radius: 100px;
+  font-weight: 700; font-size: 11px; margin-bottom: 6px; letter-spacing: 0.04em;
+}
+.popup-nombre { font-weight: 700; font-size: 13px; color: var(--malbec); margin-bottom: 4px; line-height: 1.3; }
+.popup-neg { font-weight: 600; color: var(--brocado); font-size: 12px; margin-bottom: 3px; }
+.popup-dir { color: var(--gris-texto); font-size: 12px; margin-bottom: 2px; line-height: 1.4; }
+
+#file-import { display: none; }
+
+/* ═══════════════════════════════════════
+   MOBILE ≤ 768px
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  body { overflow: auto; height: auto; min-height: 100vh; }
+
+  header { height: auto; padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+  .header-icon { width: 34px; height: 34px; font-size: 18px; }
+  .header-titles h1 { font-size: 14px; }
+  .header-titles span { font-size: 10px; }
+  .header-actions { width: 100%; justify-content: flex-end; gap: 6px; }
+  .btn { font-size: 10px; padding: 6px 10px; }
+
+  .main { flex-direction: column; overflow: visible; height: auto; }
+
+  #map { width: 100%; height: 45vh; min-height: 220px; flex: none; position: relative; }
+
+  .sidebar {
+    width: 100%; min-width: unset;
+    border-right: none; border-top: 3px solid var(--grosella);
+    overflow: visible; height: auto; flex-shrink: unset;
+  }
+
+  .stats-bar { flex-shrink: 0; }
+  .stat { padding: 8px 4px; }
+  .stat strong { font-size: 18px; }
+  .stat .stlabel { font-size: 9px; }
+
+  .paradas-list { overflow: visible; flex: none; height: auto; padding: 10px; gap: 10px; }
+
+  .card-head { padding: 11px 12px 7px 14px; gap: 9px; }
+  .card-nombre { font-size: 13px; }
+  .num-badge { width: 28px; height: 28px; font-size: 13px; }
+  .num-badge-pendiente { width: 28px; height: 28px; font-size: 14px; }
+  .card-negocio { padding: 2px 12px 7px 14px; }
+  .negocio-nombre { font-size: 12px; }
+  .tag-tipo { font-size: 9px; }
+  .card-info { padding: 9px 12px 9px 14px; gap: 7px 12px; }
+  .info-label { font-size: 9px; }
+  .info-val { font-size: 12px; }
+  .card-actions { padding: 9px 12px 9px 14px; gap: 6px; }
+  .btn-sm { font-size: 11px; padding: 7px 11px; }
+
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal { max-width: 100%; max-height: 92vh; border-radius: 18px 18px 0 0; }
+  .modal-header { padding: 16px 16px 14px; }
+  .modal-title { font-size: 15px; }
+  .modal-section { padding: 14px 16px; }
+  .mgrid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mfield .val { font-size: 13px; padding: 7px 10px; }
+  .modal-footer { padding: 12px 16px; }
+}
+
+@media (max-width: 380px) {
+  #map { height: 40vh; }
+  .mgrid { grid-template-columns: 1fr; }
+  .mfield.full { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="header-icon">🏛</div>
+    <div class="header-titles">
+      <h1>Jefas Transformadoras</h1>
+      <span>Mineral de la Reforma · Sta. María la Calera · Lunes 4 de mayo</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-gmaps"  onclick="abrirEnGoogleMaps()">🗺 <span class="btn-label">Google Maps</span></button>
+    <button class="btn btn-import" onclick="document.getElementById('file-import').click()">📂 <span class="btn-label">Cargar JSON</span></button>
+    <button class="btn btn-export" onclick="exportarJSON()">💾 <span class="btn-label">Exportar JSON</span></button>
+  </div>
+</header>
+<input type="file" id="file-import" accept=".json" onchange="importarJSON(event)">
+
+<div class="main">
+  <div id="map"></div>
+
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>📍 Paradas del recorrido</h2>
+      <span class="badge" id="total-badge">4 paradas</span>
+    </div>
+    <div class="stats-bar" id="stats-bar"></div>
+    <div class="paradas-list" id="paradas-list"></div>
+  </div>
+</div>
+
+<!-- MODAL VER DETALLES -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header" id="modal-header">
+      <div class="modal-header-text">
+        <div class="modal-eyebrow" id="modal-eyebrow">Beneficiaria · Jefas Transformadoras</div>
+        <div class="modal-title" id="md-titulo-nombre">—</div>
+      </div>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+
+    <!-- Banner de pendiente (oculto por defecto) -->
+    <div class="modal-pendiente-notice" id="modal-pendiente-notice" style="display:none;">
+      <span class="notice-icon">⏳</span>
+      <span>Ubicación pendiente — aún no se han registrado las coordenadas de esta beneficiaria.</span>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="msec-title">🏪 Negocio</div>
+        <div class="mgrid">
+          <div class="mfield full"><label>Nombre del negocio</label><div class="val negocio" id="md-negocio">—</div></div>
+          <div class="mfield full"><label>Tipo de negocio</label><div class="val" id="md-tipo">—</div></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="msec-title">📍 Domicilio</div>
+        <div class="mgrid">
+          <div class="mfield full"><label>Calle y número</label><div class="val" id="md-calle">—</div></div>
+          <div class="mfield full"><label>Colonia</label><div class="val" id="md-colonia">—</div></div>
+          <div class="mfield"><label>Municipio</label><div class="val" id="md-municipio">—</div></div>
+          <div class="mfield"><label>C.P. / Sección</label><div class="val" id="md-cp">—</div></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="msec-title">📋 Datos del programa</div>
+        <div class="mgrid">
+          <div class="mfield"><label>Folio</label><div class="val" id="md-folio">—</div></div>
+          <div class="mfield"><label>Teléfono</label><div class="val" id="md-tel">—</div></div>
+        </div>
+      </div>
+      <div class="modal-section" id="modal-sec-gps">
+        <div class="msec-title">🗺 Ubicación GPS</div>
+        <div class="mgrid">
+          <div class="mfield"><label>Latitud</label><div class="val" id="md-lat">—</div></div>
+          <div class="mfield"><label>Longitud</label><div class="val" id="md-lng">—</div></div>
+          <div class="mfield full"><label>Liga Google Maps</label><div class="val" id="md-gmaps">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cerrar" onclick="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ═══════════════════════════
+//  DATOS
+//  pendiente: true  → sin coords, no aparece en mapa ni en ruta
+// ═══════════════════════════
+let paradas = [
+  {
+    id: 1, orden: 1, pendiente: false,
+    nombre: "Mayra Alicia Cortes Flores",
+    folio: "1245", negocio: "Tamales Maira", tipoNegocio: "Comercio semifijo",
+    telefono: "7712592267", calle: "Real de Minas", numero: "S/N",
+    colonia: "Santa María la Calera", municipio: "Mineral de la Reforma",
+    cp: "42186", seccion: "1849",
+    lat: 20.037923787666575, lng: -98.7160681846566,
+    gmaps: "https://maps.app.goo.gl/Bcc4K8ioP7iRw2d3A"
+  },
+  {
+    id: 2, orden: 2, pendiente: false,
+    nombre: "Jazmín Villalba Gonzalez",
+    folio: "235", negocio: "Cenaduría 3 Hermanos", tipoNegocio: "Antojitos",
+    telefono: "7713454707", calle: "Avenida Minerales", numero: "23",
+    colonia: "Santa María la Calera", municipio: "Mineral de la Reforma",
+    cp: "42186", seccion: "1854",
+    lat: 20.03223255447973, lng: -98.7192875153434,
+    gmaps: "https://maps.app.goo.gl/CPJjwWZ4YbSfadJy8"
+  },
+  {
+    id: 3, orden: 3, pendiente: false,
+    nombre: "Andrea Yañez Yañez",
+    folio: "319", negocio: "Pollería Andy", tipoNegocio: "Comercio",
+    telefono: "5537445643", calle: "—", numero: "—",
+    colonia: "—", municipio: "Mineral de la Reforma",
+    cp: "—", seccion: "740",
+    lat: 20.0214231, lng: -98.7155648,
+    gmaps: "https://maps.app.goo.gl/CspPMZFcbinMQzvG7"
+  },
+  {
+    id: 4, orden: null, pendiente: true,
+    nombre: "Maria Esther Baños Juarez",
+    folio: "439", negocio: "Regalos Ara", tipoNegocio: "Regalos para fiestas",
+    telefono: "7712627254", calle: "Av. Minerales", numero: "38",
+    colonia: "Santa Maria Calera", municipio: "Mineral de la Reforma",
+    cp: "42186", seccion: "740",
+    lat: null, lng: null,
+    gmaps: null
+  }
+];
+
+let markers = {}, routeLines = [], map;
+
+// ═══════════════════════════
+//  MAPA
+// ═══════════════════════════
+async function initMapa() {
+  map = L.map('map', { zoomControl: true });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>', maxZoom: 19
+  }).addTo(map);
+  await renderMapa();
+  ajustarVista();
+}
+
+function crearIcono(n) {
+  return L.divIcon({
+    html: `<div style="width:36px;height:36px;border-radius:50% 50% 50% 0;background:linear-gradient(135deg,#691c32,#9b2247);border:3px solid white;display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-weight:600;font-size:15px;color:#e6d194;box-shadow:0 3px 10px rgba(105,28,50,.42);transform:rotate(-45deg)"><span style="transform:rotate(45deg)">${n}</span></div>`,
+    className:'', iconSize:[36,36], iconAnchor:[18,36], popupAnchor:[0,-38]
+  });
+}
+
+async function renderMapa() {
+  Object.values(markers).forEach(m => map.removeLayer(m));
+  markers = {};
+  routeLines.forEach(l => map.removeLayer(l));
+  routeLines = [];
+
+  // Solo las paradas con coordenadas
+  const activas = paradas.filter(p => !p.pendiente);
+
+  activas.forEach(p => {
+    const m = L.marker([p.lat, p.lng], { icon: crearIcono(p.orden) }).addTo(map);
+    m.bindPopup(`<div style="min-width:185px">
+      <span class="popup-num">Parada ${p.orden}</span>
+      <div class="popup-nombre">${p.nombre}</div>
+      <div class="popup-neg">🏪 ${p.negocio}</div>
+      <div class="popup-dir">${p.calle} ${p.numero} — ${p.colonia}</div>
+      <div class="popup-dir" style="margin-top:4px">📋 Folio: <strong>${p.folio}</strong> &nbsp;|&nbsp; 📞 ${p.telefono}</div>
+    </div>`, { maxWidth: 260 });
+    m.on('click', () => resaltarCard(p.id));
+    markers[p.id] = m;
+  });
+
+  if (activas.length < 2) return;
+  mostrarEstadoRuta('⏳ Calculando ruta…');
+  try {
+    const coords = activas.map(p => `${p.lng},${p.lat}`).join(';');
+    const r = await fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson&steps=false`);
+    if (!r.ok) throw 0;
+    const d = await r.json();
+    if (d.code !== 'Ok' || !d.routes?.[0]) throw 0;
+    const geo = d.routes[0].geometry;
+    routeLines.push(L.geoJSON(geo,{style:{color:'#000',weight:8,opacity:.1,lineJoin:'round',lineCap:'round'}}).addTo(map));
+    routeLines.push(L.geoJSON(geo,{style:{color:'#9b2247',weight:5,opacity:.88,lineJoin:'round',lineCap:'round'}}).addTo(map));
+    routeLines.push(L.geoJSON(geo,{style:{color:'#e6d194',weight:2,opacity:.55,dashArray:'1,15',lineJoin:'round'}}).addTo(map));
+    mostrarEstadoRuta(`🛣 ${(d.routes[0].distance/1000).toFixed(1)} km · ⏱ ~${Math.round(d.routes[0].duration/60)} min · 1 pendiente`);
+  } catch {
+    routeLines.push(L.polyline(activas.map(p=>[p.lat,p.lng]),{color:'#9b2247',weight:3,dashArray:'8,6',opacity:.6}).addTo(map));
+    mostrarEstadoRuta('⚠ Ruta estimada · 1 pendiente');
+  }
+}
+
+function mostrarEstadoRuta(t) {
+  let el = document.getElementById('ruta-status');
+  if (!el) { el = document.createElement('div'); el.id = 'ruta-status'; document.getElementById('map').appendChild(el); }
+  el.textContent = t;
+}
+
+function ajustarVista() {
+  const activas = paradas.filter(p => !p.pendiente);
+  if (!activas.length) return;
+  map.fitBounds(L.latLngBounds(activas.map(p => [p.lat, p.lng])), {padding:[44,44]});
+  setTimeout(() => map.invalidateSize(), 100);
+}
+
+// ═══════════════════════════
+//  SIDEBAR
+// ═══════════════════════════
+function renderSidebar() {
+  const lista = document.getElementById('paradas-list');
+  lista.innerHTML = '';
+
+  paradas.forEach((p, idx) => {
+    const card = document.createElement('div');
+    card.className = `parada-card${p.pendiente ? ' pendiente' : ''}`;
+    card.id = `card-${p.id}`;
+
+    if (!p.pendiente) {
+      card.onclick = e => {
+        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+        map.setView([p.lat, p.lng], 17);
+        markers[p.id]?.openPopup();
+        resaltarCard(p.id);
+        if (window.innerWidth <= 768) document.getElementById('map').scrollIntoView({behavior:'smooth'});
+      };
+    }
+
+    const numBadgeHtml = p.pendiente
+      ? `<div class="num-badge-pendiente">⏳</div>`
+      : `<div class="num-badge">${p.orden}</div>`;
+
+    const gmapsHtml = p.gmaps
+      ? `<a href="${p.gmaps}" target="_blank" onclick="event.stopPropagation()">Ver ubicación ↗</a>`
+      : `<span class="vacio">Sin registrar</span>`;
+
+    const dirHtml = p.calle && p.calle !== '—'
+      ? `${p.calle} ${p.numero} — ${p.colonia}`
+      : `<span class="vacio">Dirección pendiente</span>`;
+
+    const cpHtml = p.cp && p.cp !== '—'
+      ? `${p.cp} / ${p.seccion}`
+      : `<span class="vacio">—</span>`;
+
+    // Botones: el pendiente solo tiene "Ver detalles"
+    const botonesHtml = p.pendiente
+      ? `<button class="btn-sm ver" onclick="abrirModal(${p.id})">👁 Ver detalles</button>`
+      : `
+        ${idx > 0 && !paradas[idx-1]?.pendiente ? `<button class="btn-sm mover-up" onclick="moverParada(${p.id},-1)">▲</button>` : ''}
+        ${idx < paradas.length-1 ? `<button class="btn-sm mover-down" onclick="moverParada(${p.id},1)">▼</button>` : ''}
+        <button class="btn-sm ver" onclick="abrirModal(${p.id})">👁 Ver detalles</button>
+        <button class="btn-sm borrar" onclick="borrarParada(${p.id})">🗑 Borrar</button>
+      `;
+
+    card.innerHTML = `
+      <div class="card-head">
+        <span class="drag-handle">⠿</span>
+        ${numBadgeHtml}
+        <div class="card-nombre">${p.nombre}</div>
+      </div>
+      ${p.pendiente ? `<div class="pendiente-banner">⏳ Ubicación pendiente de registro</div>` : ''}
+      <div class="card-negocio">
+        <span class="negocio-nombre">🏪 ${p.negocio}</span>
+        <span class="tag-tipo">${p.tipoNegocio}</span>
+      </div>
+      <div class="card-info">
+        <div class="info-item full">
+          <div class="info-label">Dirección</div>
+          <div class="info-val">${dirHtml}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Municipio</div>
+          <div class="info-val">${p.municipio}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">C.P. / Sección</div>
+          <div class="info-val">${cpHtml}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Folio</div>
+          <div class="info-val">${p.folio}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Teléfono</div>
+          <div class="info-val"><a href="tel:${p.telefono}" onclick="event.stopPropagation()">📱 ${p.telefono}</a></div>
+        </div>
+        <div class="info-item full">
+          <div class="info-label">Google Maps</div>
+          <div class="info-val">${gmapsHtml}</div>
+        </div>
+      </div>
+      <div class="card-actions">${botonesHtml}</div>
+    `;
+
+    lista.appendChild(card);
+  });
+
+  // Stats
+  const total = paradas.length;
+  const pendientes = paradas.filter(p => p.pendiente).length;
+  const activas = total - pendientes;
+  document.getElementById('total-badge').textContent = `${total} registros`;
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat"><strong>${activas}</strong><div class="stlabel">En ruta</div></div>
+    <div class="stat"><strong style="color:#b45309">${pendientes}</strong><div class="stlabel">Pendiente</div></div>
+    <div class="stat"><strong style="font-family:'Montserrat',sans-serif;font-size:15px;color:var(--brocado)">Lunes 4</strong><div class="stlabel">Mayo 2025</div></div>
+  `;
+}
+
+function resaltarCard(id) {
+  document.querySelectorAll('.parada-card').forEach(c => c.classList.remove('activa'));
+  const c = document.getElementById(`card-${id}`);
+  if (c) {
+    c.classList.add('activa');
+    if (window.innerWidth > 768) c.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+}
+
+// ═══════════════════════════
+//  ACCIONES
+// ═══════════════════════════
+async function borrarParada(id) {
+  if (!confirm('¿Borrar esta parada del recorrido?')) return;
+  paradas = paradas.filter(p => p.id !== id);
+  renumerarOrden(); renderSidebar(); await renderMapa();
+}
+
+async function moverParada(id, dir) {
+  const i = paradas.findIndex(p => p.id === id), ni = i + dir;
+  if (ni < 0 || ni >= paradas.length) return;
+  // No mover si el destino es una pendiente
+  if (paradas[ni].pendiente) return;
+  [paradas[i], paradas[ni]] = [paradas[ni], paradas[i]];
+  renumerarOrden(); renderSidebar(); await renderMapa();
+}
+
+function renumerarOrden() {
+  let n = 1;
+  paradas.forEach(p => { p.orden = p.pendiente ? null : n++; });
+}
+
+// ═══════════════════════════
+//  MODAL
+// ═══════════════════════════
+function abrirModal(id) {
+  const p = paradas.find(x => x.id === id);
+
+  // Header color según estado
+  const header = document.getElementById('modal-header');
+  const eyebrow = document.getElementById('modal-eyebrow');
+  const notice  = document.getElementById('modal-pendiente-notice');
+  const secGps  = document.getElementById('modal-sec-gps');
+
+  if (p.pendiente) {
+    header.classList.add('pendiente-header');
+    eyebrow.textContent = 'Pendiente · Jefas Transformadoras';
+    notice.style.display = 'flex';
+    secGps.style.display = 'none';
+  } else {
+    header.classList.remove('pendiente-header');
+    eyebrow.textContent = 'Beneficiaria · Jefas Transformadoras';
+    notice.style.display = 'none';
+    secGps.style.display = 'block';
+  }
+
+  document.getElementById('md-titulo-nombre').textContent = p.nombre;
+  document.getElementById('md-negocio').textContent   = p.negocio     || '—';
+  document.getElementById('md-tipo').textContent      = p.tipoNegocio || '—';
+  document.getElementById('md-calle').textContent     = (p.calle && p.calle !== '—') ? `${p.calle} ${p.numero}` : 'Pendiente';
+  document.getElementById('md-colonia').textContent   = (p.colonia && p.colonia !== '—') ? p.colonia : 'Pendiente';
+  document.getElementById('md-municipio').textContent = p.municipio || '—';
+  document.getElementById('md-cp').textContent        = (p.cp && p.cp !== '—') ? `${p.cp} / Secc. ${p.seccion}` : `— / Secc. ${p.seccion||'—'}`;
+  document.getElementById('md-folio').textContent     = p.folio || '—';
+
+  // Marcar campos pendientes visualmente
+  ['md-calle','md-colonia','md-cp'].forEach(eid => {
+    const el = document.getElementById(eid);
+    if (el.textContent === 'Pendiente') el.classList.add('pendiente-val');
+    else el.classList.remove('pendiente-val');
+  });
+
+  document.getElementById('md-tel').innerHTML = p.telefono
+    ? `<a href="tel:${p.telefono}" style="color:var(--verde-nac);font-weight:600;">📱 ${p.telefono}</a>` : '—';
+
+  if (!p.pendiente) {
+    document.getElementById('md-lat').textContent = p.lat;
+    document.getElementById('md-lng').textContent = p.lng;
+    document.getElementById('md-gmaps').innerHTML = p.gmaps
+      ? `<a href="${p.gmaps}" target="_blank" style="color:var(--verde-nac);font-weight:600;">Abrir en Google Maps ↗</a>` : '—';
+  }
+
+  document.getElementById('modal-overlay').classList.add('visible');
+}
+
+function cerrarModal() { document.getElementById('modal-overlay').classList.remove('visible'); }
+document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target === e.currentTarget) cerrarModal(); });
+
+// ═══════════════════════════
+//  EXPORT / IMPORT
+// ═══════════════════════════
+function exportarJSON() {
+  const blob = new Blob([JSON.stringify({
+    version: "1.0", programa: "Jefas Transformadoras",
+    municipio: "Mineral de la Reforma", colonia: "Santa María la Calera",
+    fecha: "Lunes 4 de mayo de 2025", exportado: new Date().toISOString(),
+    total: paradas.length, paradas
+  }, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'recorrido_jefas_calera.json'; a.click();
+}
+
+function importarJSON(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = async e => {
+    try {
+      const d = JSON.parse(e.target.result), nuevas = d.paradas || d;
+      if (!Array.isArray(nuevas)) throw new Error('Formato inválido');
+      paradas = nuevas; renumerarOrden(); renderSidebar(); await renderMapa(); ajustarVista();
+      alert(`✓ Cargadas ${paradas.length} paradas`);
+    } catch(err) { alert('Error: ' + err.message); }
+  };
+  r.readAsText(file); ev.target.value = '';
+}
+
+function abrirEnGoogleMaps() {
+  const activas = paradas.filter(p => !p.pendiente);
+  if (!activas.length) { alert('No hay paradas con ubicación'); return; }
+  if (activas.length === 1) {
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${activas[0].lat},${activas[0].lng}`, '_blank');
+    return;
+  }
+  const o = activas[0], d = activas[activas.length-1];
+  const wp = activas.slice(1,-1).map(p => `${p.lat},${p.lng}`).join('|');
+  let url = `https://www.google.com/maps/dir/?api=1&origin=${o.lat},${o.lng}&destination=${d.lat},${d.lng}&travelmode=driving`;
+  if (wp) url += `&waypoints=${encodeURIComponent(wp)}`;
+  window.open(url, '_blank');
+}
+
+// ═══════════════════════════
+//  INIT
+// ═══════════════════════════
+renderSidebar();
+initMapa();
+</script>
+</body>
+</html>

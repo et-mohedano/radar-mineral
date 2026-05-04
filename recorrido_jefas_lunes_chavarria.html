@@ -7,10 +7,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════
-   COLORES INSTITUCIONALES GOBIERNO DE MÉXICO
-   Guía de Identidad Gráfica 2024-2030
-   ═══════════════════════════════════════ */
 :root {
   --grosella:    #9b2247;
   --malbec:      #691c32;
@@ -52,6 +48,7 @@ header {
   flex-shrink: 0;
   box-shadow: 0 3px 14px rgba(105,28,50,0.45);
   position: relative;
+  z-index: 10;
 }
 header::after {
   content: '';
@@ -61,7 +58,6 @@ header::after {
 }
 
 .header-brand { display: flex; align-items: center; gap: 12px; }
-
 .header-icon {
   width: 40px; height: 40px;
   background: rgba(255,255,255,0.13);
@@ -70,33 +66,21 @@ header::after {
   display: flex; align-items: center; justify-content: center;
   font-size: 22px; flex-shrink: 0;
 }
-
 .header-titles h1 {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 16px;
-  letter-spacing: 0.03em;
-  color: var(--risco);
-  line-height: 1.2;
+  font-weight: 800; font-size: 16px;
+  letter-spacing: 0.03em; color: var(--risco); line-height: 1.2;
 }
 .header-titles span {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.82);
-  letter-spacing: 0.05em;
-  margin-top: 1px;
+  display: block; font-size: 11px; font-weight: 500;
+  color: rgba(255,255,255,0.82); letter-spacing: 0.05em; margin-top: 1px;
 }
-
 .header-actions { display: flex; gap: 8px; align-items: center; }
-
 .btn {
   font-family: 'Montserrat', sans-serif;
   font-size: 11px; font-weight: 700;
-  padding: 7px 14px;
-  border-radius: 5px; border: none;
-  cursor: pointer;
-  transition: all 0.14s;
+  padding: 7px 14px; border-radius: 5px; border: none;
+  cursor: pointer; transition: all 0.14s;
   letter-spacing: 0.03em;
   display: flex; align-items: center; gap: 5px;
   white-space: nowrap;
@@ -108,8 +92,12 @@ header::after {
 .btn-export { background: var(--brocado); color: white; }
 .btn-export:hover { background: #8f6c22; }
 
-/* ═══════ LAYOUT ═══════ */
-.main { display: flex; flex: 1; overflow: hidden; }
+/* ═══════ LAYOUT DESKTOP ═══════ */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
 
 /* ═══════ SIDEBAR ═══════ */
 .sidebar {
@@ -119,7 +107,6 @@ header::after {
   display: flex; flex-direction: column;
   overflow: hidden; flex-shrink: 0;
 }
-
 .sidebar-header {
   padding: 14px 18px;
   background: var(--malbec);
@@ -128,37 +115,27 @@ header::after {
 }
 .sidebar-header h2 {
   font-size: 12px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--risco);
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--risco);
 }
 .badge {
   background: var(--brocado); color: white;
   font-size: 11px; font-weight: 700;
   padding: 3px 11px; border-radius: 100px;
 }
-
-/* stats */
 .stats-bar {
-  display: flex;
-  background: var(--arena-light);
-  border-bottom: 1px solid var(--borde);
-  flex-shrink: 0;
+  display: flex; background: var(--arena-light);
+  border-bottom: 1px solid var(--borde); flex-shrink: 0;
 }
 .stat { flex: 1; padding: 10px 6px; text-align: center; border-right: 1px solid var(--borde); }
 .stat:last-child { border-right: none; }
 .stat strong {
-  display: block;
-  font-family: 'Lora', serif;
-  font-size: 22px; font-weight: 600;
-  color: var(--grosella); line-height: 1;
+  display: block; font-family: 'Lora', serif;
+  font-size: 22px; font-weight: 600; color: var(--grosella); line-height: 1;
 }
 .stat .stlabel {
-  font-size: 10px; font-weight: 600;
-  color: var(--gris-texto); letter-spacing: 0.05em;
-  text-transform: uppercase; margin-top: 2px;
+  font-size: 10px; font-weight: 600; color: var(--gris-texto);
+  letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px;
 }
-
-/* lista */
 .paradas-list {
   flex: 1; overflow-y: auto;
   padding: 12px;
@@ -167,6 +144,9 @@ header::after {
 .paradas-list::-webkit-scrollbar { width: 5px; }
 .paradas-list::-webkit-scrollbar-track { background: var(--arena-light); }
 .paradas-list::-webkit-scrollbar-thumb { background: var(--borde-dark); border-radius: 3px; }
+
+/* ═══════ MAPA ═══════ */
+#map { flex: 1; z-index: 1; }
 
 /* ═══════ TARJETA ═══════ */
 .parada-card {
@@ -179,42 +159,26 @@ header::after {
 }
 .parada-card:hover {
   box-shadow: 0 4px 18px rgba(105,28,50,0.13);
-  border-color: var(--grosella);
-  border-left-color: var(--grosella);
+  border-color: var(--grosella); border-left-color: var(--grosella);
 }
 .parada-card.activa {
-  border-color: var(--grosella);
-  border-left-color: var(--grosella);
+  border-color: var(--grosella); border-left-color: var(--grosella);
   box-shadow: 0 0 0 3px rgba(155,34,71,0.1);
 }
-/* Asegura que el primer y último hijo respetan el border-radius */
-.parada-card .card-head     { border-radius: 8px 8px 0 0; }
-.parada-card .card-actions  { border-radius: 0 0 8px 8px; }
-.parada-card:hover {
-  box-shadow: 0 4px 18px rgba(105,28,50,0.13);
-  border-color: var(--grosella);
-  border-left-color: var(--grosella);
-}
-.parada-card.activa {
-  border-color: var(--grosella);
-  border-left-color: var(--grosella);
-  box-shadow: 0 0 0 3px rgba(155,34,71,0.1);
-}
+.parada-card .card-head    { border-radius: 8px 8px 0 0; }
+.parada-card .card-actions { border-radius: 0 0 8px 8px; }
 
 .card-head {
   display: flex; align-items: center; gap: 10px;
-  padding: 13px 14px 8px 16px;
-  background: white;
+  padding: 13px 14px 8px 16px; background: white;
 }
 .num-badge {
   width: 32px; height: 32px;
   background: linear-gradient(135deg, var(--malbec), var(--grosella));
-  color: var(--risco);
-  border-radius: 50%;
+  color: var(--risco); border-radius: 50%;
   font-family: 'Lora', serif; font-weight: 600; font-size: 15px;
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 2px 7px rgba(105,28,50,0.3);
+  flex-shrink: 0; box-shadow: 0 2px 7px rgba(105,28,50,0.3);
 }
 .card-nombre {
   font-size: 14px; font-weight: 700;
@@ -229,13 +193,11 @@ header::after {
 .negocio-nombre { font-size: 13px; font-weight: 600; color: var(--negro); flex: 1; }
 .tag-tipo {
   font-size: 10px; font-weight: 700;
-  background: rgba(165,127,44,0.1);
-  color: #7a5c18;
+  background: rgba(165,127,44,0.1); color: #7a5c18;
   padding: 3px 9px; border-radius: 100px;
   border: 1px solid rgba(165,127,44,0.28);
   white-space: nowrap; text-transform: uppercase; letter-spacing: 0.04em;
 }
-
 .card-info {
   background: var(--arena-light);
   border-top: 1px solid var(--borde);
@@ -262,11 +224,10 @@ header::after {
 .btn-sm {
   font-family: 'Montserrat', sans-serif;
   font-size: 12px; font-weight: 600;
-  padding: 7px 13px;
-  border-radius: 6px; border: 1.5px solid var(--borde);
+  padding: 7px 13px; border-radius: 6px;
+  border: 1.5px solid var(--borde);
   cursor: pointer; background: white;
-  transition: all 0.13s; color: var(--gris-texto);
-  letter-spacing: 0.02em;
+  transition: all 0.13s; color: var(--gris-texto); letter-spacing: 0.02em;
 }
 .btn-sm:hover { background: var(--arena-light); border-color: var(--borde-dark); }
 .btn-sm.ver { background: var(--malbec); color: var(--risco); border-color: var(--malbec); }
@@ -274,9 +235,6 @@ header::after {
 .btn-sm.borrar { color: #b91c1c; border-color: #fca5a5; }
 .btn-sm.borrar:hover { background: #fef2f2; border-color: #f87171; }
 .btn-sm.mover-up, .btn-sm.mover-down { padding: 7px 10px; }
-
-/* ═══════ MAPA ═══════ */
-#map { flex: 1; z-index: 1; }
 
 /* ═══════ MODAL ═══════ */
 .modal-overlay {
@@ -287,7 +245,6 @@ header::after {
   padding: 16px;
 }
 .modal-overlay.visible { display: flex; }
-
 .modal {
   background: white; border-radius: 14px;
   width: 100%; max-width: 500px;
@@ -301,7 +258,6 @@ header::after {
   from { transform: translateY(18px) scale(0.97); opacity: 0; }
   to   { transform: translateY(0) scale(1); opacity: 1; }
 }
-
 .modal-header {
   background: linear-gradient(135deg, var(--malbec), var(--grosella));
   padding: 18px 20px 16px;
@@ -309,8 +265,7 @@ header::after {
   flex-shrink: 0; position: relative;
 }
 .modal-header::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, var(--brocado), var(--risco) 50%, var(--brocado));
 }
 .modal-header-text { flex: 1; min-width: 0; }
@@ -332,19 +287,14 @@ header::after {
   transition: background 0.13s;
 }
 .modal-close:hover { background: rgba(255,255,255,0.28); }
-
-/* modal body scrollable */
 .modal-body { overflow-y: auto; flex: 1; }
 .modal-body::-webkit-scrollbar { width: 5px; }
 .modal-body::-webkit-scrollbar-thumb { background: var(--borde-dark); border-radius: 3px; }
-
 .modal-section { padding: 16px 20px; border-bottom: 1px solid var(--borde); }
 .modal-section:last-child { border-bottom: none; }
-
 .msec-title {
   font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.09em;
-  color: var(--brocado);
+  text-transform: uppercase; letter-spacing: 0.09em; color: var(--brocado);
   margin-bottom: 12px;
   display: flex; align-items: center; gap: 7px;
 }
@@ -352,39 +302,32 @@ header::after {
   content: ''; flex: 1; height: 1px;
   background: linear-gradient(90deg, var(--borde-dark), transparent);
 }
-
 .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .mfield { display: flex; flex-direction: column; gap: 3px; }
 .mfield.full { grid-column: 1 / -1; }
-
 .mfield label {
   font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.07em;
-  color: var(--grosella); display: block;
+  text-transform: uppercase; letter-spacing: 0.07em; color: var(--grosella); display: block;
 }
 .mfield .val {
   font-size: 14px; color: var(--negro); font-weight: 500;
-  padding: 8px 11px;
-  background: var(--arena-light);
+  padding: 8px 11px; background: var(--arena-light);
   border: 1px solid var(--borde); border-radius: 7px;
-  min-height: 38px; line-height: 1.4;
-  word-break: break-word;
+  min-height: 38px; line-height: 1.4; word-break: break-word;
 }
 .mfield .val.negocio { font-family: 'Lora', serif; font-size: 15px; font-weight: 600; color: var(--malbec); background: rgba(105,28,50,0.04); border-color: rgba(105,28,50,0.2); }
 .mfield .val a { color: var(--verde-nac); font-weight: 600; text-decoration: none; }
 .mfield .val a:hover { text-decoration: underline; }
-
 .modal-footer {
-  padding: 14px 20px;
-  background: var(--arena-light); border-top: 2px solid var(--borde);
+  padding: 14px 20px; background: var(--arena-light);
+  border-top: 2px solid var(--borde);
   display: flex; justify-content: flex-end; flex-shrink: 0;
 }
 .btn-cerrar {
   font-family: 'Montserrat', sans-serif;
   font-size: 13px; font-weight: 700;
   padding: 10px 30px; border-radius: 7px; border: none;
-  cursor: pointer;
-  background: var(--malbec); color: var(--risco);
+  cursor: pointer; background: var(--malbec); color: var(--risco);
   letter-spacing: 0.04em; transition: background 0.13s;
 }
 .btn-cerrar:hover { background: var(--grosella); }
@@ -417,6 +360,116 @@ header::after {
 .popup-dir { color: var(--gris-texto); font-size: 12px; margin-bottom: 2px; line-height: 1.4; }
 
 #file-import { display: none; }
+
+/* ═══════════════════════════════════════
+   MOBILE  ≤ 768px
+   Layout: columna vertical
+   mapa arriba (fijo ~45vh) · cards abajo (scroll)
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  body { overflow: auto; height: auto; min-height: 100vh; }
+
+  /* Header compacto */
+  header {
+    height: auto;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .header-icon { width: 34px; height: 34px; font-size: 18px; }
+  .header-titles h1 { font-size: 14px; }
+  .header-titles span { font-size: 10px; }
+  .header-actions { width: 100%; justify-content: flex-end; gap: 6px; }
+  .btn { font-size: 10px; padding: 6px 10px; }
+  /* Ocultar texto de botones, dejar solo emoji en pantallas muy chicas */
+  @media (max-width: 420px) {
+    .btn-label { display: none; }
+  }
+
+  /* Layout vertical */
+  .main {
+    flex-direction: column;
+    overflow: visible;
+    height: auto;
+  }
+
+  /* Mapa arriba, altura fija */
+  #map {
+    width: 100%;
+    height: 45vh;
+    min-height: 220px;
+    flex: none;
+    position: relative;
+  }
+
+  /* Sidebar ocupa el resto, sin altura fija — scroll natural del body */
+  .sidebar {
+    width: 100%;
+    min-width: unset;
+    border-right: none;
+    border-top: 3px solid var(--grosella);
+    overflow: visible;   /* deja que el body haga scroll */
+    height: auto;
+    flex-shrink: unset;
+  }
+
+  /* Stats más compactas */
+  .stats-bar { flex-shrink: 0; }
+  .stat { padding: 8px 4px; }
+  .stat strong { font-size: 18px; }
+  .stat .stlabel { font-size: 9px; }
+
+  /* Lista de paradas: altura automática, sin overflow propio */
+  .paradas-list {
+    overflow: visible;
+    flex: none;
+    height: auto;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  /* Cards un poco más compactas en mobile */
+  .card-head { padding: 11px 12px 7px 14px; gap: 9px; }
+  .card-nombre { font-size: 13px; }
+  .num-badge { width: 28px; height: 28px; font-size: 13px; }
+
+  .card-negocio { padding: 2px 12px 7px 14px; }
+  .negocio-nombre { font-size: 12px; }
+  .tag-tipo { font-size: 9px; }
+
+  .card-info {
+    padding: 9px 12px 9px 14px;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px 12px;
+  }
+  .info-label { font-size: 9px; }
+  .info-val { font-size: 12px; }
+
+  .card-actions { padding: 9px 12px 9px 14px; gap: 6px; }
+  .btn-sm { font-size: 11px; padding: 7px 11px; }
+
+  /* Modal ocupa toda la pantalla en mobile */
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal {
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 18px 18px 0 0;
+  }
+  .modal-header { padding: 16px 16px 14px; }
+  .modal-title { font-size: 15px; }
+  .modal-section { padding: 14px 16px; }
+  .mgrid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mfield .val { font-size: 13px; padding: 7px 10px; }
+  .modal-footer { padding: 12px 16px; }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 380px) {
+  #map { height: 40vh; }
+  .mgrid { grid-template-columns: 1fr; }
+  .mfield.full { grid-column: 1; }
+}
 </style>
 </head>
 <body>
@@ -430,14 +483,17 @@ header::after {
     </div>
   </div>
   <div class="header-actions">
-    <button class="btn btn-gmaps"  onclick="abrirEnGoogleMaps()">🗺 Google Maps</button>
-    <button class="btn btn-import" onclick="document.getElementById('file-import').click()">📂 Cargar JSON</button>
-    <button class="btn btn-export" onclick="exportarJSON()">💾 Exportar JSON</button>
+    <button class="btn btn-gmaps"  onclick="abrirEnGoogleMaps()">🗺 <span class="btn-label">Google Maps</span></button>
+    <button class="btn btn-import" onclick="document.getElementById('file-import').click()">📂 <span class="btn-label">Cargar JSON</span></button>
+    <button class="btn btn-export" onclick="exportarJSON()">💾 <span class="btn-label">Exportar JSON</span></button>
   </div>
 </header>
 <input type="file" id="file-import" accept=".json" onchange="importarJSON(event)">
 
 <div class="main">
+  <!-- En mobile: mapa primero (arriba), sidebar después (abajo) -->
+  <div id="map"></div>
+
   <div class="sidebar">
     <div class="sidebar-header">
       <h2>📍 Paradas del recorrido</h2>
@@ -446,7 +502,6 @@ header::after {
     <div class="stats-bar" id="stats-bar"></div>
     <div class="paradas-list" id="paradas-list"></div>
   </div>
-  <div id="map"></div>
 </div>
 
 <!-- MODAL VER DETALLES -->
@@ -459,9 +514,7 @@ header::after {
       </div>
       <button class="modal-close" onclick="cerrarModal()">✕</button>
     </div>
-
     <div class="modal-body">
-
       <div class="modal-section">
         <div class="msec-title">🏪 Negocio</div>
         <div class="mgrid">
@@ -469,7 +522,6 @@ header::after {
           <div class="mfield full"><label>Tipo de negocio</label><div class="val" id="md-tipo">—</div></div>
         </div>
       </div>
-
       <div class="modal-section">
         <div class="msec-title">📍 Domicilio</div>
         <div class="mgrid">
@@ -479,7 +531,6 @@ header::after {
           <div class="mfield"><label>C.P. / Sección</label><div class="val" id="md-cp">—</div></div>
         </div>
       </div>
-
       <div class="modal-section">
         <div class="msec-title">📋 Datos del programa</div>
         <div class="mgrid">
@@ -487,7 +538,6 @@ header::after {
           <div class="mfield"><label>Teléfono</label><div class="val" id="md-tel">—</div></div>
         </div>
       </div>
-
       <div class="modal-section">
         <div class="msec-title">🗺 Ubicación GPS</div>
         <div class="mgrid">
@@ -496,9 +546,7 @@ header::after {
           <div class="mfield full"><label>Liga Google Maps</label><div class="val" id="md-gmaps">—</div></div>
         </div>
       </div>
-
     </div>
-
     <div class="modal-footer">
       <button class="btn-cerrar" onclick="cerrarModal()">Cerrar</button>
     </div>
@@ -507,24 +555,17 @@ header::after {
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// ═══════════════════════════
-//  DATOS
-// ═══════════════════════════
 let paradas = [
-  { id:1,orden:1, nombre:"Elvia Garcia Gonzalez",      folio:"1313", negocio:"Pollería Elvia",           tipoNegocio:"Casa habitacional adaptada",  telefono:"5522523520", calle:"Paseos de Aluminio",      numero:"145",   colonia:"Paseos de Chavarría",  municipio:"Mineral de la Reforma", cp:"42186", seccion:"1847", lat:20.044325195372178, lng:-98.70576707116413, gmaps:"https://maps.app.goo.gl/ebYvvyq9LJXA7sjPA" },
-  { id:2,orden:2, nombre:"Laura Meza Rejon",            folio:"701",  negocio:'Desayunos "Laura"',         tipoNegocio:"Comercio semifijo",           telefono:"7718142676", calle:"Río Mayo",                numero:"104",   colonia:"Paseos de Chavarria",  municipio:"Mineral de la Reforma", cp:"42186", seccion:"1849", lat:20.042890741734794, lng:-98.71056547555725, gmaps:"https://maps.app.goo.gl/x2pUHVEoeLWSJJP47" },
-  { id:3,orden:3, nombre:"Mónica Alba Pérez",           folio:"801",  negocio:"Pan Delicioso Chavarria",   tipoNegocio:"Venta en casa habitacional",  telefono:"5524481815", calle:"Paseos de la Golondrina", numero:"127-1", colonia:"Paseos de Chavarria",  municipio:"Mineral de la Reforma", cp:"42186", seccion:"740",  lat:20.044191500635282, lng:-98.71258329999999, gmaps:"https://maps.app.goo.gl/EpG1VAvhYSqCwEDy9" },
-  { id:5,orden:4, nombre:"Berenice Juarez Badillo",     folio:"148",  negocio:"BJ's Barbershop",           tipoNegocio:"Corte de cabello",            telefono:"7714344710", calle:"Árbol de Pino",           numero:"101",   colonia:"Paseos de Chavarria",  municipio:"Mineral de la Reforma", cp:"42186", seccion:"740",  lat:20.047568268751263, lng:-98.71866151618013, gmaps:"https://maps.app.goo.gl/7CmszGtwde4662139" },
-  { id:5,orden:5, nombre:"Lizbeth Adriana Mayen Calzada",folio:"1189",negocio:"Achi Lashes",               tipoNegocio:"Establecimiento fijo",        telefono:"7718020038", calle:"Cerrada de los Lagos",    numero:"143",   colonia:"Paseos de Chavarría",  municipio:"Mineral de la Reforma", cp:"42186", seccion:"1844", lat:20.042623446658922, lng:-98.71860196206482, gmaps:"https://maps.app.goo.gl/rwnyURkbPPKXKVKN6" },
-  { id:6,orden:6, nombre:"Maria Andrea Magos Pedroza",  folio:"626",  negocio:"Andy's Bazar",              tipoNegocio:"Casa habitacional adaptada",  telefono:"7718028511", calle:"Popocatépetl",            numero:"143",   colonia:"Paseos de Chavarria",  municipio:"Mineral de la Reforma", cp:"42186", seccion:"1849", lat:20.039261003171756, lng:-98.7152695680479,  gmaps:"https://maps.app.goo.gl/XvF4dmq76d1jjBnLA" }
-
+  { id:1,orden:1, nombre:"Elvia Garcia Gonzalez",        folio:"1313", negocio:"Pollería Elvia",          tipoNegocio:"Casa habitacional adaptada", telefono:"5522523520", calle:"Paseos de Aluminio",      numero:"145",   colonia:"Paseos de Chavarría", municipio:"Mineral de la Reforma", cp:"42186", seccion:"1847", lat:20.044325195372178, lng:-98.70576707116413, gmaps:"https://maps.app.goo.gl/ebYvvyq9LJXA7sjPA" },
+  { id:2,orden:2, nombre:"Laura Meza Rejon",              folio:"701",  negocio:'Desayunos "Laura"',        tipoNegocio:"Comercio semifijo",          telefono:"7718142676", calle:"Río Mayo",                numero:"104",   colonia:"Paseos de Chavarria", municipio:"Mineral de la Reforma", cp:"42186", seccion:"1849", lat:20.042890741734794, lng:-98.71056547555725, gmaps:"https://maps.app.goo.gl/x2pUHVEoeLWSJJP47" },
+  { id:3,orden:3, nombre:"Mónica Alba Pérez",             folio:"801",  negocio:"Pan Delicioso Chavarria",  tipoNegocio:"Venta en casa habitacional", telefono:"5524481815", calle:"Paseos de la Golondrina", numero:"127-1", colonia:"Paseos de Chavarria", municipio:"Mineral de la Reforma", cp:"42186", seccion:"740",  lat:20.044191500635282, lng:-98.71258329999999, gmaps:"https://maps.app.goo.gl/EpG1VAvhYSqCwEDy9" },
+  { id:4,orden:4, nombre:"Berenice Juarez Badillo",       folio:"148",  negocio:"BJ's Barbershop",          tipoNegocio:"Corte de cabello",           telefono:"7714344710", calle:"Árbol de Pino",           numero:"101",   colonia:"Paseos de Chavarria", municipio:"Mineral de la Reforma", cp:"42186", seccion:"740",  lat:20.047568268751263, lng:-98.71866151618013, gmaps:"https://maps.app.goo.gl/7CmszGtwde4662139" },
+  { id:5,orden:5, nombre:"Lizbeth Adriana Mayen Calzada", folio:"1189", negocio:"Achi Lashes",              tipoNegocio:"Establecimiento fijo",       telefono:"7718020038", calle:"Cerrada de los Lagos",    numero:"143",   colonia:"Paseos de Chavarría", municipio:"Mineral de la Reforma", cp:"42186", seccion:"1844", lat:20.042623446658922, lng:-98.71860196206482, gmaps:"https://maps.app.goo.gl/rwnyURkbPPKXKVKN6" },
+  { id:6,orden:6, nombre:"Maria Andrea Magos Pedroza",    folio:"626",  negocio:"Andy's Bazar",             tipoNegocio:"Casa habitacional adaptada", telefono:"7718028511", calle:"Popocatépetl",            numero:"143",   colonia:"Paseos de Chavarria", municipio:"Mineral de la Reforma", cp:"42186", seccion:"1849", lat:20.039261003171756, lng:-98.7152695680479,  gmaps:"https://maps.app.goo.gl/XvF4dmq76d1jjBnLA" }
 ];
 
 let markers = {}, routeLines = [], map;
 
-// ═══════════════════════════
-//  MAPA
-// ═══════════════════════════
 async function initMapa() {
   map = L.map('map', { zoomControl: true });
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -588,11 +629,10 @@ function mostrarEstadoRuta(t) {
 function ajustarVista() {
   if (!paradas.length) return;
   map.fitBounds(L.latLngBounds(paradas.map(p=>[p.lat,p.lng])),{padding:[44,44]});
+  // En mobile invalidar tamaño después de que el DOM esté listo
+  setTimeout(() => map.invalidateSize(), 100);
 }
 
-// ═══════════════════════════
-//  SIDEBAR
-// ═══════════════════════════
 function renderSidebar() {
   const lista = document.getElementById('paradas-list');
   lista.innerHTML = '';
@@ -605,6 +645,10 @@ function renderSidebar() {
       map.setView([p.lat,p.lng],17);
       markers[p.id]?.openPopup();
       resaltarCard(p.id);
+      // En mobile: scroll al mapa
+      if (window.innerWidth <= 768) {
+        document.getElementById('map').scrollIntoView({behavior:'smooth'});
+      }
     };
     card.innerHTML = `
       <div class="card-head">
@@ -660,12 +704,12 @@ function renderSidebar() {
 function resaltarCard(id) {
   document.querySelectorAll('.parada-card').forEach(c=>c.classList.remove('activa'));
   const c = document.getElementById(`card-${id}`);
-  if (c) { c.classList.add('activa'); c.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  if (c) {
+    c.classList.add('activa');
+    if (window.innerWidth > 768) c.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
 }
 
-// ═══════════════════════════
-//  ACCIONES
-// ═══════════════════════════
 async function borrarParada(id) {
   if (!confirm('¿Borrar esta parada del recorrido?')) return;
   paradas = paradas.filter(p=>p.id!==id);
@@ -679,22 +723,19 @@ async function moverParada(id,dir) {
 }
 function renumerarOrden() { paradas.forEach((p,i)=>p.orden=i+1); }
 
-// ═══════════════════════════
-//  MODAL
-// ═══════════════════════════
 function abrirModal(id) {
   const p = paradas.find(x=>x.id===id);
   document.getElementById('md-titulo-nombre').textContent = p.nombre;
-  document.getElementById('md-negocio').textContent   = p.negocio    || '—';
-  document.getElementById('md-tipo').textContent      = p.tipoNegocio|| '—';
+  document.getElementById('md-negocio').textContent   = p.negocio     || '—';
+  document.getElementById('md-tipo').textContent      = p.tipoNegocio || '—';
   document.getElementById('md-calle').textContent     = `${p.calle} ${p.numero}`;
-  document.getElementById('md-colonia').textContent   = p.colonia    || '—';
-  document.getElementById('md-municipio').textContent = p.municipio  || '—';
+  document.getElementById('md-colonia').textContent   = p.colonia     || '—';
+  document.getElementById('md-municipio').textContent = p.municipio   || '—';
   document.getElementById('md-cp').textContent        = `${p.cp||'—'} / Secc. ${p.seccion||'—'}`;
-  document.getElementById('md-folio').textContent     = p.folio      || '—';
+  document.getElementById('md-folio').textContent     = p.folio       || '—';
   document.getElementById('md-lat').textContent       = p.lat;
   document.getElementById('md-lng').textContent       = p.lng;
-  document.getElementById('md-tel').innerHTML  = p.telefono
+  document.getElementById('md-tel').innerHTML = p.telefono
     ? `<a href="tel:${p.telefono}" style="color:var(--verde-nac);font-weight:600;">📱 ${p.telefono}</a>` : '—';
   document.getElementById('md-gmaps').innerHTML = p.gmaps
     ? `<a href="${p.gmaps}" target="_blank" style="color:var(--verde-nac);font-weight:600;">Abrir en Google Maps ↗</a>` : '—';
@@ -703,9 +744,6 @@ function abrirModal(id) {
 function cerrarModal() { document.getElementById('modal-overlay').classList.remove('visible'); }
 document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) cerrarModal(); });
 
-// ═══════════════════════════
-//  EXPORT / IMPORT
-// ═══════════════════════════
 function exportarJSON() {
   const blob = new Blob([JSON.stringify({version:"1.0",programa:"Jefas Transformadoras",municipio:"Mineral de la Reforma",fecha:"Lunes 4 de mayo de 2025",exportado:new Date().toISOString(),total:paradas.length,paradas},null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
@@ -734,9 +772,6 @@ function abrirEnGoogleMaps() {
   window.open(url,'_blank');
 }
 
-// ═══════════════════════════
-//  INIT
-// ═══════════════════════════
 renderSidebar();
 initMapa();
 </script>

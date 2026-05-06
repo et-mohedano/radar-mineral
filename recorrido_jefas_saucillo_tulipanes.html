@@ -442,7 +442,7 @@ header::after {
   <div class="sidebar">
     <div class="sidebar-header">
       <h2>📍 Paradas del recorrido</h2>
-      <span class="badge" id="total-badge">8 paradas</span>
+      <span class="badge" id="total-badge">6 paradas</span>
     </div>
     <div class="stats-bar" id="stats-bar"></div>
     <div class="paradas-list" id="paradas-list"></div>
@@ -514,33 +514,7 @@ header::after {
 // oriente a poniente de forma continua sin backtracking.
 let paradas = [
   {
-    id:2, orden:1,
-    nombre:"Bianca Cervantes Tapia",
-    folio:"1167", negocio:"My Friends Clothe Store", tipoNegocio:"Comercio",
-    telefono:"7713533536",
-    calle:"Av. Minerales", numero:"S/N",
-    colonia:"El Saucillo", municipio:"Mineral de la Reforma",
-    cp:"42186", seccion:"737",
-    lat:20.032185876407965, lng:-98.71658946183851,
-    gmaps:"https://www.google.com/maps?q=20.031984329223633,-98.71656799316406&z=17&hl=es",
-    observaciones:"Falta firma del trabajador social",
-    comentario:"Sí, cuenta con local."
-  },
-  {
-    id:1, orden:2,
-    nombre:"Ana Karen Corona Martinez",
-    folio:"350", negocio:"Servicio Podológico Preventivo", tipoNegocio:"Servicios",
-    telefono:"7715001757",
-    calle:"Av. Primero de Mayo", numero:"S/N",
-    colonia:"Saucillo", municipio:"Mineral de la Reforma",
-    cp:"42186", seccion:"1765",
-    lat:20.06783856580115, lng:-98.73130343300167,
-    gmaps:"https://www.google.com/maps?q=20.067697525024414,-98.73129272460938&z=17&hl=es",
-    observaciones:"Completo",
-    comentario:"Sí, cuenta con local."
-  },
-  {
-    id:4, orden:3,
+    id:4, orden:1,
     nombre:"Brisa Jardines Sanchez",
     folio:"839", negocio:"Mia Guerrero Moda y Estilo", tipoNegocio:"Comercio",
     telefono:"7714349593",
@@ -553,7 +527,7 @@ let paradas = [
     comentario:"Sí, cuenta con local."
   },
   {
-    id:5, orden:4,
+    id:5, orden:2,
     nombre:"Elizabeth Rivera Guillermo",
     folio:"813", negocio:"Composturas Eli", tipoNegocio:"Casa habitacional adaptada",
     telefono:"7717010156",
@@ -566,20 +540,7 @@ let paradas = [
     comentario:"Información correcta."
   },
   {
-    id:3, orden:5,
-    nombre:"Ma. Guadalupe Arenas Mendez",
-    folio:"515", negocio:"Studio 13", tipoNegocio:"Comercio",
-    telefono:"7712790425",
-    calle:"Ficus", numero:"148",
-    colonia:"El Saucillo", municipio:"Mineral de la Reforma",
-    cp:"42186", seccion:"740",
-    lat:20.05717156616251, lng:-98.75803658882272,
-    gmaps:"https://www.google.com/maps/place/20%C2%B003'25.1%22N+98%C2%B045'29.1%22W/@20.0569801,-98.7606544,17z",
-    observaciones:"Completo",
-    comentario:"Sí, cuenta con local."
-  },
-  {
-    id:6, orden:6,
+    id:6, orden:3,
     nombre:"Margarita Ramona Martinez Perez",
     folio:"292", negocio:"Limpieza Mágica", tipoNegocio:"Comercio fijo",
     telefono:"7711467522",
@@ -592,7 +553,7 @@ let paradas = [
     comentario:"Información correcta."
   },
   {
-    id:7, orden:7,
+    id:7, orden:4,
     nombre:"María del Socorro Pedraza Cruz",
     folio:"388", negocio:"Cocina Mary", tipoNegocio:"Comercio",
     telefono:"7712322144",
@@ -605,7 +566,7 @@ let paradas = [
     comentario:"Información correcta, negocio en domicilio."
   },
   {
-    id:8, orden:8,
+    id:8, orden:5,
     nombre:"Ixchel Refugio Acosta",
     folio:"600", negocio:"Petunia Arte Floral", tipoNegocio:"Casa habitacional adaptada",
     telefono:"7712028949",
@@ -616,6 +577,19 @@ let paradas = [
     gmaps:"https://www.google.com/maps?q=20.060375213623047,-98.77000427246094&z=17&hl=es",
     observaciones:"Falta firma del trabajador social",
     comentario:"Información correcta."
+  },
+  {
+    id:2, orden:6,
+    nombre:"Bianca Cervantes Tapia",
+    folio:"1167", negocio:"My Friends Clothe Store", tipoNegocio:"Comercio",
+    telefono:"7713533536",
+    calle:"Av. Minerales", numero:"S/N",
+    colonia:"El Saucillo", municipio:"Mineral de la Reforma",
+    cp:"42186", seccion:"737",
+    lat:20.032185876407965, lng:-98.71658946183851,
+    gmaps:"https://www.google.com/maps?q=20.031984329223633,-98.71656799316406&z=17&hl=es",
+    observaciones:"Falta firma del trabajador social",
+    comentario:"Sí, cuenta con local."
   }
 ];
 

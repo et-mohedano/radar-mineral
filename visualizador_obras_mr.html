@@ -322,6 +322,21 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size
   line-height:1;
 }
 .obra-pin:hover,.obra-pin.hi{transform:scale(1.35);box-shadow:0 6px 20px rgba(0,0,0,0.3)!important}
+/* Gradient legend */
+.lg-gradient{margin-top:4px}
+.lg-grad-bar{
+  height:10px;border-radius:5px;
+  background:linear-gradient(to right,#FEF0EC,#F8A0A0,#C4546A,#9B2540,#6B1020);
+  margin-bottom:4px;
+}
+.lg-grad-labels{display:flex;justify-content:space-between;font-size:0.62rem;color:var(--gris4);font-weight:600}
+/* Zone inversion tooltip label */
+.inv-zone-label{
+  background:var(--white);border:1.5px solid var(--gris3);
+  border-radius:8px;padding:6px 10px;font-family:'DM Sans',sans-serif;
+  font-size:0.8rem;font-weight:700;color:var(--ink);
+  box-shadow:var(--shadow);
+}
 </style>
 </head>
 <body>
@@ -366,6 +381,9 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size
         </button>
         <button class="lyr-btn on" id="btn-obras-mk">
           <span class="lyr-dot" style="background:var(--dorado-lt);border-radius:50%"></span>Marcadores de Obras
+        </button>
+        <button class="lyr-btn" id="btn-inversion">
+          <span class="lyr-dot" style="background:#7B1D2E;border-radius:50%"></span>Inversi&#243;n por Zona
         </button>
       </div>
     </div>
@@ -413,6 +431,14 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size
       <div class="lg-row"><div class="lg-sw ci" style="background:var(--vino-mid);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.2)"></div><span class="lg-lbl">2024</span></div>
       <div class="lg-row"><div class="lg-sw ci" style="background:var(--verde-mid);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.2)"></div><span class="lg-lbl">2025</span></div>
       <div class="lg-row"><div class="lg-sw ci" style="background:var(--azul-mid);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.2)"></div><span class="lg-lbl">2026</span></div>
+      <div class="lg-div" id="lg-inv-div" style="display:none"></div>
+      <div id="lg-inv-block" style="display:none">
+        <h4>Inversi&#243;n por zona</h4>
+        <div class="lg-gradient">
+          <div class="lg-grad-bar"></div>
+          <div class="lg-grad-labels"><span>Menor</span><span>Mayor</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -749,12 +775,91 @@ function getFiltered(){
 function applyFilter(){
   selUid=null;
   const list=getFiltered();
-  buildMarkers(list);   // rebuilds markers with ONLY filtered obras
+  buildMarkers(list);
   renderList(list);
+  buildInversionLayer(list);  // reactive: rebuild if active
 }
 
 // ── LAYER TOGGLES ────────────────────────────
 const lyrMap={contorno:contornoL,zonas:zonasL,secciones:seccionesL,colonias:coloniasL};
+
+// ── INVERSIÓN POR ZONA LAYER ──────────────────────────────────────
+let inversionLayer=null;
+LS['inversion']=false;
+
+function buildInversionLayer(list){
+  if(inversionLayer){map.removeLayer(inversionLayer);inversionLayer=null;}
+  if(!LS['inversion'])return;
+
+  // Compute total monto per zona from filtered list
+  const montoZona={};
+  list.forEach(o=>{
+    const z=o.zona_num;
+    if(z)montoZona[z]=(montoZona[z]||0)+(o.monto||0);
+  });
+  const values=Object.values(montoZona).filter(v=>v>0);
+  if(!values.length)return;
+  const minV=Math.min(...values);
+  const maxV=Math.max(...values);
+
+  // Color scale: light vino-xlt → deep vino
+  function invColor(val){
+    if(!val||maxV===minV)return 'rgba(247,238,240,0.7)';
+    const t=(val-minV)/(maxV-minV); // 0..1
+    // Interpolate through 5-stop vino scale
+    const stops=[
+      [247,238,240],  // #F7EEF0 very light
+      [248,160,160],  // #F8A0A0 light pink
+      [196, 84,106],  // #C4546A mid vino
+      [155, 37, 64],  // #9B2540 vino
+      [107, 16, 32],  // #6B1020 deep vino
+    ];
+    const seg=t*(stops.length-1);
+    const i=Math.min(Math.floor(seg),stops.length-2);
+    const f=seg-i;
+    const c=stops[i].map((s,k)=>Math.round(s+(stops[i+1][k]-s)*f));
+    return `rgba(${c[0]},${c[1]},${c[2]},0.82)`;
+  }
+
+  inversionLayer=L.geoJSON(ZONAS_DATA,{
+    style:f=>{
+      const z=String(f.properties.zona);
+      const val=montoZona[z]||0;
+      return{
+        color:'rgba(255,255,255,0.7)',weight:1.5,
+        fillColor:invColor(val),
+        fillOpacity:val?0.88:0.2,
+      };
+    },
+    onEachFeature:(f,layer)=>{
+      const z=String(f.properties.zona);
+      const val=montoZona[z]||0;
+      const obras_z=list.filter(o=>o.zona_num===z);
+      layer.bindTooltip(
+        `<div class="inv-zone-label"><b>Zona ${z}</b><br/>${fmtM(val)}<br/>${obras_z.length} obra${obras_z.length!==1?'s':''}</div>`,
+        {sticky:true,className:'leaflet-tooltip-plain'}
+      );
+      layer.on('mouseover',()=>layer.setStyle({fillOpacity:Math.min((val?0.88:0.2)+0.1,1),weight:2.5}));
+      layer.on('mouseout',()=>layer.setStyle({fillOpacity:val?0.88:0.2,weight:1.5}));
+    }
+  }).addTo(map);
+
+  // Update legend gradient visibility
+  document.getElementById('lg-inv-div').style.display='';
+  document.getElementById('lg-inv-block').style.display='';
+}
+
+document.getElementById('btn-inversion').addEventListener('click',()=>{
+  LS['inversion']=!LS['inversion'];
+  document.getElementById('btn-inversion').classList.toggle('on',LS['inversion']);
+  if(!LS['inversion']){
+    if(inversionLayer){map.removeLayer(inversionLayer);inversionLayer=null;}
+    document.getElementById('lg-inv-div').style.display='none';
+    document.getElementById('lg-inv-block').style.display='none';
+  } else {
+    buildInversionLayer(getFiltered());
+  }
+});
 ['contorno','zonas','secciones','colonias'].forEach(n=>{
   document.getElementById('btn-'+n).addEventListener('click',()=>{
     LS[n]=!LS[n];

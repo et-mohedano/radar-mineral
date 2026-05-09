@@ -40,6 +40,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size:15px;background:var(--gris1);color:var(--ink)}
+body{display:flex;flex-direction:column}
 
 /* ── HEADER ── */
 #hdr{
@@ -81,7 +82,7 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size
 .stat-pill .l{font-family:'DM Sans',sans-serif;font-size:0.62rem;font-weight:700;color:var(--gris4);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px}
 
 /* ── MAIN ── */
-#main{display:flex;flex:1;overflow:hidden;height:calc(100vh - 72px)}
+#main{display:flex;flex:1;overflow:hidden;min-height:0}
 
 /* ── SIDEBAR ── */
 #sidebar{
@@ -89,7 +90,7 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size
   background:var(--white);
   border-right:1px solid var(--gris2);
   display:flex;flex-direction:column;overflow:hidden;
-  z-index:500;
+  z-index:500;min-height:0;
 }
 .sb-block{padding:14px 16px;border-bottom:1px solid var(--gris2);flex-shrink:0}
 .sb-label{
@@ -310,6 +311,86 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size
 .lg-lbl{font-size:0.72rem;font-weight:500;color:var(--gris5)}
 .lg-div{height:1px;background:var(--gris2);margin:9px 0}
 
+/* ── TABS ── */
+#tab-bar{
+  display:flex;align-items:stretch;background:var(--white);
+  border-bottom:2px solid var(--gris2);flex-shrink:0;z-index:900;padding:0 24px;gap:4px;
+}
+.tab-btn{
+  padding:10px 22px;background:transparent;border:none;
+  border-bottom:3px solid transparent;margin-bottom:-2px;
+  font-family:"DM Sans",sans-serif;font-size:0.9rem;font-weight:600;
+  color:var(--gris4);cursor:pointer;transition:all 0.18s;
+  display:flex;align-items:center;gap:8px;
+}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--vino);border-bottom-color:var(--vino)}
+.tab-panel{display:none;flex:1;overflow:hidden;min-height:0;height:0}
+.tab-panel.active{display:flex;flex-direction:column;height:auto;flex:1}
+
+/* ── INFORME ── */
+#informe-wrap{flex:1;overflow-y:auto;overflow-x:hidden;padding:28px 32px 40px;background:var(--gris1);min-height:0}
+#informe-wrap::-webkit-scrollbar{width:5px}
+#informe-wrap::-webkit-scrollbar-thumb{background:var(--gris3);border-radius:3px}
+.inf-kpi-strip{display:flex;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+.inf-kpi{
+  flex:1;min-width:140px;border-radius:14px;padding:18px 20px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  position:relative;overflow:hidden;
+}
+.inf-kpi::after{content:"";position:absolute;right:-12px;top:-12px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.12)}
+.inf-kpi.vino{background:linear-gradient(135deg,var(--vino) 0%,var(--vino-mid) 100%);color:#fff}
+.inf-kpi.verde{background:linear-gradient(135deg,var(--verde) 0%,var(--verde-mid) 100%);color:#fff}
+.inf-kpi.dorado{background:linear-gradient(135deg,var(--dorado) 0%,var(--dorado-mid) 100%);color:#fff}
+.inf-kpi.azul{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-mid) 100%);color:#fff}
+.inf-kpi.gris{background:linear-gradient(135deg,var(--gris5) 0%,#3A3630 100%);color:#fff}
+.ik-icon{font-size:1.4rem;opacity:0.9}
+.ik-val{font-family:"DM Sans",sans-serif;font-size:1.7rem;font-weight:700;line-height:1}
+.ik-lbl{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;opacity:0.75}
+.inf-row{display:flex;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.inf-card{
+  background:var(--white);border-radius:14px;padding:22px 24px;
+  border:1px solid var(--gris2);box-shadow:var(--shadow-sm);
+  flex:1;min-width:260px;display:flex;flex-direction:column;
+}
+.inf-card.wide{flex:2;min-width:380px}
+.inf-card.wider{flex:2.5;min-width:400px}
+.inf-card.full{flex:1 0 100%}
+.ic-title{font-family:"DM Sans",sans-serif;font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ic-sub{font-size:0.72rem;color:var(--gris4);margin-bottom:16px;font-weight:500}
+.chart-wrap{width:100%;position:relative}
+.chart-wrap.tall{min-height:260px}
+svg.chart{width:100%;overflow:visible}
+.year-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px}
+.year-legend span{font-size:0.72rem;font-weight:600;color:var(--gris5);display:flex;align-items:center;gap:5px}
+.yl-dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.chart-legend{display:flex;flex-direction:column;gap:5px;margin-top:12px}
+.cl-row{display:flex;align-items:center;gap:8px}
+.cl-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.cl-lbl{font-size:0.72rem;font-weight:600;color:var(--gris5);flex:1}
+.cl-val{font-size:0.72rem;font-weight:700;color:var(--ink)}
+.top-obra-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--gris2)}
+.top-obra-row:last-child{border:none}
+.tor-rank{font-family:"DM Sans",sans-serif;font-size:1.1rem;font-weight:700;color:var(--gris3);width:28px;flex-shrink:0;text-align:center}
+.tor-rank.gold{color:#C9993A}
+.tor-rank.silver{color:#9C9890}
+.tor-rank.bronze{color:#A0561A}
+.tor-bar-wrap{flex:1;min-width:0}
+.tor-title{font-size:0.78rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.tor-bar-bg{background:var(--gris1);border-radius:4px;height:6px;overflow:hidden}
+.tor-bar-fill{height:100%;border-radius:4px}
+.tor-meta{font-size:0.65rem;color:var(--gris4);margin-top:3px;display:flex;gap:8px}
+.tor-monto{font-family:"DM Sans",sans-serif;font-size:0.85rem;font-weight:700;color:var(--vino);flex-shrink:0;min-width:80px;text-align:right}
+.insights-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:4px}
+.insight-card{background:var(--gris1);border-radius:10px;padding:14px 16px;border-left:4px solid var(--gris3)}
+.insight-card.iv{border-left-color:var(--vino-mid)}
+.insight-card.ig{border-left-color:var(--verde-mid)}
+.insight-card.id{border-left-color:var(--dorado-mid)}
+.insight-card.ia{border-left-color:var(--azul-mid)}
+.ins-title{font-size:0.78rem;font-weight:700;color:var(--ink);margin-bottom:5px}
+.ins-body{font-size:0.75rem;color:var(--gris5);line-height:1.5}
+.ins-hl{font-weight:700;color:var(--vino)}
+
 /* ── MARKER ── */
 .obra-pin{
   width:32px;height:32px;border-radius:50%;
@@ -358,6 +439,11 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size
   </div>
 </div>
 
+<div id="tab-bar">
+  <button class="tab-btn active" id="tab-mapa" data-tab="panel-mapa">&#128506; Mapa de Obras</button>
+  <button class="tab-btn" id="tab-informe" data-tab="panel-informe">&#128202; Informe Ejecutivo</button>
+</div>
+<div id="panel-mapa" class="tab-panel active">
 <div id="main">
   <!-- SIDEBAR -->
   <div id="sidebar">
@@ -441,7 +527,75 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size
       </div>
     </div>
   </div>
-</div>
+</div><!-- end #main -->
+</div><!-- end panel-mapa -->
+
+<div id="panel-informe" class="tab-panel">
+  <div id="informe-wrap">
+
+    <div class="inf-kpi-strip">
+      <div class="inf-kpi vino"><div class="ik-icon">&#128181;</div><div class="ik-val">$971M</div><div class="ik-lbl">Inversi&#243;n Total</div></div>
+      <div class="inf-kpi verde"><div class="ik-icon">&#127963;</div><div class="ik-val">65</div><div class="ik-lbl">Obras</div></div>
+      <div class="inf-kpi dorado"><div class="ik-icon">&#128101;</div><div class="ik-val">3.05M</div><div class="ik-lbl">Beneficiarios</div></div>
+      <div class="inf-kpi azul"><div class="ik-icon">&#128205;</div><div class="ik-val">10</div><div class="ik-lbl">Zonas Atendidas</div></div>
+      <div class="inf-kpi gris"><div class="ik-icon">&#128197;</div><div class="ik-val">$14.9M</div><div class="ik-lbl">Promedio por Obra</div></div>
+    </div>
+
+    <div class="inf-row">
+      <div class="inf-card wide">
+        <div class="ic-title">&#128200; Inversi&#243;n por A&#241;o</div>
+        <div class="ic-sub">Monto total ejecutado y proyectado por ejercicio fiscal</div>
+        <div class="chart-wrap" id="chart-year"></div>
+        <div class="year-legend">
+          <span><span class="yl-dot" style="background:#9B2540"></span>2024 &mdash; $313.7M (26 obras)</span>
+          <span><span class="yl-dot" style="background:#2C7A4E"></span>2025 &mdash; $555.5M (23 obras)</span>
+          <span><span class="yl-dot" style="background:#2558A8"></span>2026 &mdash; $101.9M (16 obras)</span>
+        </div>
+      </div>
+      <div class="inf-card">
+        <div class="ic-title">&#127981; Por Origen del Recurso</div>
+        <div class="ic-sub">Distribuci&#243;n del financiamiento</div>
+        <div class="chart-wrap" id="chart-origen"></div>
+        <div class="chart-legend" id="legend-origen"></div>
+      </div>
+    </div>
+
+    <div class="inf-row">
+      <div class="inf-card">
+        <div class="ic-title">&#128205; Inversi&#243;n por Zona</div>
+        <div class="ic-sub">Monto total por zona municipal</div>
+        <div class="chart-wrap tall" id="chart-zona"></div>
+      </div>
+      <div class="inf-card">
+        <div class="ic-title">&#127959; Por Tipo de Obra</div>
+        <div class="ic-sub">Distribuci&#243;n de inversi&#243;n por categor&#237;a</div>
+        <div class="chart-wrap tall" id="chart-tipo"></div>
+      </div>
+    </div>
+
+    <div class="inf-row">
+      <div class="inf-card wider">
+        <div class="ic-title">&#127942; Top 10 Obras por Monto</div>
+        <div class="ic-sub">Las obras de mayor impacto presupuestal del municipio</div>
+        <div id="top-obras-list"></div>
+      </div>
+      <div class="inf-card">
+        <div class="ic-title">&#128176; Por Fuente de Financiamiento</div>
+        <div class="ic-sub">Fondos y programas que financian las obras</div>
+        <div class="chart-wrap tall" id="chart-fuente"></div>
+      </div>
+    </div>
+
+    <div class="inf-row">
+      <div class="inf-card full">
+        <div class="ic-title">&#128161; Insights Clave para el Presidente Municipal</div>
+        <div class="ic-sub">An&#225;lisis autom&#225;tico del periodo 2024&#8211;2026</div>
+        <div class="insights-grid" id="insights-grid"></div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- end panel-informe -->
 
 <script>
 (function(){
@@ -916,6 +1070,185 @@ document.getElementById('btn-obras-mk').addEventListener('click',()=>{
 
 // ── INIT ─────────────────────────────────────
 applyFilter();
+
+// ── TAB SWITCHING ──────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='panel-informe') renderInforme();
+  });
+});
+
+// ── INFORME ────────────────────────────────────
+function fmtMS(m){
+  if(!m) return '$0';
+  if(m>=1e9) return '$'+(m/1e9).toFixed(1)+'B';
+  if(m>=1e6) return '$'+(m/1e6).toFixed(1)+'M';
+  return '$'+(m/1e3).toFixed(0)+'K';
+}
+
+function barChart(cId,data,opts){
+  opts=opts||{};
+  const el=document.getElementById(cId);
+  if(!el)return;
+  const W=el.clientWidth||460;
+  const H=opts.height||200;
+  const horiz=!!opts.horizontal;
+  const pad={l:horiz?150:14,r:14,t:14,b:horiz?14:44};
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+  const maxV=Math.max(...data.map(d=>d.val),1);
+  let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" style="height:${H}px">`;
+  const n=data.length;
+  data.forEach((d,i)=>{
+    const ratio=d.val/maxV;
+    const col=d.color||'#9B2540';
+    if(horiz){
+      const slotH=cH/n;
+      const y=pad.t+i*slotH+2;
+      const bH=slotH-5;
+      const bW=ratio*cW;
+      s+=`<rect x="${pad.l}" y="${y}" width="${Math.max(bW,2)}" height="${bH}" rx="3" fill="${col}"/>`;
+      s+=`<text x="${pad.l-6}" y="${y+bH/2+4}" text-anchor="end" font-family="DM Sans,sans-serif" font-size="11" fill="#6A6258" font-weight="600">${d.label}</text>`;
+      const valTxt=fmtMS(d.val);
+      if(bW>55){
+        s+=`<text x="${pad.l+bW-6}" y="${y+bH/2+4}" text-anchor="end" font-family="DM Sans,sans-serif" font-size="10" fill="#fff" font-weight="700">${valTxt}</text>`;
+      } else {
+        s+=`<text x="${pad.l+bW+6}" y="${y+bH/2+4}" text-anchor="start" font-family="DM Sans,sans-serif" font-size="10" fill="#6A6258" font-weight="700">${valTxt}</text>`;
+      }
+    } else {
+      const slotW=cW/n;
+      const x=pad.l+i*slotW+2;
+      const bW=slotW-5;
+      const bH=ratio*cH;
+      const y=pad.t+cH-bH;
+      s+=`<rect x="${x}" y="${y}" width="${bW}" height="${Math.max(bH,2)}" rx="3" fill="${col}"/>`;
+      s+=`<text x="${x+bW/2}" y="${H-8}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#6A6258" font-weight="600">${d.label}</text>`;
+      s+=`<text x="${x+bW/2}" y="${Math.max(y-5,pad.t+10)}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#6A6258">${fmtMS(d.val)}</text>`;
+    }
+  });
+  s+='</svg>';
+  el.innerHTML=s;
+}
+
+function donutChart(cId, data, lgId){
+  const el=document.getElementById(cId); if(!el)return;
+  const total=data.reduce((a,d)=>a+d.val,0);
+  const R=60,r=36,cx=75,cy=75,W=150,H=150;
+  let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" style="height:${H}px;max-width:${W}px;display:block;margin:0 auto">`;
+  let ang=-Math.PI/2;
+  data.forEach(d=>{
+    const sl=total>0?(d.val/total)*Math.PI*2:0;
+    const x1=cx+R*Math.cos(ang),y1=cy+R*Math.sin(ang);
+    const x2=cx+R*Math.cos(ang+sl),y2=cy+R*Math.sin(ang+sl);
+    const xi1=cx+r*Math.cos(ang),yi1=cy+r*Math.sin(ang);
+    const xi2=cx+r*Math.cos(ang+sl),yi2=cy+r*Math.sin(ang+sl);
+    const lg=sl>Math.PI?1:0;
+    s+=`<path d="M${xi1} ${yi1}L${x1} ${y1}A${R} ${R} 0 ${lg} 1 ${x2} ${y2}L${xi2} ${yi2}A${r} ${r} 0 ${lg} 0 ${xi1} ${yi1}Z" fill="${d.color}" stroke="white" stroke-width="2"/>`;
+    ang+=sl;
+  });
+  s+=`<text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" font-weight="700" fill="#1C1A17">${fmtMS(total)}</text>`;
+  s+=`<text x="${cx}" y="${cy+12}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#9C9890">Total</text>`;
+  s+='</svg>';
+  el.innerHTML=s;
+  const lgEl=document.getElementById(lgId);
+  if(lgEl) lgEl.innerHTML=data.map(d=>`<div class="cl-row"><div class="cl-dot" style="background:${d.color}"></div><span class="cl-lbl">${d.label}</span><span class="cl-val">${fmtMS(d.val)}</span></div>`).join('');
+}
+
+function renderInforme(){
+  const ZCOLS=['#9B2540','#B8882A','#2C7A4E','#2558A8','#6B3AA0','#A0561A','#1A8B7A','#6B8B1A','#8B1A6B','#5A6B8B'];
+  const byYear={2024:{m:0},2025:{m:0},2026:{m:0}};
+  const byOrigen={ESTATAL:0,FEDERAL:0,MUNICIPAL:0};
+  const byZona={},byTipo={},byFuente={};
+  function nt(t){
+    if(!t)return 'Otro';const u=t.toUpperCase();
+    if(u.includes('PAVIMENT')&&u.includes('ASFALT'))return 'Pav. Asf\u00e1ltica';
+    if(u.includes('PAVIMENT')||u.includes('BACHEO'))return 'Pav. Hidr\u00e1ulica';
+    if(u.includes('DREN')||u.includes('ALCANT')||u.includes('PLUVIAL'))return 'Drenaje/Pluvial';
+    if(u.includes('ELECTR'))return 'Electrificaci\u00f3n';
+    if(u.includes('AGUA')||u.includes('SANITARIO'))return 'Agua/Sanit.';
+    if(u.includes('PARQUE')||u.includes('DEPORTIVO')||u.includes('ESPACIO'))return 'Espacio P\u00fablico';
+    if(u.includes('EDIFICAC'))return 'Edificaci\u00f3n';
+    if(u.includes('NOMENCL'))return 'Nomenclatura';
+    if(u.includes('COMPLEMENT')||u.includes('INTEGRAL'))return 'Obra Integral';
+    return 'Otro';
+  }
+  OBRAS.forEach(o=>{
+    const m=o.monto||0;
+    if(byYear[o.year])byYear[o.year].m+=m;
+    if(o.origen in byOrigen)byOrigen[o.origen]+=m;
+    byZona[o.zona_num]=(byZona[o.zona_num]||0)+m;
+    const t=nt(o.tipo); byTipo[t]=(byTipo[t]||0)+m;
+    const fn=o.fuente_norm||'Sin especificar'; byFuente[fn]=(byFuente[fn]||0)+m;
+  });
+
+  barChart('chart-year',[
+    {label:'2024',val:byYear[2024].m,color:'#9B2540'},
+    {label:'2025',val:byYear[2025].m,color:'#2C7A4E'},
+    {label:'2026',val:byYear[2026].m,color:'#2558A8'},
+  ],{height:180});
+
+  donutChart('chart-origen',[
+    {label:'Estatal',val:byOrigen.ESTATAL,color:'#6B3AA0'},
+    {label:'Federal',val:byOrigen.FEDERAL,color:'#2558A8'},
+    {label:'Municipal',val:byOrigen.MUNICIPAL,color:'#2C7A4E'},
+  ],'legend-origen');
+
+  const zonaData=Object.entries(byZona).sort((a,b)=>b[1]-a[1])
+    .map(([z,v],i)=>({label:'Zona '+z,val:v,color:ZCOLS[i%ZCOLS.length]}));
+  barChart('chart-zona',zonaData,{height:290,horizontal:true});
+
+  const tipoData=Object.entries(byTipo).sort((a,b)=>b[1]-a[1])
+    .map(([t,v],i)=>({label:t,val:v,color:ZCOLS[i%ZCOLS.length]}));
+  barChart('chart-tipo',tipoData,{height:290,horizontal:true});
+
+  const fuenteData=Object.entries(byFuente)
+    .filter(([k])=>k!=='Sin especificar')
+    .sort((a,b)=>b[1]-a[1]).slice(0,8)
+    .map(([t,v],i)=>({label:t,val:v,color:ZCOLS[i%ZCOLS.length]}));
+  barChart('chart-fuente',fuenteData,{height:290,horizontal:true});
+
+  // Top 10
+  const top10=[...OBRAS].sort((a,b)=>(b.monto||0)-(a.monto||0)).slice(0,10);
+  const maxM=top10[0].monto||1;
+  const ycol={2024:'#9B2540',2025:'#2C7A4E',2026:'#2558A8'};
+  const rk=['gold','silver','bronze'];
+  const md=['&#129351;','&#129352;','&#129353;'];
+  document.getElementById('top-obras-list').innerHTML=top10.map((o,i)=>`
+    <div class="top-obra-row">
+      <div class="tor-rank ${rk[i]||''}">${i<3?md[i]:i+1}</div>
+      <div class="tor-bar-wrap">
+        <div class="tor-title" title="${o.titulo}">${o.titulo}</div>
+        <div class="tor-bar-bg"><div class="tor-bar-fill" style="width:${((o.monto||0)/maxM*100).toFixed(1)}%;background:${ycol[o.year]}"></div></div>
+        <div class="tor-meta"><span>${o.zona||'Sin zona'}</span><span>${o.colonia||''}</span><span style="color:${ycol[o.year]};font-weight:700">${o.year}</span></div>
+      </div>
+      <div class="tor-monto">${fmtMS(o.monto)}</div>
+    </div>`).join('');
+
+  // Insights
+  const tot=OBRAS.reduce((s,o)=>s+(o.monto||0),0);
+  const ep=(byOrigen.ESTATAL/tot*100).toFixed(0);
+  const fp=(byOrigen.FEDERAL/tot*100).toFixed(0);
+  const mp=(byOrigen.MUNICIPAL/tot*100).toFixed(0);
+  const z7p=((byZona['7']||0)/tot*100).toFixed(0);
+  const insData=[
+    {c:'iv',t:'&#127959; Zona de Mayor Inversi&#243;n',b:`La <span class="ins-hl">Zona 7</span> concentra el <span class="ins-hl">${z7p}%</span> de toda la inversi&#243;n ($425.9M), impulsada por la Reconstrucci&#243;n del Boulevard Las Torres ($289M).`},
+    {c:'ig',t:'&#128176; Dependencia Estatal',b:`El <span class="ins-hl">${ep}%</span> de la inversi&#243;n es de origen estatal, el <span class="ins-hl">${fp}%</span> federal y <span class="ins-hl">${mp}%</span> municipal. Hay margen para diversificar fuentes.`},
+    {c:'id',t:'&#128243; Rubro Dominante',b:`La <span class="ins-hl">pavimentaci&#243;n hidr&#225;ulica</span> lidera el gasto con 14 obras y $388.9M. El drenaje pluvial ocupa el 2&#176; lugar con $194.6M en 10 obras.`},
+    {c:'ia',t:'&#128197; Aceleraci&#243;n 2025',b:`La inversi&#243;n en 2025 (<span class="ins-hl">$555.5M</span>) super&#243; en un <span class="ins-hl">77%</span> a la de 2024 ($313.7M), indicando una aceleraci&#243;n sostenida de la ejecuci&#243;n de obra.`},
+    {c:'iv',t:'&#127942; Obra Emblema',b:`La <span class="ins-hl">Reconstrucci&#243;n del Blvd. Las Torres</span> representa el <span class="ins-hl">29.8%</span> de toda la inversi&#243;n con $289M. Es la obra de mayor impacto presupuestal.`},
+    {c:'ig',t:'&#128205; Cobertura Territorial',b:`Las 65 obras atienden las <span class="ins-hl">10 zonas</span> del municipio. Las zonas 3 (3 obras) y 8 (4 obras) son las menos atendidas; oportunidad para pr&#243;ximos ejercicios.`},
+    {c:'id',t:'&#128167; FAISM: Fondo Clave',b:`El FAISM financia <span class="ins-hl">21 obras</span> (mayor n&#250;mero por fuente), con $62.5M. Es el principal instrumento para infraestructura b&#225;sica en colonias y localidades.`},
+    {c:'ia',t:'&#128679; Cartera 2026',b:`Hay <span class="ins-hl">16 proyectos</span> aprobados para 2026 por $101.9M, con &#233;nfasis en espacios p&#250;blicos y servicios b&#225;sicos. Continuidad de la pol&#237;tica de mejoramiento urbano.`},
+  ];
+  document.getElementById('insights-grid').innerHTML=insData.map(ins=>`
+    <div class="insight-card ${ins.c}">
+      <div class="ins-title">${ins.t}</div>
+      <div class="ins-body">${ins.b}</div>
+    </div>`).join('');
+}
 
 })();
 </script>

@@ -418,6 +418,167 @@ svg.chart{width:100%;overflow:visible}
   font-size:0.8rem;font-weight:700;color:var(--ink);
   box-shadow:var(--shadow);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE FIRST  (≤ 768px)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Header ── */
+  #hdr {
+    height: auto;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .hdr-text h1 { font-size: 0.95rem; }
+  .hdr-text p  { font-size: 0.58rem; }
+  .hdr-crest   { width: 34px; height: 34px; font-size: 16px; }
+  .hdr-stats   { width: 100%; justify-content: space-between; gap: 6px; }
+  .stat-pill   { flex: 1; min-width: 0; padding: 5px 6px; border-radius: 8px; }
+  .stat-pill .v { font-size: 1rem; }
+  .stat-pill .l { font-size: 0.52rem; }
+
+  /* ── Tab bar ── */
+  #tab-bar { padding: 0 10px; }
+  .tab-btn { padding: 9px 12px; font-size: 0.78rem; gap: 5px; }
+
+  /* ── MAP tab: stack sidebar on top of map ── */
+  #panel-mapa { flex-direction: column; }
+  #main       { flex-direction: column; height: auto; flex: 1; }
+
+  #sidebar {
+    width: 100%;
+    max-height: 42vh;
+    border-right: none;
+    border-bottom: 1px solid var(--gris2);
+    flex-shrink: 0;
+  }
+
+  /* Collapse layer controls into a horizontal scrollable strip */
+  .lyr-grid {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 5px;
+    padding-bottom: 2px;
+    flex-wrap: nowrap;
+  }
+  .lyr-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    padding: 6px 9px;
+  }
+  .lyr-n { display: none; }
+
+  /* Filters */
+  .sb-block { padding: 10px 12px; }
+  .sb-label { font-size: 0.58rem; margin-bottom: 7px; }
+  .f-btn    { font-size: 0.68rem; padding: 5px 3px; }
+  .fuente-select { font-size: 0.75rem; padding: 7px 28px 7px 10px; }
+
+  /* Obras list: smaller cards */
+  #obras-list { padding: 6px 8px 8px; }
+  .yr-group-hdr { font-size: 0.6rem; padding: 3px 8px; margin: 6px 0 4px; }
+  .obra-card   { padding: 8px 10px; margin-bottom: 5px; }
+  .oc-title    { font-size: 0.68rem; }
+  .oc-loc      { font-size: 0.6rem; }
+  .oc-tipo-badge { font-size: 0.55rem; padding: 1px 6px; }
+  .oc-monto    { font-size: 0.75rem; }
+
+  /* Map fills remaining space */
+  #map-wrap { flex: 1; min-height: 280px; }
+
+  /* Legend smaller, reposition */
+  #legend {
+    bottom: 10px; left: 8px;
+    padding: 8px 10px;
+    max-width: 130px;
+  }
+  #legend h4    { font-size: 0.56rem; }
+  .lg-lbl       { font-size: 0.62rem; }
+
+  /* Leaflet popup wider on mobile */
+  .leaflet-popup-content-wrapper {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+  .leaflet-popup-content {
+    min-width: 0 !important;
+  }
+  .opm-grid { grid-template-columns: 1fr; }
+  .opm-monto-bar { flex-direction: column; }
+  .opm-monto-cell { padding: 10px 16px; }
+  .opm-banner  { padding: 16px 16px 12px; }
+  .opm-title   { font-size: 0.92rem; }
+  .opm-body    { padding: 14px 16px 16px; max-height: 45vh; }
+
+  /* ── INFORME tab ── */
+  #informe-wrap { padding: 16px 14px 32px; }
+
+  .inf-kpi-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .inf-kpi:last-child { grid-column: 1 / -1; }
+  .ik-val  { font-size: 1.3rem; }
+  .ik-lbl  { font-size: 0.58rem; }
+  .ik-icon { font-size: 1.1rem; }
+
+  .inf-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .inf-card,
+  .inf-card.wide,
+  .inf-card.wider,
+  .inf-card.full {
+    min-width: 0;
+    width: 100%;
+    padding: 16px 14px;
+  }
+  .ic-title { font-size: 0.85rem; }
+  .ic-sub   { font-size: 0.68rem; margin-bottom: 12px; }
+
+  /* Charts: shorter on mobile */
+  .chart-wrap.tall { min-height: 200px; }
+
+  /* Top obras */
+  .tor-title  { font-size: 0.72rem; }
+  .tor-monto  { font-size: 0.78rem; min-width: 66px; }
+  .tor-meta   { font-size: 0.6rem; }
+  .tor-rank   { font-size: 0.95rem; width: 24px; }
+
+  /* Insights: single column */
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+  .ins-title { font-size: 0.75rem; }
+  .ins-body  { font-size: 0.72rem; }
+
+  /* Year legend */
+  .year-legend { gap: 8px; }
+  .year-legend span { font-size: 0.66rem; }
+
+  /* Chart legend */
+  .cl-lbl { font-size: 0.66rem; }
+  .cl-val { font-size: 0.66rem; }
+
+  /* Detail popup / layer popups */
+  .lp-title { font-size: 0.88rem; }
+  .lp-row   { font-size: 0.74rem; }
+  .rent-badge { font-size: 0.58rem; padding: 1px 6px; }
+}
+
+/* ── Very small phones (≤ 380px) ── */
+@media (max-width: 380px) {
+  .hdr-stats { gap: 4px; }
+  .stat-pill .v { font-size: 0.88rem; }
+  .tab-btn      { font-size: 0.7rem; padding: 8px 10px; }
+  .inf-kpi-strip { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ik-val  { font-size: 1.1rem; }
+}
 </style>
 </head>
 <body>

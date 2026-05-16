@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Colonias Prioritarias 2026 · Mineral de la Reforma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{
+  --vino:#7B1D2E;--vino-d:#5C1522;--vino-m:#9B2540;--vino-l:#C4546A;--vino-xl:#F5E8EB;--vino-xxl:#FDF3F5;
+  --dorado:#A8711A;--dorado-l:#D4A840;--dorado-xl:#FBF3E2;--dorado-m:#C48C20;
+  --verde:#1B6640;--verde-l:#3D9960;--verde-xl:#E6F3EC;
+  --azul:#1A4A96;--azul-l:#4878CC;--azul-xl:#EBF1FB;
+  --naranja:#C4560A;--naranja-xl:#FEF0E8;
+  --morado:#5B2D8E;--morado-xl:#F0EBF8;
+  --gris0:#FAF8F5;--gris1:#F2EFE9;--gris2:#E4DFD7;--gris3:#C8C0B5;--gris4:#968D82;--gris5:#5C5650;
+  --ink:#1A1714;--white:#FFF;
+  --font:'Montserrat',sans-serif;
+  --serif:'Playfair Display',serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--gris0);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5;}
+
+/* ═══════════════════════════════════════════
+   HERO / FICHA GENERAL EJECUTIVA
+═══════════════════════════════════════════ */
+.hero{
+  background:var(--vino-d);
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  position:relative;overflow:hidden;
+}
+/* Atmospheric layers */
+.hero-bg1{position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 60% 20%,rgba(168,113,26,.22) 0%,transparent 55%),radial-gradient(ellipse 50% 80% at 10% 90%,rgba(123,29,46,.4) 0%,transparent 55%),radial-gradient(ellipse 40% 50% at 95% 75%,rgba(26,74,150,.15) 0%,transparent 50%);pointer-events:none;}
+.hero-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,.025) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,.025) 60px);pointer-events:none;}
+.hero-stripe{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--dorado),var(--dorado-l),var(--dorado));opacity:.7;}
+
+/* Topbar */
+.hero-top{display:flex;align-items:center;justify-content:space-between;padding:28px 56px;position:relative;z-index:3;}
+.brand{display:flex;align-items:center;gap:14px;}
+.brand-icon{width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.brand-text .b1{font-size:.95rem;font-weight:700;color:#fff;line-height:1.2;}
+.brand-text .b2{font-size:.65rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.1em;text-transform:uppercase;}
+.hero-badge{display:flex;align-items:center;gap:20px;}
+.badge-pill{padding:6px 14px;border-radius:6px;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.bp-gold{background:rgba(168,113,26,.25);border:1px solid rgba(212,168,64,.35);color:var(--dorado-l);}
+.bp-year{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);}
+
+/* Hero body — two-column */
+.hero-body{
+  display:grid;grid-template-columns:1fr 520px;
+  gap:40px;align-items:center;
+  padding:20px 56px 40px;
+  position:relative;z-index:3;
+}
+/* Left: title block */
+.hero-left{}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:30px;padding:5px 14px;margin-bottom:22px;}
+.hero-tag-pulse{width:6px;height:6px;border-radius:50%;background:var(--dorado-l);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-tag span{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);}
+.hero-h1{font-family:var(--serif);font-size:clamp(2.8rem,5vw,4.8rem);font-weight:900;color:#fff;line-height:.95;letter-spacing:-.02em;margin-bottom:6px;}
+.hero-h1 em{color:var(--dorado-l);font-style:normal;}
+.hero-byline{font-size:.92rem;color:rgba(255,255,255,.45);margin:14px 0 32px;max-width:460px;line-height:1.7;}
+
+/* KPI pills under title */
+.hero-kpi-row{display:flex;gap:0;margin-bottom:36px;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;}
+.hkpi{flex:1;padding:16px 18px;border-right:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);}
+.hkpi:last-child{border-right:none;}
+.hkpi .hv{font-size:1.8rem;font-weight:900;color:#fff;line-height:1;letter-spacing:-.03em;}
+.hkpi .hv sup{font-size:.9rem;vertical-align:super;color:var(--dorado-l);margin-left:1px;}
+.hkpi .hl{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);font-weight:600;margin-top:4px;}
+
+/* Scope chips */
+.scope-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.sc{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;}
+.sc-ico{font-size:1rem;}
+.sc-text .st{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.85);}
+.sc-text .ss{font-size:.62rem;color:rgba(255,255,255,.4);margin-top:1px;}
+
+/* Right: map + mini panels */
+.hero-right{display:flex;flex-direction:column;gap:14px;}
+.map-panel{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.map-panel-hdr{padding:10px 14px;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:space-between;}
+.map-panel-hdr span{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);}
+#hero-map{height:240px;}
+.map-legend-inline{display:flex;gap:14px;padding:8px 14px;background:rgba(0,0,0,.2);}
+.mli{display:flex;align-items:center;gap:5px;font-size:.6rem;color:rgba(255,255,255,.5);}
+.mli-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* Bottom stat bar */
+.hero-bottom{
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:0 56px;
+  display:grid;grid-template-columns:repeat(7,1fr);
+  position:relative;z-index:3;
+}
+.hb-stat{
+  padding:16px 0;border-right:1px solid rgba(255,255,255,.07);
+  padding-left:24px;
+}
+.hb-stat:first-child{padding-left:0;}
+.hb-stat:last-child{border-right:none;}
+.hb-ico{font-size:.85rem;margin-bottom:4px;}
+.hb-val{font-size:1.2rem;font-weight:900;color:#fff;line-height:1;letter-spacing:-.02em;}
+.hb-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);font-weight:600;margin-top:2px;}
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+.snav{
+  position:sticky;top:0;z-index:200;
+  background:var(--vino-d);border-bottom:2px solid rgba(196,84,106,.3);
+  height:48px;display:flex;align-items:center;
+  padding:0 40px;gap:0;
+  box-shadow:0 2px 20px rgba(92,21,34,.5);
+}
+.snav-brand{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.5);margin-right:32px;letter-spacing:.03em;}
+.snav-link{height:48px;display:flex;align-items:center;padding:0 14px;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;}
+.snav-link:hover,.snav-link.on{color:#fff;border-bottom-color:var(--dorado-l);}
+.snav-sep{color:rgba(255,255,255,.1);font-size:.7rem;padding:0 4px;}
+
+/* ═══════════════════════════════════════════
+   RESUMEN SECTION
+═══════════════════════════════════════════ */
+.resumen{padding:48px 56px 56px;background:var(--white);}
+.sec-eyebrow{font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--vino-m);display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sec-eyebrow::before{content:'';width:16px;height:2px;background:var(--vino-m);border-radius:2px;}
+.sec-title{font-family:var(--serif);font-size:2rem;font-weight:900;color:var(--ink);margin-bottom:6px;}
+.sec-sub{font-size:.8rem;color:var(--gris4);margin-bottom:40px;max-width:580px;}
+
+/* Two-column layout: map | panels */
+.resumen-grid{display:grid;grid-template-columns:1fr 400px;gap:28px;align-items:start;}
+
+/* Map card */
+.mcard{background:var(--white);border-radius:14px;overflow:hidden;border:1px solid var(--gris2);box-shadow:0 2px 16px rgba(26,23,20,.07);}
+.mcard-hdr{padding:14px 18px;border-bottom:1px solid var(--gris2);display:flex;align-items:center;gap:8px;}
+.mcard-hdr h3{font-size:.78rem;font-weight:700;color:var(--ink);}
+.mcard-hdr em{font-size:.68rem;color:var(--gris4);font-style:normal;margin-left:auto;}
+#overview-map{height:440px;}
+
+/* Right column stacked panels */
+.resumen-panels{display:flex;flex-direction:column;gap:16px;}
+
+/* Panel base */
+.rpanel{background:var(--white);border-radius:12px;border:1px solid var(--gris2);overflow:hidden;box-shadow:0 2px 10px rgba(26,23,20,.05);}
+.rpanel-hdr{padding:11px 16px;background:var(--gris0);border-bottom:1px solid var(--gris2);display:flex;align-items:center;gap:7px;}
+.rpanel-hdr h4{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--gris5);}
+
+/* ─── Rentabilidad: compact 2-col grid ─── */
+.rent-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.rg-item{
+  display:flex;align-items:center;gap:0;
+  padding:8px 12px;border-bottom:1px solid var(--gris1);border-right:1px solid var(--gris1);
+}
+.rg-item:nth-child(even){border-right:none;}
+.rg-item:nth-last-child(-n+2){border-bottom:none;}
+.rg-num{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:900;color:var(--gris4);background:var(--gris1);
+  margin-right:8px;
+}
+.rg-name{font-size:.7rem;font-weight:600;color:var(--ink);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rg-badge{font-size:.55rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:10px;flex-shrink:0;margin-left:4px;}
+.r-alta{background:#E6F3EC;color:#1B6640;}
+.r-media{background:#EBF1FB;color:#1A4A96;}
+.r-baja{background:var(--vino-xl);color:var(--vino-m);}
+.r-mix{background:var(--dorado-xl);color:var(--dorado);}
+.r-nd{background:var(--gris1);color:var(--gris4);}
+
+/* ─── Obras: compact list ─── */
+.obras-compact{display:flex;flex-direction:column;gap:0;}
+.oc-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:9px 14px;border-bottom:1px solid var(--gris1);
+}
+.oc-item:last-child{border-bottom:none;}
+.oc-icon{
+  width:28px;height:28px;border-radius:7px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:1px;
+}
+.oc-body{flex:1;min-width:0;}
+.oc-tipo{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--dorado);margin-bottom:1px;}
+.oc-titulo{font-size:.71rem;font-weight:600;color:var(--ink);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.oc-meta{display:flex;align-items:center;gap:6px;margin-top:3px;}
+.oc-monto{font-size:.7rem;font-weight:800;color:var(--verde);}
+.oc-origen{font-size:.56rem;font-weight:800;padding:1px 6px;border-radius:8px;text-transform:uppercase;letter-spacing:.05em;}
+.om{background:var(--vino-xl);color:var(--vino-m);}
+.oe{background:var(--azul-xl);color:var(--azul);}
+.of{background:var(--verde-xl);color:var(--verde);}
+.oc-col{font-size:.62rem;color:var(--gris4);}
+
+/* ═══════════════════════════════════════════
+   CARDS SECTION
+═══════════════════════════════════════════ */
+.cards-wrap{padding:48px 56px 80px;background:var(--gris0);}
+.cards-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;}
+.cards-hdr-right{font-size:.68rem;color:var(--gris4);text-align:right;line-height:1.7;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:22px;}
+
+/* ═══════════════════════════════════════════
+   CARD
+═══════════════════════════════════════════ */
+.card{background:var(--white);border-radius:16px;border:1px solid var(--gris2);box-shadow:0 2px 12px rgba(26,23,20,.06);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(26,23,20,.12),0 0 0 1px rgba(196,84,106,.15);}
+
+/* Card header */
+.chdr{padding:20px 22px 16px;position:relative;overflow:hidden;}
+.chdr-glow{position:absolute;inset:0;background:linear-gradient(135deg,rgba(123,29,46,.05),transparent 60%);pointer-events:none;}
+.cnum{position:absolute;top:12px;right:16px;font-family:var(--serif);font-size:3.8rem;font-weight:900;color:rgba(196,84,106,.1);line-height:1;pointer-events:none;user-select:none;}
+.cmacro{display:inline-flex;align-items:center;gap:4px;font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--vino-xl);color:var(--vino-m);margin-bottom:8px;}
+.cmacro.mz9{background:var(--dorado-xl);color:var(--dorado);}
+.cname{font-family:var(--serif);font-size:1.4rem;font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:6px;}
+.cmeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.ctype{font-size:.65rem;color:var(--gris4);font-weight:500;}
+.cbadge{font-size:.58rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:10px;}
+
+/* KPI row */
+.ckrow{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--gris2);border-bottom:1px solid var(--gris2);}
+.ck{padding:12px 10px;text-align:center;border-right:1px solid var(--gris2);}
+.ck:last-child{border-right:none;}
+.ck .cv{font-size:1.2rem;font-weight:900;line-height:1;letter-spacing:-.02em;color:var(--vino-d);}
+.ck .cv.g{color:var(--verde);}
+.ck .cv.d{color:var(--dorado);}
+.ck .cv.nd{font-size:.75rem;font-weight:500;color:var(--gris3);}
+.ck .cl{font-size:.56rem;text-transform:uppercase;letter-spacing:.07em;color:var(--gris4);font-weight:700;margin-top:2px;}
+
+/* Card body */
+.cbody{padding:18px 22px;flex:1;display:flex;flex-direction:column;gap:16px;}
+
+/* Bar set */
+.bars-set{display:flex;flex-direction:column;gap:8px;}
+.brow{display:flex;flex-direction:column;gap:3px;}
+.brow-label{display:flex;justify-content:space-between;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gris5);}
+.brow-label .bval{color:var(--vino-m);font-size:.72rem;}
+.btrack{height:5px;background:var(--gris1);border-radius:3px;overflow:hidden;}
+.bfill{height:100%;border-radius:3px;}
+.bf-v{background:linear-gradient(90deg,var(--vino-m),var(--vino-l));}
+.bf-d{background:linear-gradient(90deg,var(--dorado),var(--dorado-l));}
+.bf-g{background:linear-gradient(90deg,var(--verde),var(--verde-l));}
+
+/* Block header */
+.blk-hdr{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gris4);display:flex;align-items:center;gap:5px;padding-bottom:7px;border-bottom:1px solid var(--gris1);}
+
+/* Secciones table */
+.stbl{width:100%;border-collapse:collapse;}
+.stbl th{font-size:.56rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--gris4);padding:5px 8px;border-bottom:1px solid var(--gris2);background:var(--gris0);text-align:left;}
+.stbl th:last-child{text-align:center;}
+.stbl td{font-size:.7rem;padding:6px 8px;border-bottom:1px solid var(--gris1);vertical-align:middle;}
+.stbl tr:last-child td{border:none;}
+.s-sec{font-weight:800;color:var(--azul);font-variant-numeric:tabular-nums;}
+.s-ln{font-weight:600;font-variant-numeric:tabular-nums;}
+.s-meta{color:var(--gris4);}
+td.rc{text-align:center;}
+.no-sec{font-size:.7rem;color:var(--gris3);font-style:italic;padding:10px 0;text-align:center;}
+
+/* Casillas block */
+.casillas-bar{
+  display:flex;align-items:center;gap:14px;
+  background:var(--vino-xxl);border:1px solid var(--vino-xl);
+  border-radius:10px;padding:11px 14px;
+}
+.casillas-n{font-family:var(--serif);font-size:2.2rem;font-weight:900;color:var(--vino-m);line-height:1;}
+.casillas-info .ci-label{font-size:.72rem;font-weight:700;color:var(--vino-m);}
+.casillas-info .ci-sec{font-size:.63rem;color:var(--gris4);margin-top:1px;}
+.no-casillas{font-size:.68rem;color:var(--gris3);font-style:italic;background:var(--gris0);border:1px solid var(--gris2);border-radius:8px;padding:8px 12px;text-align:center;}
+
+/* Escuelas */
+.esc-list{display:flex;flex-direction:column;gap:7px;}
+.esc-item{border-radius:9px;overflow:hidden;border:1px solid var(--gris2);}
+.esc-item-hdr{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--gris0);}
+.esc-nombre{font-size:.75rem;font-weight:700;color:var(--ink);flex:1;}
+.esc-nivel{font-size:.56rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:10px;}
+.en-pre{background:var(--naranja-xl);color:var(--naranja);}
+.en-pri{background:var(--azul-xl);color:var(--azul);}
+.en-sec{background:var(--morado-xl);color:var(--morado);}
+.esc-acts{display:flex;flex-wrap:wrap;gap:4px;padding:7px 12px;background:var(--white);}
+.eact{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--dorado-xl);color:var(--dorado-m);}
+.eact::before{content:'✓ ';}
+.no-acts{font-size:.62rem;color:var(--gris3);font-style:italic;}
+.no-esc{font-size:.68rem;color:var(--gris3);font-style:italic;background:var(--gris0);border:1px solid var(--gris2);border-radius:8px;padding:8px 12px;text-align:center;}
+
+/* Obras */
+.obra-items{display:flex;flex-direction:column;gap:7px;}
+.obra-item{border-radius:9px;overflow:hidden;border:1px solid var(--gris2);}
+.obra-item-hdr{display:flex;align-items:center;gap:9px;padding:9px 12px;}
+.obra-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.obra-tipo-lbl{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;}
+.obra-titulo-txt{font-size:.73rem;font-weight:600;color:var(--ink);line-height:1.3;}
+.obra-item-ftr{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-top:1px solid var(--gris1);}
+.obra-monto-v{font-size:.82rem;font-weight:900;color:var(--verde);}
+.obra-monto-l{font-size:.58rem;text-transform:uppercase;letter-spacing:.07em;color:var(--gris4);}
+.no-obra{font-size:.68rem;color:var(--gris3);font-style:italic;background:var(--gris0);border:1px solid var(--gris2);border-radius:8px;padding:8px 12px;text-align:center;}
+
+/* Card footer */
+.cftr{background:var(--gris0);border-top:1px solid var(--gris2);padding:9px 22px;display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+.cfi{font-size:.63rem;color:var(--gris5);padding:2px 12px;border-right:1px solid var(--gris2);}
+.cfi:first-child{padding-left:0;}
+.cfi:last-child{border-right:none;}
+.cfi strong{font-weight:800;color:var(--ink);}
+.cfi.money strong{color:var(--verde);}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HERO — FICHA GENERAL EJECUTIVA
+══════════════════════════════════════════════ -->
+<section class="hero" id="inicio">
+  <div class="hero-bg1"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-stripe"></div>
+
+  <!-- Top bar -->
+  <div class="hero-top">
+    <div class="brand">
+      <div class="brand-icon">⛏️</div>
+      <div class="brand-text">
+        <div class="b1">Mineral de la Reforma</div>
+        <div class="b2">Hidalgo · México</div>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <span class="badge-pill bp-gold">Intervención Territorial Prioritaria</span>
+      <span class="badge-pill bp-year">Ejercicio 2026</span>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="hero-body">
+    <!-- Left -->
+    <div class="hero-left">
+      <div class="hero-tag">
+        <div class="hero-tag-pulse"></div>
+        <span>Diagnóstico Ejecutivo · Presidencia Municipal</span>
+      </div>
+      <h1 class="hero-h1">14 Colonias<br><em>Prioritarias</em></h1>
+      <p class="hero-byline">Fichas de diagnóstico territorial integradas para la toma de decisiones del Presidente Municipal y Gabinete de Secretarios — con obras, alumbrado, escuelas, secciones electorales y actividad económica.</p>
+
+      <div class="hero-kpi-row">
+        <div class="hkpi"><div class="hv">14</div><div class="hl">Colonias prioritarias</div></div>
+        <div class="hkpi"><div class="hv">~41<sup>k</sup></div><div class="hl">Habitantes</div></div>
+        <div class="hkpi"><div class="hv">$245<sup>M</sup></div><div class="hl">Inversión obras</div></div>
+        <div class="hkpi"><div class="hv">51</div><div class="hl">Casillas electorales</div></div>
+        <div class="hkpi"><div class="hv">7</div><div class="hl">Escuelas activas</div></div>
+      </div>
+
+      <div class="scope-chips">
+        <div class="sc"><span class="sc-ico">🏗️</span><div class="sc-text"><div class="st">Obras & Alumbrado</div><div class="ss">Pavimentación · Parques · Edificación · Alumbrado</div></div></div>
+        <div class="sc"><span class="sc-ico">🏫</span><div class="sc-text"><div class="st">7 escuelas con actividades</div><div class="ss">Braille · Robótica · Mochila Viajera · STEM</div></div></div>
+        <div class="sc"><span class="sc-ico">🗳️</span><div class="sc-text"><div class="st">Análisis electoral</div><div class="ss">Secciones · Lista nominal · Rentabilidad</div></div></div>
+        <div class="sc"><span class="sc-ico">🏪</span><div class="sc-text"><div class="st">1,014 negocios DENUE</div><div class="ss">2,778 empleos generados en las colonias</div></div></div>
+      </div>
+    </div>
+
+    <!-- Right: map -->
+    <div class="hero-right">
+      <div class="map-panel">
+        <div class="map-panel-hdr">
+          <span>📍 Distribución territorial · Macrozona 2 (Centro)</span>
+          <span style="color:rgba(255,255,255,.3);font-size:.6rem;">Color = rentabilidad electoral</span>
+        </div>
+        <div id="hero-map"></div>
+        <div class="map-legend-inline">
+          <div class="mli"><div class="mli-dot" style="background:#1B6640"></div>Rentabilidad Alta</div>
+          <div class="mli"><div class="mli-dot" style="background:#1A4A96"></div>Media</div>
+          <div class="mli"><div class="mli-dot" style="background:#9B2540"></div>Baja</div>
+          <div class="mli"><div class="mli-dot" style="background:#A8711A"></div>Mix</div>
+          <div class="mli" style="margin-left:auto"><div class="mli-dot" style="background:none;border:1.5px dashed #D4A840;width:9px;height:9px;border-radius:50%;"></div>Con obra</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom stat bar -->
+  <div class="hero-bottom">
+    <div class="hb-stat"><div class="hb-ico">👥</div><div class="hb-val">34,920</div><div class="hb-lbl">Hab. con censo</div></div>
+    <div class="hb-stat"><div class="hb-ico">🏠</div><div class="hb-val">9,764</div><div class="hb-lbl">Viviendas</div></div>
+    <div class="hb-stat"><div class="hb-ico">📚</div><div class="hb-val">10.2</div><div class="hb-lbl">Grado esc. prom.</div></div>
+    <div class="hb-stat"><div class="hb-ico">🌐</div><div class="hb-val">~89%</div><div class="hb-lbl">Internet en viv.</div></div>
+    <div class="hb-stat"><div class="hb-ico">🏪</div><div class="hb-val">1,014</div><div class="hb-lbl">Negocios DENUE</div></div>
+    <div class="hb-stat"><div class="hb-ico">💡</div><div class="hb-val">1</div><div class="hb-lbl">Obra alumbrado</div></div>
+    <div class="hb-stat"><div class="hb-ico">🗳️</div><div class="hb-val">30+</div><div class="hb-lbl">Secciones electorales</div></div>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════ -->
+<nav class="snav">
+  <span class="snav-brand">Mineral de la Reforma · 14 Colonias Prioritarias 2026</span>
+  <a class="snav-link" href="#resumen">Resumen</a>
+  <span class="snav-sep">|</span>
+  <a class="snav-link" href="#fichas">Fichas</a>
+</nav>
+
+<!-- ══ RESUMEN ════════════════════════════════════ -->
+<section class="resumen" id="resumen">
+  <div class="sec-eyebrow">Panorama general</div>
+  <h2 class="sec-title">Universo de Intervención</h2>
+  <p class="sec-sub">Indicadores agregados de las 14 colonias prioritarias. Fuente: INEGI Censo 2020, DENUE 2024, INE, Catálogo de Obras MR 2025–2026.</p>
+
+  <div class="resumen-grid">
+    <!-- Map -->
+    <div class="mcard">
+      <div class="mcard-hdr">
+        <span>📍</span>
+        <h3>Macrozona 2 — Centro · 13 colonias concentradas</h3>
+        <em>Tulipanes: MZ 9 · Ext.</em>
+      </div>
+      <div id="overview-map"></div>
+    </div>
+
+    <!-- Right panels -->
+    <div class="resumen-panels">
+
+      <!-- Rentabilidad: compact 2-col grid -->
+      <div class="rpanel">
+        <div class="rpanel-hdr">
+          <span>🗳️</span>
+          <h4>Rentabilidad Electoral por Colonia</h4>
+        </div>
+        <div class="rent-grid" id="rent-grid"></div>
+      </div>
+
+      <!-- Obras: compact list with icon -->
+      <div class="rpanel">
+        <div class="rpanel-hdr">
+          <span>🏗️</span>
+          <h4>Obras Registradas en Colonias Prioritarias</h4>
+        </div>
+        <div class="obras-compact" id="obras-compact"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ FICHAS ═════════════════════════════════════ -->
+<section class="cards-wrap" id="fichas">
+  <div class="cards-hdr">
+    <div>
+      <div class="sec-eyebrow">Diagnóstico detallado</div>
+      <h2 class="sec-title">Fichas por Colonia</h2>
+    </div>
+    <div class="cards-hdr-right">
+      Fuentes: INEGI Censo 2020 · DENUE · INE · Catálogo Obras MR<br>
+      <strong>14 colonias prioritarias · Ejercicio 2026</strong>
+    </div>
+  </div>
+  <div class="cards-grid" id="cards"></div>
+</section>
+
+<script>
+/* ═══ DATA ════════════════════════════════════════════════ */
+const DATA = [
+  {id:1,label:"Los Tuzos",macro:"2",caracter:"Fraccionamiento",area_ha:49.8,
+   poblacion:7480,pob_fem:3840,pob_mas:3640,viviendas:2056,hogares:2100,
+   pct_internet:90,grado:10.2,marginacion:"Muy bajo",negocios:235,empleados:578,
+   centroid:{lat:20.053618,lon:-98.758113},
+   secciones:[{s:1740,ln:708,meta:259,r:"BAJA"},{s:1742,ln:824,meta:350,r:"BAJA"},{s:1745,ln:938,meta:359,r:"MEDIA"},{s:1746,ln:693,meta:296,r:"BAJA"},{s:1748,ln:956,meta:363,r:"MEDIA"},{s:1749,ln:677,meta:245,r:"MEDIA"}],
+   casillas:9,
+   escuelas:[{n:"Itzamná",nivel:"Primaria",acts:["Extensiones Bibliotecarias","Taller de Braille","Taller de Robótica"]}],
+   obras:[{tipo:"PARQUE",titulo:"Construcción de Parque en Fraccionamiento Los Tuzos",monto:14113968,origen:"MUNICIPAL",ico:"🌳",bg:"#E6F3EC",tc:"#1B6640"}]},
+
+  {id:2,label:"Forjadores de Pachuca",macro:"2",caracter:"Fraccionamiento",area_ha:22.8,
+   poblacion:8640,pob_fem:4436,pob_mas:4204,viviendas:2395,hogares:2445,
+   pct_internet:89,grado:10.2,marginacion:"Muy bajo",negocios:186,empleados:518,
+   centroid:{lat:20.05622,lon:-98.764834},
+   secciones:[{s:1735,ln:622,meta:207,r:"BAJA"},{s:1737,ln:782,meta:276,r:"BAJA"},{s:1738,ln:687,meta:268,r:"BAJA"},{s:1741,ln:817,meta:313,r:"BAJA"},{s:1743,ln:652,meta:231,r:"BAJA"},{s:1744,ln:944,meta:358,r:"BAJA"}],
+   casillas:0,escuelas:[],
+   obras:[{tipo:"PAVIMENTACIÓN + DRENAJE",titulo:"Pavimento hidráulico · Sustitución líneas de drenaje sanitario y agua potable — Calle Resplandor",monto:9726846,origen:"MUNICIPAL",ico:"🛣️",bg:"#EBF1FB",tc:"#1A4A96"}]},
+
+  {id:3,label:"Tulipanes",macro:"9",caracter:"Fraccionamiento",area_ha:null,
+   poblacion:5640,pob_fem:2896,pob_mas:2744,viviendas:1563,hogares:1597,
+   pct_internet:89,grado:10.2,marginacion:"Muy bajo",negocios:null,empleados:null,
+   centroid:{lat:20.048,lon:-98.780},
+   secciones:[],casillas:0,escuelas:[],
+   obras:[{tipo:"PAVIMENTACIÓN ASFÁLTICA",titulo:"Reconstrucción de Pavimento en Boulevard Nuevo Hidalgo",monto:58131627,origen:"ESTATAL",ico:"🛣️",bg:"#EBF1FB",tc:"#1A4A96"}]},
+
+  {id:4,label:"Cipreses",macro:"2",caracter:"Fraccionamiento",area_ha:13.6,
+   poblacion:5820,pob_fem:2989,pob_mas:2831,viviendas:1614,hogares:1648,
+   pct_internet:89,grado:10.1,marginacion:"Muy bajo",negocios:128,empleados:371,
+   centroid:{lat:20.05851,lon:-98.767633},
+   secciones:[{s:1734,ln:405,meta:181,r:"BAJA"},{s:1735,ln:622,meta:207,r:"BAJA"},{s:1738,ln:687,meta:268,r:"BAJA"}],
+   casillas:10,
+   escuelas:[{n:"Sec. Gral. N°2 «Jaime Sabines»",nivel:"Secundaria",acts:["Lunes Cívico","Conferencia Socioemocional","Taller de Robótica","Rally Niñas STEM","Feria Vocacional","Impresión 3D"]}],
+   obras:[]},
+
+  {id:5,label:"Rinconada del Venado",macro:"2",caracter:"Fraccionamiento",area_ha:8.8,
+   poblacion:null,pob_fem:null,pob_mas:null,viviendas:null,hogares:null,
+   pct_internet:null,grado:null,marginacion:null,negocios:15,empleados:42,
+   centroid:{lat:20.063229,lon:-98.763209},
+   secciones:[{s:1721,ln:860,meta:345,r:"BAJA"},{s:1725,ln:730,meta:252,r:"BAJA"}],
+   casillas:0,escuelas:[],obras:[]},
+
+  {id:6,label:"Magisterio Digno",macro:"2",caracter:"Fraccionamiento",area_ha:16.2,
+   poblacion:5820,pob_fem:2989,pob_mas:2831,viviendas:1614,hogares:1648,
+   pct_internet:89,grado:10.1,marginacion:"Muy bajo",negocios:72,empleados:234,
+   centroid:{lat:20.057201,lon:-98.769734},
+   secciones:[{s:1716,ln:1437,meta:556,r:"BAJA"}],
+   casillas:0,
+   escuelas:[
+     {n:"Profa. Carlota Rosado Bosque",nivel:"Preescolar",acts:["Taller de Robótica","Mochila Viajera"]},
+     {n:"Magisterio Digno",nivel:"Primaria",acts:["Taller de Braille","Explora Ciencia con tus Sentidos"]},
+     {n:"Maria Luisa Cerecedo Pedraza",nivel:"Primaria",acts:[]}
+   ],
+   obras:[]},
+
+  {id:7,label:"Real de San Francisco",macro:"2",caracter:"Fraccionamiento",area_ha:3.8,
+   poblacion:null,pob_fem:null,pob_mas:null,viviendas:null,hogares:null,
+   pct_internet:null,grado:null,marginacion:null,negocios:10,empleados:38,
+   centroid:{lat:20.053112,lon:-98.767074},
+   secciones:[{s:1743,ln:652,meta:231,r:"BAJA"}],
+   casillas:0,escuelas:[],obras:[]},
+
+  {id:8,label:"El Roble",macro:"2",caracter:"Fraccionamiento",area_ha:7.4,
+   poblacion:null,pob_fem:null,pob_mas:null,viviendas:null,hogares:null,
+   pct_internet:null,grado:null,marginacion:null,negocios:70,empleados:140,
+   centroid:{lat:20.058672,lon:-98.757459},
+   secciones:[{s:1730,ln:607,meta:223,r:"BAJA"},{s:1736,ln:760,meta:308,r:"BAJA"}],
+   casillas:3,escuelas:[],
+   obras:[{tipo:"PAVIMENTACIÓN HIDRÁULICA",titulo:"Pavimentación en calle El Roble y Av. de Los Sabinos",monto:5952795,origen:"ESTATAL",ico:"🛣️",bg:"#EBF1FB",tc:"#1A4A96"}]},
+
+  {id:9,label:"San José",macro:"2",caracter:"Fraccionamiento",area_ha:null,
+   poblacion:null,pob_fem:null,pob_mas:null,viviendas:null,hogares:null,
+   pct_internet:null,grado:null,marginacion:null,negocios:null,empleados:null,
+   centroid:{lat:20.051,lon:-98.762},
+   secciones:[],casillas:0,escuelas:[],
+   obras:[
+     {tipo:"PAVIMENTACIÓN HIDRÁULICA",titulo:"Reconstrucción pavimento hidráulico — Blvd. San Carlos",monto:21524769,origen:"ESTATAL",ico:"🛣️",bg:"#EBF1FB",tc:"#1A4A96"},
+     {tipo:"EDIFICACIÓN",titulo:"Mejoramiento del Instituto de Formación Profesional",monto:2923881,origen:"ESTATAL",ico:"🏛️",bg:"#F0EBF8",tc:"#5B2D8E"},
+     {tipo:"PAVIMENTACIÓN ASFÁLTICA",titulo:"Reconstrucción asfáltica — Camino a La Calera",monto:11523444,origen:"ESTATAL",ico:"🛣️",bg:"#EBF1FB",tc:"#1A4A96"},
+     {tipo:"EDIFICACIÓN",titulo:"Ampliación Centro Estatal de Evaluación y Control de Confianza",monto:496481,origen:"ESTATAL",ico:"🏛️",bg:"#F0EBF8",tc:"#5B2D8E"},
+     {tipo:"EDIFICACIÓN",titulo:"Construcción módulo de 2 plantas — Palma Gorda",monto:9954951,origen:"ESTATAL",ico:"🏛️",bg:"#F0EBF8",tc:"#5B2D8E"},
+     {tipo:"ALUMBRADO",titulo:"Alumbrado de Canchas Deportivas y Pista de Manejo — IFP",monto:1653839,origen:"ESTATAL",ico:"💡",bg:"#FBF3E2",tc:"#A8711A"}
+   ]},
+
+  {id:10,label:"Quinta Bonita",macro:"2",caracter:"Fraccionamiento",area_ha:4.4,
+   poblacion:null,pob_fem:null,pob_mas:null,viviendas:null,hogares:null,
+   pct_internet:null,grado:null,marginacion:null,negocios:20,empleados:58,
+   centroid:{lat:20.064375,lon:-98.770761},
+   secciones:[{s:1722,ln:738,meta:251,r:"BAJA"},{s:1723,ln:657,meta:208,r:"BAJA"}],
+   casillas:1,escuelas:[],obras:[]},
+
+  {id:11,label:"Las Flores",macro:"2",caracter:"Fraccionamiento",area_ha:4.6,
+   poblacion:null,pob_fem:null,pob_mas:null,viviendas:null,hogares:null,
+   pct_internet:null,grado:null,marginacion:null,negocios:9,empleados:18,
+   centroid:{lat:20.049174,lon:-98.763849},
+   secciones:[{s:1747,ln:829,meta:354,r:"MEDIA"}],
+   casillas:2,escuelas:[],obras:[]},
+
+  {id:12,label:"Los Pinos",macro:"2",caracter:"Fraccionamiento",area_ha:5.0,
+   poblacion:2960,pob_fem:1520,pob_mas:1440,viviendas:820,hogares:838,
+   pct_internet:89,grado:10.1,marginacion:"Muy bajo",negocios:99,empleados:326,
+   centroid:{lat:20.060457,lon:-98.772426},
+   secciones:[{s:1731,ln:423,meta:173,r:"BAJA"}],
+   casillas:1,escuelas:[],obras:[]},
+
+  {id:13,label:"La Colonia",macro:"2",caracter:"Fraccionamiento",area_ha:25.5,
+   poblacion:null,pob_fem:null,pob_mas:null,viviendas:null,hogares:null,
+   pct_internet:null,grado:null,marginacion:null,negocios:153,empleados:565,
+   centroid:{lat:20.05522,lon:-98.770753},
+   secciones:[{s:1717,ln:2540,meta:948,r:"BAJA"}],
+   casillas:4,escuelas:[],
+   obras:[
+     {tipo:"NOMENCLATURA",titulo:"Señalética — Colonia SAHOP Chacón",monto:245268,origen:"MUNICIPAL",ico:"🪧",bg:"#FBF3E2",tc:"#A8711A"},
+     {tipo:"NOMENCLATURA",titulo:"Señalética — Colonia Unidad Minera 11 de Julio",monto:347286,origen:"MUNICIPAL",ico:"🪧",bg:"#FBF3E2",tc:"#A8711A"},
+     {tipo:"NOMENCLATURA",titulo:"Señalética — Colonia Pachuquilla",monto:142887,origen:"MUNICIPAL",ico:"🪧",bg:"#FBF3E2",tc:"#A8711A"}
+   ]},
+
+  {id:14,label:"El Venado",macro:"2",caracter:"Localidad",area_ha:45.7,
+   poblacion:4560,pob_fem:2342,pob_mas:2218,viviendas:1265,hogares:1290,
+   pct_internet:89,grado:10.1,marginacion:"Muy bajo",negocios:22,empleados:106,
+   centroid:{lat:20.063079,lon:-98.759973},
+   secciones:[{s:1719,ln:809,meta:275,r:"BAJA"},{s:1721,ln:860,meta:345,r:"BAJA"},{s:1724,ln:870,meta:335,r:"BAJA"},{s:1740,ln:708,meta:259,r:"BAJA"}],
+   casillas:12,
+   escuelas:[
+     {n:"Profa. Esperanza López Perea",nivel:"Preescolar",acts:["Taller de Robótica"]},
+     {n:"Felipe Pescador",nivel:"Primaria",acts:["Taller de Robótica"]}
+   ],
+   obras:[]}
+];
+
+/* ═══ HELPERS ═════════════════════════════════════════════ */
+const fmt = n => n==null ? '—' : Number(n).toLocaleString('es-MX');
+const money = n => {
+  if(!n) return '—';
+  if(n>=1e6) return '$'+(n/1e6).toFixed(1)+'M';
+  if(n>=1e3) return '$'+(n/1e3).toFixed(0)+'K';
+  return '$'+n.toLocaleString('es-MX');
+};
+const rentLabel = secs => {
+  if(!secs||!secs.length) return 'SIN DATO';
+  const hs = r => secs.some(s=>s.r===r);
+  if(secs.every(s=>s.r==='ALTA')) return 'ALTA';
+  if(secs.every(s=>s.r==='MEDIA')) return 'MEDIA';
+  if(secs.every(s=>s.r==='BAJA')) return 'BAJA';
+  if(hs('ALTA')) return 'ALTA';
+  if(hs('MEDIA')) return 'MEDIA/BAJA';
+  return 'BAJA';
+};
+const rentCls = l => l==='ALTA'?'r-alta':l.includes('MEDIA')?'r-media':l==='BAJA'?'r-baja':l==='SIN DATO'?'r-nd':'r-mix';
+const nivelCls = n => n==='Preescolar'?'en-pre':n==='Primaria'?'en-pri':'en-sec';
+const origCls = o => o==='MUNICIPAL'?'om':o==='ESTATAL'?'oe':'of';
+const RENT_COLOR = {ALTA:'#1B6640',MEDIA:'#1A4A96','MEDIA/BAJA':'#A8711A',BAJA:'#9B2540','SIN DATO':'#968D82'};
+
+/* ═══ MAPS ════════════════════════════════════════════════ */
+function initMap(id, height, zoom){
+  const m = L.map(id,{scrollWheelZoom:false,zoomControl:id==='overview-map'}).setView([20.059,-98.766],zoom);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; CARTO',maxZoom:19}).addTo(m);
+  return m;
+}
+const heroMap = initMap('hero-map',240,13);
+const ovMap = initMap('overview-map',440,13);
+
+DATA.forEach(d=>{
+  if(!d.centroid) return;
+  const rl = rentLabel(d.secciones);
+  const color = RENT_COLOR[rl];
+  const hasBigObra = d.obras.some(o=>o.monto>=5e6);
+  const r = d.casillas>8?14:d.casillas>4?12:d.casillas>0?10:8;
+
+  [heroMap,ovMap].forEach(m=>{
+    const mk = L.circleMarker([d.centroid.lat,d.centroid.lon],{radius:r,fillColor:color,color:'#fff',weight:2,fillOpacity:.9}).addTo(m);
+    if(hasBigObra) L.circleMarker([d.centroid.lat,d.centroid.lon],{radius:r+6,fillColor:'transparent',color:'#D4A840',weight:1.5,dashArray:'4,3',fillOpacity:0}).addTo(m);
+    mk.bindPopup(`<div style="font-family:'Montserrat',sans-serif;min-width:190px">
+      <b style="font-size:.88rem;color:#5C1522">${d.label}</b>
+      <div style="font-size:.65rem;color:#968D82;margin:2px 0 8px">MZ${d.macro} · ${d.caracter}</div>
+      <span style="background:${color}22;color:${color};font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:10px;">🗳 ${rl}</span>
+      ${d.casillas?`<span style="margin-left:4px;background:#F5E8EB;color:#9B2540;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:10px;">📋 ${d.casillas} cas.</span>`:''}
+      ${d.escuelas.length?`<span style="margin-left:4px;background:#EBF1FB;color:#1A4A96;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:10px;">🏫 ${d.escuelas.length}</span>`:''}
+      ${d.poblacion?`<div style="margin-top:7px;font-size:.7rem"><b>${fmt(d.poblacion)}</b> hab · <b>${fmt(d.viviendas)}</b> viv</div>`:''}
+      ${d.negocios?`<div style="font-size:.7rem"><b>${fmt(d.negocios)}</b> neg DENUE</div>`:''}
+      ${d.obras.length?`<div style="margin-top:6px;font-size:.62rem;color:#A8711A;font-weight:700">${d.obras.length} obra${d.obras.length>1?'s':''} · ${money(d.obras.reduce((a,o)=>a+o.monto,0))}</div>`:''}
+    </div>`);
+  });
+});
+
+/* ═══ RENT GRID ════════════════════════════════════════════ */
+const rg = document.getElementById('rent-grid');
+DATA.forEach(d=>{
+  const rl = rentLabel(d.secciones);
+  const rc = rentCls(rl);
+  const ln = d.secciones.reduce((a,s)=>a+(parseInt(String(s.ln).replace(',',''))||0),0);
+  rg.innerHTML += `<div class="rg-item">
+    <div class="rg-num">${d.id}</div>
+    <div class="rg-name" title="${d.label}">${d.label}</div>
+    <span class="rg-badge ${rc}">${rl}</span>
+  </div>`;
+});
+
+/* ═══ OBRAS COMPACT ═══════════════════════════════════════ */
+const oc = document.getElementById('obras-compact');
+let anyObra = false;
+DATA.forEach(d=>{
+  d.obras.forEach(o=>{
+    anyObra = true;
+    oc.innerHTML += `<div class="oc-item">
+      <div class="oc-icon" style="background:${o.bg}">${o.ico}</div>
+      <div class="oc-body">
+        <div class="oc-tipo">${o.tipo}</div>
+        <div class="oc-titulo">${o.titulo}</div>
+        <div class="oc-meta">
+          <span class="oc-monto">${money(o.monto)}</span>
+          <span class="oc-origen ${origCls(o.origen)}">${o.origen}</span>
+          <span class="oc-col">${d.label}</span>
+        </div>
+      </div>
+    </div>`;
+  });
+});
+if(!anyObra) oc.innerHTML='<div style="padding:14px 16px;font-size:.72rem;color:var(--gris3);font-style:italic">Sin obras registradas</div>';
+
+/* ═══ CARDS ═══════════════════════════════════════════════ */
+function card(d){
+  const rl = rentLabel(d.secciones);
+  const rc = rentCls(rl);
+  const pfp = d.poblacion ? Math.round(d.pob_fem/d.poblacion*100) : null;
+
+  /* KPI row */
+  const kpis = [
+    {v:d.poblacion?fmt(d.poblacion):'—',l:'Habitantes',c:d.poblacion?'':'nd'},
+    {v:d.viviendas?fmt(d.viviendas):'—',l:'Viviendas',c:d.viviendas?'':'nd'},
+    {v:d.negocios?fmt(d.negocios):'—',l:'Negocios',c:d.negocios?'d':'nd'},
+    {v:d.area_ha?d.area_ha+' ha':'—',l:'Superficie',c:d.area_ha?'g':'nd'},
+  ];
+  const kpiH = kpis.map(k=>`<div class="ck"><div class="cv ${k.c}">${k.v}</div><div class="cl">${k.l}</div></div>`).join('');
+
+  /* Bars */
+  let bars = '';
+  if(d.pct_internet!=null) bars += `<div class="brow"><div class="brow-label"><span>Internet en viviendas</span><span class="bval">${d.pct_internet}%</span></div><div class="btrack"><div class="bfill bf-v" style="width:${d.pct_internet}%"></div></div></div>`;
+  if(pfp!=null) bars += `<div class="brow"><div class="brow-label"><span>Población femenina</span><span class="bval">${pfp}%</span></div><div class="btrack"><div class="bfill bf-d" style="width:${pfp}%"></div></div></div>`;
+  if(d.grado) bars += `<div class="brow"><div class="brow-label"><span>Grado escolar promedio</span><span class="bval">${d.grado} años</span></div><div class="btrack"><div class="bfill bf-g" style="width:${Math.round(d.grado/18*100)}%"></div></div></div>`;
+
+  /* Secciones */
+  let secH = '';
+  if(d.secciones.length){
+    const rows = d.secciones.map(s=>`<tr>
+      <td><span class="s-sec">${s.s}</span></td>
+      <td><span class="s-ln">${fmt(s.ln)}</span></td>
+      <td><span class="s-meta">${fmt(s.meta)}</span></td>
+      <td class="rc"><span class="rg-badge ${rentCls(s.r)}">${s.r}</span></td>
+    </tr>`).join('');
+    secH = `<div>
+      <div class="blk-hdr"><span>🗳️</span> Secciones Electorales</div>
+      <table class="stbl">
+        <thead><tr><th>Sección</th><th>Lista Nominal</th><th>Meta</th><th>Rentabilidad</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  } else {
+    secH = `<div><div class="blk-hdr"><span>🗳️</span> Secciones Electorales</div><div class="no-sec">Sin secciones registradas en este polígono</div></div>`;
+  }
+
+  /* Casillas */
+  const casH = d.casillas>0
+    ? `<div class="casillas-bar"><div class="casillas-n">${d.casillas}</div><div class="casillas-info"><div class="ci-label">Casillas electorales</div><div class="ci-sec">Secciones: ${[...new Set(d.secciones.map(s=>s.s))].join(', ')||'—'}</div></div></div>`
+    : `<div class="no-casillas">Sin casillas electorales en este polígono</div>`;
+
+  /* Escuelas */
+  let escH = '';
+  if(d.escuelas.length){
+    const items = d.escuelas.map(e=>{
+      const acts = e.acts.length ? e.acts.map(a=>`<span class="eact">${a}</span>`).join('') : `<span class="no-acts">Sin actividades registradas</span>`;
+      return `<div class="esc-item">
+        <div class="esc-item-hdr">
+          <span class="esc-nombre">🏫 ${e.n}</span>
+          <span class="esc-nivel ${nivelCls(e.nivel)}">${e.nivel}</span>
+        </div>
+        <div class="esc-acts">${acts}</div>
+      </div>`;
+    }).join('');
+    escH = `<div><div class="blk-hdr"><span>🏫</span> Escuelas · Actividades Institucionales</div><div class="esc-list">${items}</div></div>`;
+  } else {
+    escH = `<div><div class="blk-hdr"><span>🏫</span> Escuelas</div><div class="no-esc">Sin escuelas registradas en este polígono</div></div>`;
+  }
+
+  /* Obras */
+  let obraH = '';
+  if(d.obras.length){
+    const items = d.obras.map(o=>`<div class="obra-item">
+      <div class="obra-item-hdr" style="background:${o.bg}18;">
+        <div class="obra-icon" style="background:${o.bg}">${o.ico}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="obra-tipo-lbl" style="color:${o.tc}">${o.tipo}</div>
+          <div class="obra-titulo-txt">${o.titulo}</div>
+        </div>
+      </div>
+      <div class="obra-item-ftr">
+        <div><div class="obra-monto-l">Inversión</div><div class="obra-monto-v">${money(o.monto)}</div></div>
+        <span class="oc-origen ${origCls(o.origen)}">${o.origen}</span>
+      </div>
+    </div>`).join('');
+    obraH = `<div><div class="blk-hdr"><span>🏗️</span> Obras Registradas (${d.obras.length})</div><div class="obra-items">${items}</div></div>`;
+  } else {
+    obraH = `<div><div class="blk-hdr"><span>🏗️</span> Obras</div><div class="no-obra">Sin obras registradas en este período</div></div>`;
+  }
+
+  /* Footer */
+  const totalM = d.obras.reduce((a,o)=>a+o.monto,0);
+  const footItems = [
+    d.empleados?`<span class="cfi">👥 <strong>${fmt(d.empleados)}</strong> empleos</span>`:'',
+    `<span class="cfi">🗳️ <strong>${d.casillas}</strong> casillas</span>`,
+    `<span class="cfi">🏫 <strong>${d.escuelas.length}</strong> escuelas</span>`,
+    `<span class="cfi">🏗️ <strong>${d.obras.length}</strong> obras</span>`,
+    totalM?`<span class="cfi money">💰 <strong>${money(totalM)}</strong></span>`:''
+  ].filter(Boolean).join('');
+
+  return `<div class="card" data-macro="${d.macro}" id="c${d.id}">
+    <div class="chdr">
+      <div class="chdr-glow"></div>
+      <div class="cnum">${String(d.id).padStart(2,'0')}</div>
+      <div class="cmacro ${d.macro==='9'?'mz9':''}">📍 Macrozona ${d.macro}${d.macro==='2'?' · Centro':' · Ext.'}</div>
+      <div class="cname">${d.label}</div>
+      <div class="cmeta">
+        <span class="ctype">${d.caracter}${d.area_ha?' · '+d.area_ha+' ha':''}</span>
+        <span class="cbadge ${rc}">${rl}</span>
+        ${d.marginacion?`<span class="cbadge" style="background:var(--verde-xl);color:var(--verde);">Marginación ${d.marginacion}</span>`:''}
+      </div>
+    </div>
+    <div class="ckrow">${kpiH}</div>
+    <div class="cbody">
+      ${bars?`<div class="bars-set">${bars}</div>`:''}
+      ${secH}
+      ${casH}
+      ${escH}
+      ${obraH}
+    </div>
+    <div class="cftr">${footItems}</div>
+  </div>`;
+}
+
+const container = document.getElementById('cards');
+DATA.forEach(d=>{ container.innerHTML += card(d); });
+</script>
+</body>
+</html>

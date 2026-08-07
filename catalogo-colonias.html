@@ -109,6 +109,10 @@ select.sel{width:100%;padding:11px 12px;border:1.5px solid var(--gris2);border-r
 .popup-loc{color:var(--muted);font-size:.8rem;margin-bottom:8px}
 .popup-btn{display:inline-block;background:var(--guinda);color:#fff;font-size:.76rem;font-weight:700;padding:7px 13px;border-radius:999px;text-decoration:none}
 .leaflet-control-layers{border-radius:12px !important;font-family:var(--font);font-size:.82rem}
+.mr-tipo-toggle-row{display:flex;align-items:center;gap:6px;padding-bottom:6px;margin-bottom:6px;border-bottom:1px solid var(--gris1);font-size:.72rem;color:var(--muted);font-weight:600}
+.mr-tipo-toggle-row span{flex:1}
+.mr-tipo-toggle-row button{border:1px solid var(--gris2);background:var(--gris0);color:var(--ink);border-radius:999px;padding:2px 9px;font-size:.68rem;font-weight:700;font-family:inherit}
+.mr-tipo-toggle-row button:hover{border-color:var(--guinda);color:var(--guinda)}
 .leaflet-bar a{border-radius:8px !important}
 .mr-tooltip{background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:var(--font);font-weight:700;font-size:.74rem;padding:4px 10px;box-shadow:var(--shadow-sm)}
 .mr-tooltip::before{border-top-color:var(--ink) !important}
@@ -354,6 +358,7 @@ const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{ma
 const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
 
 const contornoLayer = CONTORNO ? L.geoJSON(CONTORNO,{
+  interactive:false,
   style:{color:'#611232', weight:3, fill:true, fillOpacity:0.02, dashArray:'7,5', opacity:0.9}
 }).addTo(map) : null;
 
@@ -409,15 +414,33 @@ RAW.forEach(rec=>{
 });
 
 const overlays = {};
-if(contornoLayer) overlays['Límite municipal'] = contornoLayer;
 TIPO_ORDER.forEach(tipo=>{
   const label = `<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:${TIPO_COLOR[tipo]};display:inline-block"></span>${tipo} (${RAW.filter(r=>r.t===tipo).length})</span>`;
   overlays[label] = layersByTipo[tipo];
   layersByTipo[tipo].addTo(map);
 });
+if(contornoLayer) overlays['Límite municipal'] = contornoLayer;
 overlays[`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:14px;height:0;border-top:2px dashed #611232;display:inline-block"></span>Zonas electorales (${ZONAS.length})</span>`] = zonaLayer;
-L.control.layers({'Calles':osm,'Satélite':sat}, overlays, {collapsed:true, position:'topright'}).addTo(map);
+const layersControl = L.control.layers({'Calles':osm,'Satélite':sat}, overlays, {collapsed:true, position:'topright'}).addTo(map);
 L.control.scale({imperial:false, position:'bottomleft'}).addTo(map);
+
+/* "Todas / Ninguna" quick toggle for the tipo layers, inserted above the first tipo
+   checkbox in the layers control (tipos are the first block in `overlays` above). */
+(function addTipoToggleRow(){
+  const overlaysBox = layersControl.getContainer().querySelector('.leaflet-control-layers-overlays');
+  if(!overlaysBox) return;
+  const row = document.createElement('div');
+  row.className = 'mr-tipo-toggle-row';
+  row.innerHTML = `<span>Tipos de colonia</span><button type="button" data-act="all">Todas</button><button type="button" data-act="none">Ninguna</button>`;
+  L.DomEvent.disableClickPropagation(row);
+  row.querySelector('[data-act="all"]').addEventListener('click', ()=>{
+    TIPO_ORDER.forEach(t=>{ if(!map.hasLayer(layersByTipo[t])) map.addLayer(layersByTipo[t]); });
+  });
+  row.querySelector('[data-act="none"]').addEventListener('click', ()=>{
+    TIPO_ORDER.forEach(t=>{ if(map.hasLayer(layersByTipo[t])) map.removeLayer(layersByTipo[t]); });
+  });
+  overlaysBox.insertBefore(row, overlaysBox.firstChild);
+})();
 
 let allBounds = null;
 TIPO_ORDER.forEach(tipo=>{

@@ -357,14 +357,15 @@ const contornoLayer = CONTORNO ? L.geoJSON(CONTORNO,{
   style:{color:'#611232', weight:3, fill:true, fillOpacity:0.02, dashArray:'7,5', opacity:0.9}
 }).addTo(map) : null;
 
-/* Zonas: outline-only, non-interactive so it never intercepts clicks/hover meant for
+/* Zonas: light fill per zone, non-interactive so it never intercepts clicks/hover meant for
    the colonia polygons underneath (pointer-events:none is set automatically by Leaflet
    when interactive:false, avoiding overlap/click bugs with the tipo layers). */
 const zonaLayer = L.geoJSON(ZONAS.map(z=>({type:'Feature', geometry:z.g, properties:{__zona:z}})), {
   interactive:false,
   style:f=>{
     const z = f.properties.__zona;
-    return {color: ZONA_COLOR[z.z]||'#611232', weight:2.5, fill:false, dashArray:'6,4', opacity:0.9};
+    const c = ZONA_COLOR[z.z]||'#611232';
+    return {color:c, weight:2.5, fill:true, fillColor:c, fillOpacity:0.16, dashArray:'6,4', opacity:0.9};
   },
   onEachFeature:(f,layer)=>{
     const z = f.properties.__zona;

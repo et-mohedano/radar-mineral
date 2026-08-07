@@ -357,19 +357,24 @@ const contornoLayer = CONTORNO ? L.geoJSON(CONTORNO,{
   style:{color:'#611232', weight:3, fill:true, fillOpacity:0.02, dashArray:'7,5', opacity:0.9}
 }).addTo(map) : null;
 
-/* Zonas: light fill per zone, non-interactive so it never intercepts clicks/hover meant for
-   the colonia polygons underneath (pointer-events:none is set automatically by Leaflet
-   when interactive:false, avoiding overlap/click bugs with the tipo layers). */
+/* Zonas: light fill per zone, hoverable to highlight, but placed in a pane BELOW the
+   default overlayPane so colonia polygons always win the pointer hit-test where they
+   overlap — zone hover only fires over gaps not covered by a colonia, so it never
+   intercepts clicks/hover meant for the tipo layers (no overlap/click bugs). */
+map.createPane('zonaPane');
+map.getPane('zonaPane').style.zIndex = 350;
+function zonaStyle(z, hovered){
+  const c = ZONA_COLOR[z.z]||'#611232';
+  return {color:c, weight: hovered?3.5:2.5, fill:true, fillColor:c, fillOpacity: hovered?0.34:0.16, dashArray:'6,4', opacity: hovered?1:0.9};
+}
 const zonaLayer = L.geoJSON(ZONAS.map(z=>({type:'Feature', geometry:z.g, properties:{__zona:z}})), {
-  interactive:false,
-  style:f=>{
-    const z = f.properties.__zona;
-    const c = ZONA_COLOR[z.z]||'#611232';
-    return {color:c, weight:2.5, fill:true, fillColor:c, fillOpacity:0.16, dashArray:'6,4', opacity:0.9};
-  },
+  pane:'zonaPane',
+  style:f=>zonaStyle(f.properties.__zona, false),
   onEachFeature:(f,layer)=>{
     const z = f.properties.__zona;
     layer.bindTooltip(`Zona ${z.z}`, {permanent:true, direction:'center', className:'mr-zone-label', opacity:0.92});
+    layer.on('mouseover', ()=>{ layer.setStyle(zonaStyle(z, true)); });
+    layer.on('mouseout', ()=>{ layer.setStyle(zonaStyle(z, false)); });
   }
 });
 

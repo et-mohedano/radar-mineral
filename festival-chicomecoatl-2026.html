@@ -41,6 +41,15 @@ button{font:inherit;color:inherit}
 .topbar .print:hover{background:rgba(255,255,255,.12)}
 .goldline{height:6px;background:linear-gradient(90deg,var(--dorado) 0 60%,var(--dorado-2) 60% 80%,#1E5B4F 80%)}
 
+/* ---------- Menú entre páginas ---------- */
+.pages{background:#4A0D26}
+.pages .wrap{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-block:8px;max-width:760px;margin-left:max(0px,calc((100% - 1180px)/2))}
+.pg{display:flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:8px 14px;border-radius:12px;color:#fff;text-decoration:none;font-weight:700;font-size:15.5px;line-height:1.2;border:1.5px solid rgba(255,255,255,.35);text-align:center}
+.pg svg{flex:none;width:22px;height:22px}
+.pg:hover{background:rgba(255,255,255,.1)}
+.pg[aria-current="page"]{background:#fff;color:var(--guinda);border-color:#fff;box-shadow:inset 0 -4px 0 var(--dorado)}
+@media (max-width:760px){.pages .wrap{padding-inline:12px;margin:0}.pg{font-size:14px;gap:7px;padding:8px 8px}.pg svg{width:19px;height:19px}}
+
 /* ---------- Papel picado ---------- */
 .garland{height:92px;background-repeat:repeat-x;background-position:center top;background-size:auto 92px;position:relative}
 
@@ -195,6 +204,8 @@ main{padding:28px 0 20px}
 .blk li{position:relative;padding-left:28px;font-size:16px;line-height:1.45;margin:8px 0;color:var(--ink)}
 .blk li::before{content:"";position:absolute;left:1px;top:4px;width:14px;height:14px;border:2.5px solid #1E5B4F;border-radius:4px;background:#fff}
 .blk .from{font-size:14px;font-weight:800;color:#1E5B4F;margin:12px 0 2px}
+.tolink{display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:var(--guinda);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:10px 16px;border-radius:999px}
+.tolink:hover{background:var(--guinda-2)}
 .blk .pending{font-size:14.5px;margin-top:10px;color:var(--warn-ink);background:var(--warn-bg);padding:8px 11px;border-radius:8px;border-left:4px solid #A57F2C}
 
 /* Apoyo por día en vista general */
@@ -311,7 +322,7 @@ dialog.viewer button{position:absolute;top:8px;right:8px;background:#fff;color:#
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
 
 @media print{
-  .controls,.picker,.bg-motion,.garland,.print,.arch,.countdown,details.support summary::after,.badge.map,dialog{display:none !important}
+  .pages,.controls,.picker,.bg-motion,.garland,.print,.arch,.countdown,details.support summary::after,.badge.map,dialog{display:none !important}
   body{font-size:12px;background:#fff;color:#000}
   .hero{padding:0 0 10px}.hero h1{font-size:40px}
   .day{break-inside:auto}.ev{break-inside:avoid}
@@ -331,6 +342,12 @@ dialog.viewer button{position:absolute;top:8px;right:8px;background:#fff;color:#
     <button class="print" type="button" onclick="window.print()">Imprimir esta vista</button>
   </div>
 </header>
+<nav class="pages" aria-label="Páginas del festival">
+  <div class="wrap">
+    <a class="pg" href="festival-chicomecoatl-2026.html" data-page aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>Programa de actividades</a>
+    <a class="pg" href="callejon-y-catrinas-2026.html" data-page><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V9a8 8 0 0 1 16 0v12"/><path d="M8 21v-8a4 4 0 0 1 8 0v8"/><path d="M2 21h20"/></svg>Callejón y catrinas</a>
+  </div>
+</nav>
 <div class="goldline" aria-hidden="true"></div>
 <div class="garland" id="garland" aria-hidden="true"></div>
 
@@ -781,7 +798,9 @@ function renderProgram(){
   if(state.sec!=="all"){
     const fl = FLOR.find(([id])=>id===state.sec);
     const st = (fl && fl[1] ? [`Martes 27 de octubre, 9:00 h, en el Auditorio: ${florTask(fl[1]).charAt(0).toLowerCase()+florTask(fl[1]).slice(1)}`] : []).concat(STANDING[state.sec]||[], ALL_STANDING);
-    html += `<div class="tasks" style="position:static;max-height:none;margin:0 6px 34px"><h4>Durante todo el festival</h4><p class="who">${esc(SEC[state.sec].full)}</p><div class="blk"><ul>${st.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div></div>`;
+    const CALL = {dif:"Descanso 1",bienestar:"Descanso 1",servicios:"Descanso 2",general:"Descanso 2",sedeco:"Descanso 3",contraloria:"Descanso 3",mujeres:"Descanso 3",obras:"Descanso 4",despacho:"Descanso 6",tesoreria:"Descanso 6",seguridad:"Descansos 7 y 8",admin:"Descansos 7 y 8",planeacion:"Descansos 7 y 8"};
+    const link = CALL[state.sec] ? `<a class="tolink" href="callejon-y-catrinas-2026.html#${state.sec}">Ver tu ${esc(CALL[state.sec].toLowerCase())} del Callejón de los Recuerdos</a>` : "";
+    html += `<div class="tasks" style="position:static;max-height:none;margin:0 6px 34px"><h4>Durante todo el festival</h4><p class="who">${esc(SEC[state.sec].full)}</p><div class="blk"><ul>${st.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${link}</div></div>`;
   }
   days.forEach(d => {
     const evs = eventsFor(state.sec, d.id);
@@ -802,7 +821,10 @@ function toTop(always){
 function renderFlor(){
   document.getElementById("florGrid").innerHTML = FLOR.map(([id,n]) => `<div class="fl${n?"":" zero"}${id===state.sec?" me":""}">${ico(id)}<span class="nm">${esc(SEC[id].name)}</span><span class="num"><b>${n}</b><small>${n===0?"sin personal":n===1?"persona":"personas"}</small></span></div>`).join("");
 }
-function render(){ renderFlor(); renderPickers(); renderStatus(); renderDayBar(); renderSummary(); renderProgram(); }
+function syncPageLinks(){
+  document.querySelectorAll("a[data-page]").forEach(a => { const base = a.getAttribute("href").split("#")[0]; a.setAttribute("href", base + (state.sec!=="all" ? "#"+state.sec : "")); });
+}
+function render(){ syncPageLinks(); renderFlor(); renderPickers(); renderStatus(); renderDayBar(); renderSummary(); renderProgram(); }
 function setSec(id, fromClick){
   state.sec = SEC[id] ? id : "all";
   if(state.day!=="all" && !eventsFor(state.sec, state.day).length) state.day = "all";

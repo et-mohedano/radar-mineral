@@ -253,6 +253,12 @@ details.support[open] summary::after{content:"Ocultar"}
 .fl .num small{font-size:12px;color:var(--ink-2)}
 .fl.zero{opacity:.6}
 .fl.me{border-color:var(--guinda);background:#FBF1F4;box-shadow:0 0 0 4px rgba(230,162,60,.35)}
+.flor-days{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 4px}
+.fd{display:flex;align-items:center;gap:12px;background:#FBF1F4;border:1.5px solid rgba(97,18,50,.25);border-radius:14px;padding:12px 14px}
+.fd-n{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--guinda);color:#fff;font-weight:800;font-size:17px}
+.fd b{display:block;font-size:16.5px;color:var(--guinda)}
+.fd span:not(.fd-n){font-size:16px;font-weight:600}
+@media (max-width:760px){.flor-days{grid-template-columns:1fr}}
 .badge.flor-link{background:transparent;border:1.5px solid var(--dorado);color:#6B5113;text-decoration:none}
 .general{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .gcard{background:var(--surface);border-radius:14px;padding:18px;border-top:5px solid var(--dorado)}
@@ -424,15 +430,16 @@ dialog.viewer button{position:absolute;top:8px;right:8px;background:#fff;color:#
     <p class="intro">Aplican a todo el personal que participa en el festival, además de las tareas de cada día.</p>
     <div class="flor" id="flor">
       <h3>Descarga de la flor y armado de ramos</h3>
-      <div class="when"><span>Sábado 31 de octubre</span><span>9:00 h</span><span class="g">Auditorio</span></div>
-      <p>Tareas: descargar la flor y hacer ramos. Se requieren hombres y mujeres. Cada área envía este número de personas:</p>
+      <div class="flor-days"><div class="fd"><span class="fd-n">1</span><div><b>Martes 27 de octubre, 9:00 h</b><span>Descarga de la flor</span></div></div><div class="fd"><span class="fd-n">2</span><div><b>Sábado 31 de octubre, 9:00 h</b><span>Armado de ramos</span></div></div></div>
+      <p>Las dos actividades son en el <strong>Auditorio</strong>. Se requieren hombres y mujeres. Cada área envía este número de personas en ambas fechas:</p>
       <div class="flor-grid" id="florGrid"></div>
     </div>
     <div class="general">
       <div class="gcard">
         <h3>Ramos de flor y adorno de panteones</h3>
         <ul>
-          <li>Descarga de la flor y armado de ramos: sábado 31 de octubre, 9:00 h, en el Auditorio, para que la flor llegue fresca a la entrega del 2 de noviembre. <a href="#flor">Ver personas por área</a>.</li>
+          <li>Descarga de la flor: martes 27 de octubre, 9:00 h, en el Auditorio.</li>
+          <li>Armado de ramos: sábado 31 de octubre, 9:00 h, en el Auditorio, para que la flor llegue fresca a la entrega del 2 de noviembre. <a href="#flor">Ver personas por área</a>.</li>
           <li>Todas las secretarías apoyan además con el adorno de panteones, según se solicite.</li>
           <li>2 de noviembre, 8:30 h: entrega de alimentos y ramos de flor en el Panteón Municipal de Pachuquilla.</li>
         </ul>
@@ -516,7 +523,7 @@ const EXP = "Explanada de Pachuquilla";
 
 const EV = [
   // 27 octubre
-  {id:"a0",d:"31",t:"9:00",k:"logistica",title:"Descarga de la flor y armado de ramos",sub:"Se requieren hombres y mujeres",place:"Auditorio",a:[],flor:true},
+  {id:"a0",d:"27",t:"9:00",k:"logistica",title:"Descarga de la flor",sub:"Se requieren hombres y mujeres. Los ramos se arman el sábado 31",place:"Auditorio",a:[],flor:true},
   {id:"a1",d:"27",t:"10:00",k:"musica",title:"Trío huasteco Alazanes de la Sierra",place:"CCA El Saucillo",a:["dif","bienestar"]},
   {id:"a2",d:"27",t:"16:00",k:"comunidad",title:"Feria de adopciones",place:HCG,a:["servicios"]},
   {id:"a3",d:"27",t:"17:00",k:"concurso",title:"Concurso de disfraces de mascotas 2026",place:HCG,a:["dif","bienestar"]},
@@ -558,6 +565,7 @@ const EV = [
   {id:"e12",d:"30",t:"20:15",k:"musica",title:"“Al ritmo del son jarocho”",sub:"Grupo La Milpa",place:EXP,a:["bienestar"]},
   {id:"e13",d:"30",t:"20:15",k:"comunidad",title:"Entrega de alimentos",place:EXP,a:["dif"]},
   // 31 octubre
+  {id:"f0",d:"31",t:"9:00",k:"logistica",title:"Armado de ramos",sub:"Se requieren hombres y mujeres. Ramos para la entrega del 2 de noviembre",place:"Auditorio",a:[],flor:true},
   {id:"f1",d:"31",t:"17:00",k:"ceremonia",title:"Inauguración de mural y exposición fotográfica",sub:"Mural alusivo al Día de Muertos de Maynor Islas López y exposición “Entre la despedida y la memoria” de Hugo David Pérez Ángeles",place:EXP+" (kiosco)",a:["bienestar"],pres:true,note:"La tabla de apoyo indica 16:30 h; confirmar horario."},
   {id:"f2",d:"31",t:"17:00",k:"musica",title:"Ensamble musical Arezzo",sub:"Narración oral y puesta en escena. Desde Huejutla de Reyes",place:EXP,a:["bienestar"]},
   {id:"f3",d:"31",t:"18:00",k:"escena",title:"Presentación del taller de jazz moderno del CEMART",place:EXP,a:["bienestar"]},
@@ -589,10 +597,11 @@ const EV = [
 const P3 = "Personal de apoyo durante toda la jornada (3 personas)";
 /* Personal para descargar la flor y hacer ramos (31 oct, 9:00 h, Auditorio) */
 const FLOR = [["obras",12],["general",12],["tesoreria",10],["dif",5],["bienestar",5],["contraloria",2],["seguridad",2],["admin",2],["mujeres",2],["despacho",2],["planeacion",1],["sedeco",2],["servicios",0]];
-const florTask = n => `Enviar ${n} ${n===1?"persona":"personas"} para descargar la flor y hacer ramos (se requieren hombres y mujeres)`;
+const florTask = (n, what="descargar la flor") => `Enviar ${n} ${n===1?"persona":"personas"} para ${what} (se requieren hombres y mujeres)`;
 
 const BLOCKS = [
-  {d:"31",when:"9:00 h",place:"Auditorio",ev:["a0"],tasks:Object.fromEntries(FLOR.filter(([,n])=>n>0).map(([id,n])=>[id,[florTask(n)]]))},
+  {d:"27",when:"9:00 h",place:"Auditorio",ev:["a0"],tasks:Object.fromEntries(FLOR.filter(([,n])=>n>0).map(([id,n])=>[id,[florTask(n,"descargar la flor")]]))},
+  {d:"31",when:"9:00 h",place:"Auditorio",ev:["f0"],tasks:Object.fromEntries(FLOR.filter(([,n])=>n>0).map(([id,n])=>[id,[florTask(n,"armar los ramos")]]))},
   {d:"27",when:"10:00 h",place:"CCA El Saucillo",ev:["a1"],tasks:{bienestar:[],dif:[]}},
   {d:"27",when:"16:00 a 19:30 h",place:HCG,ev:["a2","a3","a4","a5","a6"],tasks:{
     bienestar:["Logística","Equipo de audio","Conducción",P3],
@@ -797,7 +806,8 @@ function renderProgram(){
   let html = "";
   if(state.sec!=="all"){
     const fl = FLOR.find(([id])=>id===state.sec);
-    const st = (fl && fl[1] ? [`Sábado 31 de octubre, 9:00 h, en el Auditorio: ${florTask(fl[1]).charAt(0).toLowerCase()+florTask(fl[1]).slice(1)}`] : []).concat(STANDING[state.sec]||[], ALL_STANDING);
+    const low = s => s.charAt(0).toLowerCase()+s.slice(1);
+    const st = (fl && fl[1] ? [`Martes 27 de octubre, 9:00 h, en el Auditorio: ${low(florTask(fl[1],"descargar la flor"))}`, `Sábado 31 de octubre, 9:00 h, en el Auditorio: ${low(florTask(fl[1],"armar los ramos"))}`] : []).concat(STANDING[state.sec]||[], ALL_STANDING);
     const CALL = {dif:"Descanso 1",bienestar:"Descanso 1",servicios:"Descanso 2",general:"Descanso 2",sedeco:"Descanso 3",contraloria:"Descanso 3",mujeres:"Descanso 3",obras:"Descanso 4",despacho:"Descanso 6",tesoreria:"Descanso 6",seguridad:"Descansos 7 y 8",admin:"Descansos 7 y 8",planeacion:"Descansos 7 y 8"};
     const link = CALL[state.sec] ? `<a class="tolink" href="callejon-y-catrinas-2026.html#${state.sec}">Ver tu ${esc(CALL[state.sec].toLowerCase())} del Callejón de los Recuerdos</a>` : "";
     html += `<div class="tasks" style="position:static;max-height:none;margin:0 6px 34px"><h4>Durante todo el festival</h4><p class="who">${esc(SEC[state.sec].full)}</p><div class="blk"><ul>${st.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${link}</div></div>`;

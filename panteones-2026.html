@@ -282,6 +282,7 @@ details.support[open] summary::after{content:"Ocultar"}
 .fd b{display:block;font-size:16.5px;color:var(--guinda)}
 .fd span:not(.fd-n){display:block;font-size:16px;font-weight:600}
 .fd small{display:block;font-size:14px;color:var(--ink-2);margin-top:2px}
+.fd .tot{display:inline;font-size:inherit;color:var(--guinda);font-weight:800}
 .fd small a{color:var(--guinda);font-weight:700}
 @media (max-width:760px){.flor-days{grid-template-columns:1fr}}
 .badge.contact{background:#F4ECEE;color:var(--guinda)}
@@ -436,6 +437,9 @@ dialog.viewer button{position:absolute;top:8px;right:8px;background:#fff;color:#
 .supply h3{margin:0 0 4px;font-size:19px;color:var(--verde)}
 .supply p{margin:0;font-size:16px}
 .supply.mine{box-shadow:0 0 0 5px rgba(230,162,60,.38)}
+.ramos{margin-bottom:30px}
+.ramos .flor-days{grid-template-columns:repeat(3,1fr)}
+@media (max-width:980px){.ramos .flor-days{grid-template-columns:1fr}}
 .notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
 .notes .nt{background:var(--warn-bg);border-left:6px solid var(--dorado);border-radius:14px;padding:16px 18px}
 .notes .nt b{display:block;color:var(--warn-ink);font-size:15px;margin-bottom:4px}
@@ -515,6 +519,15 @@ dialog.viewer button{position:absolute;top:8px;right:8px;background:#fff;color:#
       <div class="notes">
         <div class="nt"><b>Nota 1</b><p>El personal debe estar a la hora indicada, ya en su panteón, según la distribución.</p></div>
         <div class="nt"><b>Nota 2</b><p>Servicios Municipales se encarga de llevar la flor y el papel picado a cada panteón. Los insumos deben estar en cada panteón antes de las 9:00 h.</p></div>
+      </div>
+    </section>
+    <section aria-labelledby="tRamos" class="ramos">
+      <h2 class="sect-title" id="tRamos">Después del adorno: ramos y reparto</h2>
+      <p class="sect-intro">Lo que sigue en los panteones hasta el 2 de noviembre.</p>
+      <div class="flor-days">
+        <div class="fd"><span class="fd-n">1</span><div><b>Sábado 31 de octubre, 9:00 h</b><span>Armado de ramos: 57 personas en total</span><small>En el Teatro Chicomecóatl. Responsable: Andrés Vaca, “El Mago”, <a href="tel:+527712047150">771 204 7150</a></small></div></div>
+        <div class="fd"><span class="fd-n">2</span><div><b>Domingo 1 de noviembre, 8:30 h</b><span>Ramos listos en cada panteón</span><small>Servicios Públicos Municipales transporta los ramos a Pachuquilla, Azoyatla y La Higa.</small></div></div>
+        <div class="fd"><span class="fd-n">3</span><div><b>Lunes 2 de noviembre, 8:30 h o al término de la misa</b><span>Reparto de alimentos (tamales) y ramos</span><small>Secretarios y directores ayudan a repartir.</small></div></div>
       </div>
     </section>
   </div>
@@ -647,19 +660,20 @@ function renderMine(){
         </div>
         <p class="with">Adornas junto con:</p>${chips(others)}
         <div class="fnote">La flor y el papel picado los lleva Servicios Municipales; estarán en el panteón antes de las 9:00 h.</div>
+        <div class="fnote">Lunes 2 de noviembre, 8:30 h o al término de la misa: reparto de alimentos (tamales) y ramos. Secretarios y directores ayudan a repartir.</div>
         <a class="maplink" href="${mapURL(p)}" target="_blank" rel="noopener">${pinSvg}Buscar el ${esc(p.name)} en el mapa</a>
       </div>
     </article>`;
   } else if(state.sec===SUPPLY){
     el.innerHTML = `<article class="feature" aria-labelledby="fT">
-      <div class="feature-head">${ico("servicios")}<div><h2 id="fT">Tu tarea: llevar los insumos</h2><p>${esc(s.full)}</p></div></div>
+      <div class="feature-head">${ico("servicios")}<div><h2 id="fT">Tu tarea: llevar flor, papel picado y ramos</h2><p>${esc(s.full)}</p></div></div>
       <div class="feature-body">
         <div class="facts3">
           <div class="fact"><span>Día</span><b>Jueves 29 de octubre</b></div>
           <div class="fact"><span>Entregar antes de</span><b>9:00 h</b><small>En cada panteón</small></div>
           <div class="fact"><span>Qué llevar</span><b>Flor y papel picado</b></div>
         </div>
-        <p class="with">Panteones a los que hay que llevar flor y papel picado:</p>
+        <p class="with">Panteones a los que hay que llevar flor y papel picado (jueves 29) y los ramos (domingo 1 de noviembre, listos a las 8:30 h):</p>
         <ul class="checklist">${PANT.map(p=>`<li><b>${esc(p.name)}</b>: lo adornan ${p.secs.map(x=>SEC[x].name).join(", ")}. <a href="${mapURL(p)}" target="_blank" rel="noopener">Mapa</a></li>`).join("")}</ul>
       </div>
     </article>`;

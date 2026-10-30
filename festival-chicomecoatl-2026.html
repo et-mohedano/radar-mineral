@@ -282,6 +282,7 @@ details.support[open] summary::after{content:"Ocultar"}
 .fd b{display:block;font-size:16.5px;color:var(--guinda)}
 .fd span:not(.fd-n){display:block;font-size:16px;font-weight:600}
 .fd small{display:block;font-size:14px;color:var(--ink-2);margin-top:2px}
+.fd .tot{display:inline;font-size:inherit;color:var(--guinda);font-weight:800}
 .fd small a{color:var(--guinda);font-weight:700}
 @media (max-width:760px){.flor-days{grid-template-columns:1fr}}
 .badge.contact{background:#F4ECEE;color:var(--guinda)}
@@ -459,9 +460,14 @@ dialog.viewer button{position:absolute;top:8px;right:8px;background:#fff;color:#
     <h2>Indicaciones para todas las secretarías</h2>
     <p class="intro">Aplican a todo el personal que participa en el festival, además de las tareas de cada día.</p>
     <div class="flor" id="flor">
-      <h3>Adorno de panteones y armado de ramos</h3>
-      <div class="flor-days"><div class="fd"><span class="fd-n">1</span><div><b>Jueves 29 de octubre, 9:00 h</b><span>Adorno de panteones</span><small>En cada panteón, según la distribución. <a href="panteones-2026.html" data-page-sec>Ver distribución</a></small></div></div><div class="fd"><span class="fd-n">2</span><div><b>Sábado 31 de octubre, 9:00 h</b><span>Armado de ramos</span><small>En el Teatro Chicomecóatl</small></div></div></div>
-      <p>Se requieren hombres y mujeres. Cada área envía este número de personas en ambas fechas:</p>
+      <h3>Panteones y ramos, paso a paso</h3>
+      <div class="flor-days">
+        <div class="fd"><span class="fd-n">1</span><div><b>Jueves 29 de octubre, 9:00 h</b><span>Adorno de panteones</span><small>En cada panteón, según la distribución. Responsable: Fátima Carrillo. <a href="panteones-2026.html" data-page-sec>Ver distribución</a></small></div></div>
+        <div class="fd"><span class="fd-n">2</span><div><b>Sábado 31 de octubre, 9:00 h</b><span>Armado de ramos: <strong class="tot" id="florTotal"></strong> en total</span><small>En el Teatro Chicomecóatl. Responsable: Andrés Vaca, “El Mago”, <a href="tel:+527712047150">771 204 7150</a></small></div></div>
+        <div class="fd"><span class="fd-n">3</span><div><b>Domingo 1 de noviembre, 8:30 h</b><span>Ramos listos en cada panteón</span><small>Servicios Públicos Municipales transporta los ramos a los panteones de Pachuquilla, Azoyatla y La Higa.</small></div></div>
+        <div class="fd"><span class="fd-n">4</span><div><b>Lunes 2 de noviembre, 8:30 h o al término de la misa</b><span>Reparto de alimentos (tamales) y ramos</span><small>Secretarios y directores ayudan a repartir.</small></div></div>
+      </div>
+      <p>Se requieren hombres y mujeres. Cada área envía este número de personas para el adorno de panteones (29) y el armado de ramos (31):</p>
       <div class="flor-grid" id="florGrid"></div>
     </div>
     <div class="general">
@@ -471,7 +477,8 @@ dialog.viewer button{position:absolute;top:8px;right:8px;background:#fff;color:#
           <li>Adorno de panteones: jueves 29 de octubre, 9:00 h, en cada panteón según la distribución. <a href="panteones-2026.html" data-page-sec>Ver distribución</a>.</li>
           <li>Servicios Municipales lleva la flor y el papel picado a cada panteón antes de las 9:00 h.</li>
           <li>Armado de ramos: sábado 31 de octubre, 9:00 h, en el Teatro Chicomecóatl, para que la flor llegue fresca a la entrega del 2 de noviembre. <a href="#flor">Ver personas por área</a>.</li>
-          <li>2 de noviembre, 8:30 h: entrega de alimentos y ramos de flor en el Panteón Municipal de Pachuquilla.</li>
+          <li>Domingo 1 de noviembre: Servicios Públicos Municipales transporta los ramos; a las 8:30 h ya deben estar en cada panteón.</li>
+          <li>Lunes 2 de noviembre, 8:30 h o al término de la misa: reparto de alimentos (tamales) y ramos. Secretarios y directores ayudan a repartir.</li>
         </ul>
       </div>
       <div class="gcard g2">
@@ -619,7 +626,7 @@ const EV = [
   {id:"e12",d:"30",t:"20:15",k:"musica",title:"“Al ritmo del son jarocho”",sub:"Grupo La Milpa",place:EXP,a:["bienestar"]},
   {id:"e13",d:"30",t:"20:15",k:"comunidad",title:"Entrega de alimentos",place:EXP,a:["dif"]},
   // 31 octubre
-  {id:"f0",d:"31",t:"9:00",k:"logistica",title:"Armado de ramos",sub:"Se requieren hombres y mujeres. Ramos para la entrega del 2 de noviembre",place:"Teatro Chicomecóatl",a:[],flor:true},
+  {id:"f0",d:"31",t:"9:00",k:"logistica",title:"Armado de ramos",sub:"__FLORTOTAL__ en total, hombres y mujeres. Ramos para el reparto del 2 de noviembre",place:"Teatro Chicomecóatl",a:[],flor:true,resp:"call"},
   {id:"f1",d:"31",t:"17:00",k:"ceremonia",title:"Inauguración de mural y exposición fotográfica",sub:"Mural alusivo al Día de Muertos de Maynor Islas López y exposición “Entre la despedida y la memoria” de Hugo David Pérez Ángeles",place:EXP+" (kiosco)",a:["bienestar"],pres:true,note:"La tabla de apoyo indica 16:30 h; confirmar horario."},
   {id:"f2",d:"31",t:"17:00",k:"musica",title:"Ensamble musical Arezzo",sub:"Narración oral y puesta en escena. Desde Huejutla de Reyes",place:EXP,a:["bienestar"]},
   {id:"f3",d:"31",t:"18:00",k:"escena",title:"Presentación del taller de jazz moderno del CEMART",place:EXP,a:["bienestar"]},
@@ -627,6 +634,7 @@ const EV = [
   {id:"f5",d:"31",t:"20:00",t2:"y 21:00",k:"musica",title:"Concierto “Recordando con amor y cacao”",sub:"Danzonera Flor de Cacao",place:EXP,a:["bienestar"]},
   {id:"f6",d:"31",t:"20:00",t2:"y 21:00",k:"recorrido",title:"Recorridos de leyendas",sub:"Leyendas en el panteón a cargo de Okos Teatro",place:"Panteón Municipal de Pachuquilla",a:["bienestar","panteones"]},
   // 1 noviembre
+  {id:"g0",d:"1",t:"8:30",k:"logistica",title:"Ramos listos en cada panteón",sub:"Servicios Públicos Municipales transporta los ramos; a las 8:30 h ya deben estar en cada panteón",place:"Panteones de Pachuquilla, Azoyatla y La Higa",a:["servicios"]},
   {id:"g1",d:"1",t:"15:00",k:"concurso",title:"Concursos gastronómicos: alimentos con maíz y pan de muerto",place:EXP,a:[],todas:true},
   {id:"g2",d:"1",t:"15:00",k:"musica",title:"Trío huasteco Catanes del Son",place:EXP,a:["bienestar"]},
   {id:"g3",d:"1",t:"16:00",k:"musica",title:"Concierto “Hasta los muertos bailan”",sub:"Grupo cubano D’Lira, son cubano",place:EXP,a:["bienestar"],cuba:true},
@@ -637,7 +645,8 @@ const EV = [
   {id:"g8",d:"1",t:"19:00",k:"musica",title:"Banda de Viento Flor del Río",place:"Panteón de Azoyatla",a:["bienestar"]},
   {id:"g9",d:"1",t:"20:00",t2:"y 21:00",k:"recorrido",title:"Recorridos de leyendas",sub:"Leyendas en el panteón a cargo de Okos Teatro",place:"Panteón Municipal de Pachuquilla",a:["bienestar","panteones"]},
   // 2 noviembre
-  {id:"h1",d:"2",t:"9:00",k:"comunidad",title:"Banda de Viento Flor del Río y entrega de alimentos",place:"Panteón Municipal de Pachuquilla",a:["dif"],note:"La tabla de apoyo indica 8:00 h (tamales) y 8:30 h (alimentos y ramos); confirmar horario."},
+  {id:"h0",d:"2",t:"8:30",t2:"o al término de la misa",k:"comunidad",title:"Reparto de alimentos (tamales) y ramos",sub:"Secretarios y directores ayudan a repartir",place:"Panteones de Pachuquilla, Azoyatla y La Higa",a:[],todas:true},
+  {id:"h1",d:"2",t:"9:00",k:"comunidad",title:"Banda de Viento Flor del Río y entrega de alimentos",place:"Panteón Municipal de Pachuquilla",a:["dif"]},
   {id:"h2",d:"2",t:"10:30",k:"comunidad",title:"Banda de Viento Flor del Río y entrega de alimentos",place:"Panteón de Azoyatla",a:["dif"]},
   {id:"h3",d:"2",t:"17:00",k:"musica",title:"“Mosaico de música para los muertos”",sub:"Tenor Isaid Crisóstomo",place:EXP,a:["bienestar"]},
   {id:"h4",d:"2",t:"18:00",k:"escena",title:"“La catrina le canta a la muerte”",place:EXP,a:["bienestar"]},
@@ -658,12 +667,14 @@ const PANT = [
 const pantOf = id => PANT.find(p=>p.secs.includes(id));
 /* Personas por área para adornar panteones (29 oct) y armar ramos (31 oct) */
 const FLOR = [["obras",12],["general",12],["tesoreria",10],["dif",5],["bienestar",5],["contraloria",2],["seguridad",2],["admin",2],["mujeres",2],["despacho",2],["planeacion",1],["sedeco",2],["servicios",0]];
+const FLOR_TOTAL = FLOR.reduce((a,[,n])=>a+n,0);
 const pantTask = (id,p) => { const f = FLOR.find(([x])=>x===id); const n = f ? f[1] : 0; return `Adornar el ${p.name}${n?` con ${n} ${n===1?"persona":"personas"}`:""}; deben estar ya en el panteón a las 9:00 h`; };
 const florTask = (n, what="descargar la flor") => `Enviar ${n} ${n===1?"persona":"personas"} para ${what} (se requieren hombres y mujeres)`;
 
 const BLOCKS = [
   {d:"29",when:"9:00 h",place:"Panteones de Pachuquilla, Azoyatla y La Higa",ev:["c0"],tasks:Object.assign(Object.fromEntries(PANT.flatMap(p=>p.secs.map(id=>[id,[pantTask(id,p)]]))),{servicios:["Llevar la flor y el papel picado a los panteones de Pachuquilla, Azoyatla y La Higa antes de las 9:00 h"]})},
-  {d:"31",when:"9:00 h",place:"Teatro Chicomecóatl",ev:["f0"],tasks:Object.fromEntries(FLOR.filter(([,n])=>n>0).map(([id,n])=>[id,[florTask(n,"armar los ramos")]]))},
+  {d:"31",when:"9:00 h",place:"Teatro Chicomecóatl",ev:["f0"],tasks:Object.fromEntries(FLOR.filter(([,n])=>n>0).map(([id,n])=>[id,[florTask(n,"armar los ramos")]])),pending:`Total: ${FLOR_TOTAL} personas. Responsable: Andrés Vaca, “El Mago”, 771 204 7150.`},
+  {d:"1",when:"Antes de las 8:30 h",place:"Panteones de Pachuquilla, Azoyatla y La Higa",ev:["g0"],tasks:{servicios:["Transportar los ramos a los panteones de Pachuquilla, Azoyatla y La Higa; a las 8:30 h ya deben estar todos en cada panteón"]}},
   {d:"27",when:"10:00 h",place:"CCA El Saucillo",ev:["a1"],tasks:{bienestar:[],dif:[]}},
   {d:"27",when:"16:00 a 19:30 h",place:HCG,ev:["a2","a3","a4","a5","a6"],tasks:{
     bienestar:["Logística","Equipo de audio","Conducción",P3],
@@ -712,7 +723,7 @@ const BLOCKS = [
   {d:"1",when:"20:00 h",place:"Panteón Municipal de Pachuquilla",ev:["g9"],tasks:{
     seguridad:["Apoyo con unidad de vigilancia durante el recorrido de leyendas"],
     bienestar:["1 persona de apoyo durante la actividad"]}},
-  {d:"2",when:"8:00 h",place:"Panteón Municipal de Pachuquilla",ev:["h1"],tasks:{todas:["Banda de viento y entrega de tamales","Entrega de alimentos y ramos de flor a las 8:30 h"]}},
+  {d:"2",when:"8:30 h o al término de la misa",place:"Panteones de Pachuquilla, Azoyatla y La Higa",ev:["h0"],tasks:{todas:["Secretarios y directores ayudan a repartir alimentos (tamales) y ramos"]}},
   {d:"2",when:"17:00 a 21:30 h",place:EXP+" y desfile",ev:["h3","h4","h5","h6","h7","h8","h9"],tasks:{
     dif:["Conducción",P3+", junto con Administración, Planeación y Tesorería"],
     bienestar:["Logística y desarrollo del evento"],
@@ -727,7 +738,7 @@ const BLOCKS = [
 const STANDING = {
   despacho:["Designar personal para foto y video del evento","Foto y video del presidente municipal y la presidenta del DIF en los eventos donde asistan","Diseño e impresión del material de difusión"]
 };
-const ALL_STANDING = ["El personal de apoyo recibe indicaciones del Mtro. Luis Alonso López Vite (Bienestar), 771 776 3794"];
+const ALL_STANDING = ["Lunes 2 de noviembre, 8:30 h o al término de la misa: secretarios y directores ayudan a repartir alimentos (tamales) y ramos","El personal de apoyo recibe indicaciones del Mtro. Luis Alonso López Vite (Bienestar), 771 776 3794"];
 
 /* ======================= LÓGICA ======================= */
 const EVM = Object.fromEntries(EV.map(e=>[e.id,e]));
@@ -798,7 +809,7 @@ function renderSummary(){
   const days = new Set(evs.map(e=>e.d)).size;
   if(state.sec==="all"){
     el.innerHTML = `<div><h2>Programa completo</h2><p>Las ${EV.length} actividades del festival y el apoyo que da cada secretaría. Abre “Apoyo de las secretarías” en cada día para ver quién hace qué.</p></div>
-      <div class="stats"><div class="stat"><b>${EV.length}</b><span>actividades</span></div><div class="stat"><b>7</b><span>días</span></div><div class="stat"><b>${EV.filter(e=>e.pres).length}</b><span>con presidente</span></div></div>`;
+      <div class="stats"><div class="stat"><b>${EV.length}</b><span>actividades</span></div><div class="stat"><b>7</b><span>días</span></div><div class="stat"><b>${EV.filter(e=>e.pres).length}</b><span>con el presidente</span></div></div>`;
     return;
   }
   const s = SEC[state.sec];
@@ -813,17 +824,19 @@ function tagsHTML(e){
   return t ? `<div class="tags">${t}</div>` : "";
 }
 function evHTML(e){
+  const sub = e.sub ? e.sub.replace("__FLORTOTAL__", FLOR_TOTAL + " personas") : "";
   return `<article class="ev k-${e.k}">
     <div class="kind">${KIND[e.k]}</div>
     <h3>${esc(e.title)}</h3>
-    ${e.sub?`<p class="sub">${esc(e.sub)}</p>`:""}
+    ${sub?`<p class="sub">${esc(sub)}</p>`:""}
     <p class="place">${pin}<span>${esc(e.place)}</span></p>
     ${tagsHTML(e)}
-    ${e.pres?`<span class="badge pres">Se sugiere presencia del Presidente Municipal</span>`:""}
+    ${e.pres?`<span class="badge pres">Se contará con la presencia del Presidente Municipal. Asistencia obligatoria de secretarios y directores</span>`:""}
     ${e.cuba?`<span class="badge cuba">País invitado: Cuba</span>`:""}
     ${e.map?`<a class="badge map" href="#${e.map}">Ver recorrido</a>`:""}
     ${e.flor?`<a class="badge flor-link" href="#flor">Ver cuántas personas envía cada área</a>`:""}
     ${e.pant?`<a class="badge flor-link" href="panteones-2026.html${state.sec!=="all"?"#"+state.sec:""}">${pantOf(state.sec)?"Tu panteón: "+esc(pantOf(state.sec).name.replace("Panteón de ","")):"Ver distribución por panteón"}</a>`:""}
+    ${e.resp==="call"?`<span class="badge contact">Responsable: Andrés Vaca, “El Mago”, <a href="tel:+527712047150">771 204 7150</a></span>`:""}
     ${e.k==="concurso"?`<span class="badge contact">Informes: Andrés Vaca, <a href="tel:+527712047150">771 204 7150</a></span>`:""}
     ${e.note?`<div class="note">${esc(e.note)}</div>`:""}
   </article>`;
@@ -875,6 +888,7 @@ function renderProgram(){
     const st = [].concat(
       pt ? [`Jueves 29 de octubre, 9:00 h: ${low(pantTask(state.sec, pt))}`] : state.sec==="servicios" ? ["Jueves 29 de octubre: llevar la flor y el papel picado a los panteones de Pachuquilla, Azoyatla y La Higa antes de las 9:00 h"] : [],
       fl && fl[1] ? [`Sábado 31 de octubre, 9:00 h, en el Teatro Chicomecóatl: ${low(florTask(fl[1],"armar los ramos"))}`] : [],
+      state.sec==="servicios" ? ["Domingo 1 de noviembre: transportar los ramos a los panteones; a las 8:30 h ya deben estar en cada panteón"] : [],
       STANDING[state.sec]||[], ALL_STANDING);
     const CALL = {dif:"Descanso 1",bienestar:"Descanso 1",servicios:"Descanso 2",general:"Descanso 2",sedeco:"Descanso 3",contraloria:"Descanso 3",mujeres:"Descanso 3",obras:"Descanso 4",despacho:"Descanso 6",tesoreria:"Descanso 6",seguridad:"Descansos 7 y 8",admin:"Descansos 7 y 8",planeacion:"Descansos 7 y 8"};
     const link = CALL[state.sec] ? `<a class="tolink" href="callejon-y-catrinas-2026.html#${state.sec}">Ver ${CALL[state.sec].startsWith("Descansos")?"tus":"tu"} ${esc(CALL[state.sec].toLowerCase())} del Callejón de los Recuerdos</a>` : "";
@@ -898,6 +912,7 @@ function toTop(always){
   if(always || window.scrollY > y) window.scrollTo({top:y, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
 }
 function renderFlor(){
+  const ft = document.getElementById("florTotal"); if(ft) ft.textContent = FLOR_TOTAL + " personas";
   document.getElementById("florGrid").innerHTML = FLOR.map(([id,n]) => `<div class="fl${n?"":" zero"}${id===state.sec?" me":""}">${ico(id)}<span class="nm">${esc(SEC[id].name)}</span><span class="num"><b>${n}</b><small>${n===0?"sin personal":n===1?"persona":"personas"}</small></span></div>`).join("");
 }
 function syncPageLinks(){
